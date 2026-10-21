@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ Sơ Cá Nhân & Quản Lý Tài Khoản Smember | TechZone</title>
+  
+  <!-- Font Awesome Icons 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- TechZone Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- TechZone Header -->
+  <header class="tz-header">
+    <div class="tz-topbar">
+      <div class="container topbar-content">
+        <div class="topbar-left">
+          <!-- Location Dropdown Selector -->
+          <div class="tz-location-wrapper">
+            <button type="button" class="tz-location-badge" id="btn-select-location" aria-expanded="false" title="Nhấp để đổi khu vực">
+              <i class="fa-solid fa-location-dot"></i>
+              <span class="tz-location-name">Hà Nội</span>
+              <i class="fa-solid fa-angle-down tz-location-arrow"></i>
+            </button>
+            <div class="tz-location-dropdown" id="tz-location-dropdown" role="listbox">
+              <div class="tz-dropdown-header">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Chọn khu vực nhận hàng:</span>
+              </div>
+              <ul class="tz-location-list">
+                <li class="tz-location-item" data-city="Hà Nội" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> Hà Nội</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+                <li class="tz-location-item" data-city="TP. Hồ Chí Minh" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> TP. Hồ Chí Minh</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+                <li class="tz-location-item" data-city="Đà Nẵng" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> Đà Nẵng</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+                <li class="tz-location-item" data-city="Cần Thơ" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> Cần Thơ</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+                <li class="tz-location-item" data-city="Hải Phòng" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> Hải Phòng</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+                <li class="tz-location-item" data-city="Đồng Nai" role="option">
+                  <span class="tz-city-name"><i class="fa-solid fa-building"></i> Đồng Nai</span>
+                  <i class="fa-solid fa-check tz-city-check"></i>
+                </li>
+              </ul>
+              <div class="tz-dropdown-footer">
+                <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2H tại các khu vực trên
+              </div>
+            </div>
+          </div>
+
+          <span class="topbar-divider topbar-hide-mobile">|</span>
+          <a href="#" class="topbar-link topbar-hide-mobile"><i class="fa-solid fa-store"></i> 86 chi nhánh TechZone toàn quốc</a>
+        </div>
+        <div class="topbar-right">
+          <span class="topbar-link topbar-hotline"><i class="fa-solid fa-headset"></i> CSKH: <strong>1800.6868</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tz-main-header">
+      <div class="container main-header-row">
+        <!-- Logo -->
+        <a href="index.html" class="tz-logo">
+          <div class="tz-logo-chip"><i class="fa-solid fa-microchip"></i></div>
+          <div>Tech<span class="accent">Zone</span></div>
+        </a>
+
+        <!-- Nút Trang chủ -->
+        <a href="index.html" class="btn-home-nav" title="Quay về trang chủ">
+          <i class="fa-solid fa-house"></i>
+          <span>Trang chủ</span>
+        </a>
+
+        <div class="tz-header-page-title">
+          <span class="tz-title-sep">|</span> Hồ Sơ Tài Khoản Smember
+        </div>
+
+        <div class="tz-header-actions">
+          <!-- User Account Button (Đăng nhập / Tên người dùng) -->
+          <div class="tz-user-wrapper" id="tz-user-wrapper">
+            <a href="login.html" class="tz-user-btn" id="tz-user-btn" title="Tài khoản">
+              <i class="fa-solid fa-circle-user"></i>
+              <div class="meta">
+                <span class="sub">Tài khoản</span>
+                <span id="tz-user-name-display">Đăng nhập</span>
+              </div>
+            </a>
+            <div class="tz-user-dropdown" id="tz-user-dropdown">
+              <div class="tz-user-dropdown-header">
+                <i class="fa-solid fa-user-check"></i>
+                <span id="tz-dropdown-greeting">Xin chào, Bạn!</span>
+              </div>
+              <a href="history.html" class="tz-user-dropdown-item">
+                <i class="fa-solid fa-clock-rotate-left"></i> Đơn mua của tôi
+              </a>
+              <a href="profile.html" class="tz-user-dropdown-item active" id="tz-btn-profile-info">
+                <i class="fa-solid fa-id-card"></i> Thông tin tài khoản
+              </a>
+              <div class="tz-user-dropdown-item logout" id="tz-btn-logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+              </div>
+            </div>
+          </div>
+
+          <!-- Nút Đơn mua -->
+          <a href="history.html" class="tz-nav-btn" title="Đơn mua của bạn">
+            <i class="fa-solid fa-box-archive"></i>
+            <div class="meta">
+              <span class="sub">Quản lý</span>
+              <span>Đơn mua</span>
+            </div>
+          </a>
+
+          <!-- Nút Giỏ hàng -->
+          <a href="checkout.html" class="tz-nav-btn tz-cart-btn" title="Giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <div class="meta">
+              <span class="sub">Giỏ hàng</span>
+              <span>Thanh toán</span>
+            </div>
+            <span class="tz-cart-badge">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Profile Main Content -->
+  <main class="tz-profile-page">
+    <div class="container" style="max-width: 1140px;">
+      
+      <!-- Breadcrumb -->
+      <div class="tz-profile-breadcrumb">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <span>/</span>
+        <a href="#">Tài khoản cá nhân</a>
+        <span>/</span>
+        <span style="color: #0f172a; font-weight: 600;">Hồ sơ Smember VIP</span>
+      </div>
+
+      <!-- 2-Column Profile Layout -->
+      <div class="tz-profile-layout">
+        
+        <!-- CỘT TRÁI: SIDEBAR PROFILE -->
+        <aside class="tz-profile-sidebar">
+          <div class="sidebar-user-hero">
+            <div class="avatar-wrapper">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Avatar thành viên" class="sidebar-avatar-img" id="profile-avatar-img">
+              <label for="profile-avatar-input" class="btn-change-avatar" title="Nhấp để tải lên ảnh đại diện mới">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" id="profile-avatar-input" accept="image/*" style="display: none;">
+              </label>
+            </div>
+            <div class="sidebar-user-name" id="profile-sidebar-name">Quản trị viên TechZone</div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.65rem;" id="profile-sidebar-email">admin@gmail.com</div>
+            <div class="tz-smember-badge" id="profile-rank-badge">
+              <i class="fa-solid fa-seedling"></i> Smember Mới
+            </div>
+          </div>
+
+          <!-- Menu Quản Lý Cá Nhân -->
+          <nav class="tz-profile-nav">
+            <a href="#profile" class="profile-nav-item tz-profile-nav-item active" data-tab="profile">
+              <i class="fa-solid fa-id-badge"></i>
+              <span>Hồ sơ của tôi</span>
+            </a>
+            <a href="history.html" class="profile-nav-item tz-profile-nav-item">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Đơn mua của tôi</span>
+            </a>
+            <a href="#address" class="profile-nav-item tz-profile-nav-item" data-tab="address">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>Sổ địa chỉ nhận hàng</span>
+            </a>
+            <a href="#password" class="profile-nav-item tz-profile-nav-item" data-tab="password">
+              <i class="fa-solid fa-lock"></i>
+              <span>Đổi mật khẩu</span>
+            </a>
+            <button type="button" class="profile-nav-item tz-profile-nav-item logout" id="btn-sidebar-logout" style="width: 100%; border: none; background: none; font-family: inherit;">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span>Đăng xuất tài khoản</span>
+            </button>
+          </nav>
+        </aside>
+
+        <!-- CỘT PHẢI: CHI TIẾT THÔNG TIN (MAIN CONTENT) -->
+        <section class="tz-profile-content">
+          
+          <!-- Thẻ Tóm Tắt Quyền Lợi Smember (3 Cards) -->
+          <div class="tz-benefit-grid">
+            <div class="benefit-card">
+              <div class="benefit-icon points">
+                <i class="fa-solid fa-coins"></i>
+              </div>
+              <div class="benefit-data">
+                <div class="benefit-val" id="profile-reward-points">0 <span class="unit">điểm</span></div>
+                <div class="benefit-label">Điểm tích lũy Smember</div>
+              </div>
+            </div>
+
+            <div class="benefit-card">
+              <div class="benefit-icon spending">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+              <div class="benefit-data">
+                <div class="benefit-val" id="profile-total-spent">0 <span class="unit">đ</span></div>
+                <div class="benefit-label">Tổng chi tiêu tích lũy</div>
+              </div>
+            </div>
+
+            <div class="benefit-card">
+              <div class="benefit-icon orders">
+                <i class="fa-solid fa-truck-fast"></i>
+              </div>
+              <div class="benefit-data">
+                <div class="benefit-val" id="profile-orders-count">0 <span class="unit">đơn hàng</span></div>
+                <div class="benefit-label">Đơn hàng hoàn tất</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 1: Form Thông Tin Cá Nhân -->
+          <div class="tz-profile-card" id="section-profile-info">
+            <div class="tz-profile-card-header">
+              <h3><i class="fa-solid fa-user-gear" style="color: #0284c7;"></i> Hồ Sơ Cá Nhân</h3>
+              <p>Quản lý thông tin hồ sơ để bảo mật tài khoản và nhận ưu đãi riêng biệt từ TechZone</p>
+            </div>
+
+            <form id="tz-profile-form">
+              <div class="tz-form-row">
+                <div class="tz-form-group">
+                  <label for="profile-account">Tên đăng nhập / Email</label>
+                  <input type="text" id="profile-account" class="tz-form-control readonly" readonly title="Email tài khoản được cố định để xác thực bảo mật">
+                </div>
+                <div class="tz-form-group">
+                  <label for="profile-fullname">Họ và tên thật <span style="color: #ef4444;">*</span></label>
+                  <input type="text" id="profile-fullname" class="tz-form-control" placeholder="Nhập họ và tên đầy đủ" required>
+                </div>
+              </div>
+
+              <div class="tz-form-row">
+                <div class="tz-form-group">
+                  <label for="profile-phone">Số điện thoại liên hệ</label>
+                  <input type="tel" id="profile-phone" class="tz-form-control" placeholder="Ví dụ: 0912345678 (10 số)">
+                </div>
+                <div class="tz-form-group">
+                  <label for="profile-birthday">Ngày tháng năm sinh</label>
+                  <input type="date" id="profile-birthday" class="tz-form-control">
+                </div>
+              </div>
+
+              <div class="tz-form-group">
+                <label>Giới tính</label>
+                <div class="tz-gender-group">
+                  <label class="tz-gender-label">
+                    <input type="radio" name="gender" value="nam" checked> Nam
+                  </label>
+                  <label class="tz-gender-label">
+                    <input type="radio" name="gender" value="nu"> Nữ
+                  </label>
+                  <label class="tz-gender-label">
+                    <input type="radio" name="gender" value="khac"> Khác
+                  </label>
+                </div>
+              </div>
+
+              <div style="margin: 1.5rem 0 1rem; border-top: 1px dashed #e2e8f0; padding-top: 1.25rem;">
+                <h4 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0 0 0.25rem; display: flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-map-location-dot" style="color: #0284c7;"></i> Sổ Địa Chỉ Nhận Hàng Mặc Định
+                </h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 1rem;">Địa chỉ này sẽ được tự động điền sẵn khi bạn mua hàng tại trang Thanh toán.</p>
+
+                <div class="tz-form-row">
+                  <div class="tz-form-group">
+                    <label for="profile-city">Tỉnh / Thành phố</label>
+                    <input type="text" id="profile-city" class="tz-form-control" placeholder="Ví dụ: Hà Nội, TP. Hồ Chí Minh...">
+                  </div>
+                  <div class="tz-form-group">
+                    <label for="profile-district">Quận / Huyện</label>
+                    <input type="text" id="profile-district" class="tz-form-control" placeholder="Ví dụ: Cầu Giấy, Quận 1...">
+                  </div>
+                </div>
+
+                <div class="tz-form-group">
+                  <label for="profile-address">Địa chỉ cụ thể (Số nhà, đường, phường/xã)</label>
+                  <input type="text" id="profile-address" class="tz-form-control" placeholder="Ví dụ: 123 Đường Cầu Giấy, P. Dịch Vọng">
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem;">
+                <button type="submit" class="tz-btn-save-profile">
+                  <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Card 2: Đổi Mật Khẩu Tài Khoản -->
+          <div class="tz-profile-card" id="section-password-change">
+            <div class="tz-profile-card-header">
+              <h3><i class="fa-solid fa-shield-halved" style="color: #0284c7;"></i> Đổi Mật Khẩu</h3>
+              <p>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu của bạn cho bất kỳ ai</p>
+            </div>
+
+            <form id="tz-change-password-form">
+              <div class="tz-form-group">
+                <label for="profile-old-pass">Mật khẩu hiện tại <span style="color: #ef4444;">*</span></label>
+                <div class="tz-password-wrapper">
+                  <input type="password" id="profile-old-pass" class="tz-form-control" placeholder="Nhập mật khẩu hiện tại" required>
+                  <button type="button" class="tz-password-toggle" data-target="profile-old-pass" title="Ẩn/Hiện mật khẩu">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="tz-form-row">
+                <div class="tz-form-group">
+                  <label for="profile-new-pass">Mật khẩu mới <span style="color: #ef4444;">*</span></label>
+                  <div class="tz-password-wrapper">
+                    <input type="password" id="profile-new-pass" class="tz-form-control" placeholder="Tối thiểu 6 ký tự" required>
+                    <button type="button" class="tz-password-toggle" data-target="profile-new-pass" title="Ẩn/Hiện mật khẩu">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="tz-form-group">
+                  <label for="profile-confirm-new-pass">Xác nhận mật khẩu mới <span style="color: #ef4444;">*</span></label>
+                  <div class="tz-password-wrapper">
+                    <input type="password" id="profile-confirm-new-pass" class="tz-form-control" placeholder="Nhập lại mật khẩu mới" required>
+                    <button type="button" class="tz-password-toggle" data-target="profile-confirm-new-pass" title="Ẩn/Hiện mật khẩu">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.25rem;">
+                <button type="submit" class="tz-btn-save-profile" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                  <i class="fa-solid fa-key"></i> Xác Nhận Đổi Mật Khẩu
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="tz-footer">
+    <div class="container footer-main-grid">
+      <div class="tz-footer-col">
+        <h4>Tổng Đài Hỗ Trợ Miễn Phí</h4>
+        <div class="tz-hotlines">
+          <div class="tz-hotline-row">Tư vấn mua hàng: <strong>1800.6868</strong></div>
+          <div class="tz-hotline-row">Hỗ trợ kỹ thuật: <strong>1800.6869</strong></div>
+          <div class="tz-hotline-row">Bảo hành chính hãng: <strong>1800.6870</strong></div>
+        </div>
+        <p style="margin-top: 1rem;">Đơn vị vận chuyển: <strong>Hỏa Tốc TechZone 2H (FastExpress)</strong></p>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Chính Sách Bán Hàng</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Chính sách bảo hành 1 đổi 1 30 ngày</a></li>
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Chính sách đổi trả linh hoạt</a></li>
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Giao hàng hỏa tốc trong 2h</a></li>
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Quy chế hoạt động & Điều khoản</a></li>
+        </ul>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Đặc Quyền Thành Viên Smember</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fa-solid fa-crown"></i> Tích điểm tới 5% giá trị đơn hàng</a></li>
+          <li><a href="#"><i class="fa-solid fa-gift"></i> Quà tặng sinh nhật đến 500.000đ</a></li>
+          <li><a href="#"><i class="fa-solid fa-wrench"></i> Miễn phí vệ sinh máy định kỳ</a></li>
+          <li><a href="#"><i class="fa-solid fa-bolt"></i> Ưu tiên nhận máy mới đầu tiên</a></li>
+        </ul>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Phương Thức Thanh Toán</h4>
+        <div class="payment-methods">
+          <span class="pay-badge"><i class="fa-solid fa-money-bill-wave"></i> COD Tiền mặt</span>
+          <span class="pay-badge"><i class="fa-brands fa-cc-visa"></i> Visa / Master</span>
+          <span class="pay-badge"><i class="fa-solid fa-qrcode"></i> VNPAY / VietQR</span>
+        </div>
+        <h4 style="margin-top: 1.25rem;">Kết Nối Với Chúng Tôi</h4>
+        <div class="social-links" style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+          <a href="#" style="color: #38bdf8; font-size: 1.2rem;"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" style="color: #ef4444; font-size: 1.2rem;"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" style="color: #ec4899; font-size: 1.2rem;"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-copyright">
+      <div class="container">
+        <p>© 2026 TechZone - Hệ thống bán lẻ thiết bị công nghệ chính hãng hàng đầu Việt Nam.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CUSTOM MODAL ĐĂNG XUẤT CHÍNH GIỮA MÀN HÌNH -->
+  <div class="tz-modal-overlay" id="tz-logout-modal" role="dialog" aria-modal="true" aria-labelledby="tz-logout-title">
+    <div class="tz-modal-content">
+      <div class="tz-modal-icon-badge">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </div>
+      <h3 class="tz-modal-title" id="tz-logout-title">Xác nhận đăng xuất</h3>
+      <p class="tz-modal-desc">Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?</p>
+      <div class="tz-modal-btn-group">
+        <button type="button" class="tz-btn-modal-cancel" id="tz-btn-cancel-logout">Hủy bỏ</button>
+        <button type="button" class="tz-btn-modal-logout" id="tz-btn-confirm-logout">Đăng xuất</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE ACCOUNT SELECTOR MODAL -->
+  <div class="tz-modal-overlay" id="tz-google-modal" role="dialog" aria-modal="true" aria-labelledby="tz-google-modal-title">
+    <div class="tz-google-modal-card">
+      <div class="google-modal-header">
+        <img src="images/google-icon.svg" alt="Google" width="32" height="32" class="google-logo">
+        <h3 id="tz-google-modal-title">Đăng nhập bằng Google</h3>
+        <p class="google-sub">Chọn tài khoản Google để tiếp tục đến <strong>TechZone</strong></p>
+      </div>
+
+      <div class="google-account-list">
+        <!-- Account 1 -->
+        <div class="google-account-item" data-fullname="Nguyễn Văn An" data-email="an.nguyen@gmail.com">
+          <div class="google-avatar avatar-blue">A</div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Nguyễn Văn An</div>
+            <div class="google-user-email">an.nguyen@gmail.com</div>
+          </div>
+          <i class="fa-solid fa-angle-right google-arrow"></i>
+        </div>
+
+        <!-- Account 2 -->
+        <div class="google-account-item" data-fullname="Trần Thị Mai" data-email="mai.tran@gmail.com">
+          <div class="google-avatar avatar-purple">M</div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Trần Thị Mai</div>
+            <div class="google-user-email">mai.tran@gmail.com</div>
+          </div>
+          <i class="fa-solid fa-angle-right google-arrow"></i>
+        </div>
+
+        <!-- Account 3: Custom Google Toggle -->
+        <div class="google-account-item google-custom-toggle" id="btn-toggle-custom-google">
+          <div class="google-avatar avatar-gray">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Sử dụng tài khoản khác</div>
+            <div class="google-user-email">Nhập họ tên và Gmail của bạn</div>
+          </div>
+          <i class="fa-solid fa-angle-down google-arrow" id="google-arrow-toggle"></i>
+        </div>
+      </div>
+
+      <!-- Custom Google Input Form -->
+      <form class="google-custom-form" id="form-custom-google" style="display: none;">
+        <div class="google-input-group">
+          <label for="google-custom-name">Họ và tên Google của bạn</label>
+          <input type="text" id="google-custom-name" placeholder="Ví dụ: Lê Hoàng Nam" required>
+        </div>
+        <div class="google-input-group">
+          <label for="google-custom-email">Địa chỉ Email Google (Gmail)</label>
+          <input type="email" id="google-custom-email" placeholder="Ví dụ: nam.le@gmail.com" required>
+        </div>
+        <button type="submit" class="btn-submit-google-custom">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Đăng nhập với tài khoản này
+        </button>
+      </form>
+
+      <div class="google-modal-footer">
+        <button type="button" class="btn-cancel-google" id="btn-close-google-modal">Hủy bỏ</button>
+        <span class="google-secure-badge"><i class="fa-solid fa-shield-halved"></i> Google Identity Services</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main JavaScript Bundle -->
+  <script src="js/main.js"></script>
+</body>
+</html>

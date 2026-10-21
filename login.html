@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập Tài Khoản | TechZone</title>
+  
+  <!-- Font Awesome Icons 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- TechZone Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Scoped Social Login Button Styles (ITviec Split Style) */
+    .tz-social-login-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+      width: 100% !important;
+      margin-top: 0.5rem !important;
+    }
+    .tz-btn-social-item {
+      width: 100% !important;
+      height: 48px !important;
+      min-height: 48px !important;
+      max-height: 48px !important;
+      display: flex !important;
+      align-items: center !important;
+      border-radius: 6px !important;
+      font-size: 14.5px !important;
+      font-weight: 500 !important;
+      color: #ffffff !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: none !important;
+      box-sizing: border-box !important;
+      text-decoration: none !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+    .tz-btn-social-item:hover {
+      filter: brightness(1.08) !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+      transform: translateY(-1px) !important;
+    }
+    .tz-btn-social-item .social-icon-box {
+      width: 55px !important;
+      min-width: 55px !important;
+      max-width: 55px !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+      background-color: rgba(0, 0, 0, 0.08) !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      padding: 0 !important;
+    }
+    .tz-btn-social-item .social-icon-box svg,
+    .tz-btn-social-item .social-icon-box img {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      object-fit: contain !important;
+      display: block !important;
+      flex-shrink: 0 !important;
+    }
+    .tz-btn-social-item.social-apple .social-icon-box img {
+      filter: brightness(0) invert(1) !important;
+    }
+    .tz-btn-social-item .social-text {
+      flex: 1 !important;
+      text-align: center !important;
+      font-size: 14.5px !important;
+      font-weight: 500 !important;
+      color: #ffffff !important;
+      letter-spacing: 0.2px !important;
+      padding: 0 10px !important;
+      white-space: nowrap !important;
+    }
+    .tz-btn-social-item.social-google { background-color: #dc4e41 !important; }
+    .tz-btn-social-item.social-facebook { background-color: #1877F2 !important; }
+    .tz-btn-social-item.social-zalo { background-color: #0068FF !important; }
+    .tz-btn-social-item.social-apple { background-color: #000000 !important; }
+
+    /* Divider "Hoặc đăng nhập bằng" tinh tế với 2 vạch ngang mờ */
+    .tz-auth-separator {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      gap: 12px !important;
+      margin: 22px 0 18px 0 !important;
+      color: #6c757d !important;
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .tz-auth-separator::before,
+    .tz-auth-separator::after {
+      content: '' !important;
+      flex: 1 !important;
+      height: 1px !important;
+      background-color: #e0e0e0 !important;
+      border: none !important;
+    }
+    .tz-auth-separator span {
+      padding: 0 4px !important;
+      white-space: nowrap !important;
+    }
+
+    /* Đường gạch ngang mờ phân cách bên dưới các nút social */
+    .tz-auth-bottom-divider {
+      width: 100% !important;
+      height: 1px !important;
+      background-color: #e0e0e0 !important;
+      margin: 22px 0 16px 0 !important;
+      border: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="tz-header">
+    <div class="tz-topbar">
+      <div class="container topbar-content">
+        <div class="topbar-left">
+          <span class="topbar-link"><i class="fa-solid fa-shield-halved"></i> Hệ thống bán lẻ công nghệ chính hãng TechZone</span>
+        </div>
+        <div class="topbar-right">
+          <span class="topbar-link topbar-hotline"><i class="fa-solid fa-headset"></i> Hotline: <strong>1800.6868</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tz-main-header">
+      <div class="container main-header-row">
+        <!-- Logo -->
+        <a href="index.html" class="tz-logo">
+          <div class="tz-logo-chip"><i class="fa-solid fa-microchip"></i></div>
+          <div>Tech<span class="accent">Zone</span></div>
+        </a>
+
+        <!-- Nút Trang chủ -->
+        <a href="index.html" class="btn-home-nav" title="Quay về trang chủ">
+          <i class="fa-solid fa-house"></i>
+          <span>Trang chủ</span>
+        </a>
+
+        <div class="tz-header-page-title">
+          <span class="tz-title-sep">|</span> Đăng Nhập Hệ Thống
+        </div>
+
+        <div class="tz-header-actions">
+          <a href="products.html" class="tz-nav-btn" title="Xem sản phẩm">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <div class="meta">
+              <span class="sub">Khám phá</span>
+              <span>Sản phẩm</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login Main Content -->
+  <main class="tz-auth-page">
+    <div class="tz-auth-card">
+      <div class="tz-auth-header">
+        <a href="index.html" class="logo-mini">
+          <span class="chip"><i class="fa-solid fa-microchip"></i></span>
+          Tech<span style="color: #0284c7;">Zone</span>
+        </a>
+        <h2>Chào mừng bạn trở lại!</h2>
+        <p>Đăng nhập để theo dõi đơn hàng và nhận ưu đãi độc quyền Smember</p>
+      </div>
+
+      <form class="tz-auth-form" id="tz-login-form">
+        <div class="tz-form-group">
+          <label for="login-account">Email hoặc Số điện thoại</label>
+          <div class="tz-input-with-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="text" id="login-account" placeholder="Ví dụ: vy@techzone.vn hoặc 0987654321" required autofocus>
+          </div>
+        </div>
+
+        <div class="tz-form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="login-password">Mật khẩu</label>
+            <a href="#" onclick="showToast('Vui lòng liên hệ Hotline 1800.6868 để được cấp lại mật khẩu!', 'info', 'Quên mật khẩu?'); return false;" style="font-size: 0.78rem; color: #0284c7; text-decoration: none;">Quên mật khẩu?</a>
+          </div>
+          <div class="tz-password-wrapper">
+            <div class="tz-input-with-icon" style="width: 100%;">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="login-password" placeholder="Nhập mật khẩu của bạn" required>
+            </div>
+            <button type="button" class="tz-password-toggle" data-target="login-password" title="Ẩn/Hiện mật khẩu">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="tz-btn-auth-submit">
+          <i class="fa-solid fa-right-to-bracket" style="margin-right: 6px;"></i> Đăng Nhập
+        </button>
+      </form>
+
+      <!-- Phân cách Đăng nhập Mạng Xã Hội -->
+      <div class="tz-auth-separator">
+        <span>Hoặc đăng nhập bằng</span>
+      </div>
+
+      <!-- 4 Nút Đăng nhập Nhanh MXH chuẩn mẫu 2 phần có đường kẻ dọc ngăn cách -->
+      <div class="tz-social-login-list">
+        
+        <!-- 1. Google Button: Nền đỏ #dc4e41, icon Google trắng -->
+        <button type="button" class="tz-btn-social-item social-google" data-provider="Google" title="Đăng nhập bằng Google">
+          <span class="social-icon-box">
+            <img src="images/google-icon.svg" alt="Google" width="20" height="20" style="width:20px;height:20px;max-width:20px;max-height:20px;display:block;object-fit:contain;">
+          </span>
+          <span class="social-text">Đăng nhập bằng Google</span>
+        </button>
+
+        <!-- 2. Facebook Button: Nền xanh dương #1877F2, icon Facebook trắng -->
+        <button type="button" class="tz-btn-social-item social-facebook" data-provider="Facebook" title="Đăng nhập bằng Facebook">
+          <span class="social-icon-box">
+            <img src="images/facebook-icon.svg" alt="Facebook" width="20" height="20" style="width:20px;height:20px;max-width:20px;max-height:20px;display:block;object-fit:contain;">
+          </span>
+          <span class="social-text">Đăng nhập bằng Facebook</span>
+        </button>
+
+        <!-- 3. Zalo Button: Nền xanh #0068FF, icon Zalo chuẩn -->
+        <button type="button" class="tz-btn-social-item social-zalo" data-provider="Zalo" title="Đăng nhập bằng Zalo">
+          <span class="social-icon-box">
+            <img src="images/zalo-icon.svg" alt="Zalo" width="20" height="20" style="width:20px;height:20px;max-width:20px;max-height:20px;display:block;object-fit:contain;">
+          </span>
+          <span class="social-text">Đăng nhập bằng Zalo</span>
+        </button>
+
+        <!-- 4. Apple Button: Nền đen #000000, icon Apple trắng chuẩn -->
+        <button type="button" class="tz-btn-social-item social-apple" data-provider="Apple" title="Đăng nhập bằng Apple ID">
+          <span class="social-icon-box">
+            <img src="images/apple-icon.svg" alt="Apple" width="20" height="20" style="width:20px;height:20px;max-width:20px;max-height:20px;display:block;object-fit:contain;">
+          </span>
+          <span class="social-text">Đăng nhập bằng Apple</span>
+        </button>
+
+      </div>
+
+      <!-- Đường gạch ngang mờ phân cách với footer form -->
+      <div class="tz-auth-bottom-divider"></div>
+
+      <div class="tz-auth-footer">
+        Chưa có tài khoản TechZone? <a href="register.html">Đăng ký ngay</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="tz-footer" style="padding-top: 1.5rem;">
+    <div class="container footer-bottom-bar" style="border-top: none;">
+      <div>&copy; 2026 TechZone Technology Ecosystem. Bản quyền thuộc về TechZone Vietnam.</div>
+      <div>Multi-page Architecture | Hệ thống Bán lẻ & Quản trị Vận đơn</div>
+    </div>
+  </footer>
+
+    <!-- Google Account Selector Modal -->
+  <div class="tz-modal-overlay" id="tz-google-modal" role="dialog" aria-modal="true" aria-labelledby="tz-google-modal-title">
+    <div class="tz-google-modal-card">
+      <div class="google-modal-header">
+        <img src="images/google-icon.svg" alt="Google" width="32" height="32" class="google-logo">
+        <h3 id="tz-google-modal-title">Đăng nhập bằng Google</h3>
+        <p class="google-sub">Chọn tài khoản Google để tiếp tục đến <strong>TechZone</strong></p>
+      </div>
+
+      <div class="google-account-list">
+        <!-- Account 1 -->
+        <div class="google-account-item" data-fullname="Nguyễn Văn An" data-email="an.nguyen@gmail.com">
+          <div class="google-avatar avatar-blue">A</div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Nguyễn Văn An</div>
+            <div class="google-user-email">an.nguyen@gmail.com</div>
+          </div>
+          <i class="fa-solid fa-angle-right google-arrow"></i>
+        </div>
+
+        <!-- Account 2 -->
+        <div class="google-account-item" data-fullname="Trần Thị Mai" data-email="mai.tran@gmail.com">
+          <div class="google-avatar avatar-purple">M</div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Trần Thị Mai</div>
+            <div class="google-user-email">mai.tran@gmail.com</div>
+          </div>
+          <i class="fa-solid fa-angle-right google-arrow"></i>
+        </div>
+
+        <!-- Account 3: Custom Google Toggle -->
+        <div class="google-account-item google-custom-toggle" id="btn-toggle-custom-google">
+          <div class="google-avatar avatar-gray">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div class="google-user-meta">
+            <div class="google-user-name">Sử dụng tài khoản khác</div>
+            <div class="google-user-email">Nhập họ tên và Gmail của bạn</div>
+          </div>
+          <i class="fa-solid fa-angle-down google-arrow" id="google-arrow-toggle"></i>
+        </div>
+      </div>
+
+      <!-- Custom Google Input Form -->
+      <form class="google-custom-form" id="form-custom-google" style="display: none;">
+        <div class="google-input-group">
+          <label for="google-custom-name">Họ và tên Google của bạn</label>
+          <input type="text" id="google-custom-name" placeholder="Ví dụ: Lê Hoàng Nam" required>
+        </div>
+        <div class="google-input-group">
+          <label for="google-custom-email">Địa chỉ Email Google (Gmail)</label>
+          <input type="email" id="google-custom-email" placeholder="Ví dụ: nam.le@gmail.com" required>
+        </div>
+        <button type="submit" class="btn-submit-google-custom">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Đăng nhập với tài khoản này
+        </button>
+      </form>
+
+      <div class="google-modal-footer">
+        <button type="button" class="btn-cancel-google" id="btn-close-google-modal">Hủy bỏ</button>
+        <span class="google-secure-badge"><i class="fa-solid fa-shield-halved"></i> Google Identity Services</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container"></div>
+
+  <!-- Main JS -->
+  <script src="js/main.js"></script>
+</body>
+</html>

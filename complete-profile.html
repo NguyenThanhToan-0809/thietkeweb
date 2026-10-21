@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoàn Thiện Thông Tin Cá Nhân (Bước 2/2) | TechZone</title>
+  
+  <!-- Font Awesome Icons 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- TechZone Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Scoped Stepper Styles */
+    .tz-reg-stepper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 1.5rem 0;
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .tz-step-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .tz-step-badge.done {
+      background: #22c55e;
+      color: #ffffff;
+    }
+    .tz-step-badge.active {
+      background: #38bdf8;
+      color: #0f172a;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    }
+    .tz-step-info {
+      flex: 1;
+      text-align: left;
+    }
+    .tz-step-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .tz-step-sub {
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+    .tz-form-select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: #0f172a;
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+    .tz-form-select:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TechZone Header -->
+  <header class="tz-header">
+    <div class="tz-topbar">
+      <div class="container topbar-content">
+        <div class="topbar-left">
+          <span class="topbar-link"><i class="fa-solid fa-shield-halved"></i> Hệ thống bán lẻ thiết bị công nghệ chính hãng TechZone</span>
+        </div>
+        <div class="topbar-right">
+          <span class="topbar-link topbar-hotline"><i class="fa-solid fa-headset"></i> Hotline hỗ trợ: <strong>1800.6868</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tz-main-header">
+      <div class="container main-header-row">
+        <!-- Logo -->
+        <a href="index.html" class="tz-logo">
+          <div class="tz-logo-chip"><i class="fa-solid fa-microchip"></i></div>
+          <div>Tech<span class="accent">Zone</span></div>
+        </a>
+
+        <!-- Nút Trang chủ -->
+        <a href="index.html" class="btn-home-nav" title="Quay về trang chủ">
+          <i class="fa-solid fa-house"></i>
+          <span>Trang chủ</span>
+        </a>
+
+        <div class="tz-header-page-title">
+          <span class="tz-title-sep">|</span> Hoàn Thiện Hồ Sơ Cá Nhân (Bước 2/2)
+        </div>
+
+        <div class="tz-header-actions">
+          <span style="font-size: 0.82rem; font-weight: 600; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 0.4rem 0.85rem; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.25);">
+            <i class="fa-solid fa-user-check"></i> Bước 2/2
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Complete Profile Main Content (Split Layout) -->
+  <main class="tz-auth-page" style="padding: 2.5rem 1rem;">
+    <div class="tz-auth-split-wrapper">
+      
+      <!-- CỘT TRÁI: PROGRESS BANNER -->
+      <aside class="tz-auth-banner-col">
+        <div class="banner-brand">
+          <a href="index.html" class="logo-mini">
+            <span class="chip"><i class="fa-solid fa-microchip"></i></span>
+            Tech<span style="color: #38bdf8;">Zone</span>
+          </a>
+          <p class="tagline">Chỉ còn một bước đơn giản để kích hoạt tài khoản Smember và nhận trọn bộ voucher độc quyền.</p>
+        </div>
+
+        <!-- Stepper Progress Tracker -->
+        <div style="margin: 1.5rem 0;">
+          <div class="tz-reg-stepper" style="margin-bottom: 0.65rem;">
+            <div class="tz-step-badge done">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <div class="tz-step-info">
+              <div class="tz-step-title">Bước 1: Tạo tài khoản</div>
+              <div class="tz-step-sub" id="display-pending-email">Đã xác thực email & mật khẩu</div>
+            </div>
+          </div>
+
+          <div class="tz-reg-stepper" style="border-color: #38bdf8; background: rgba(56, 189, 248, 0.12);">
+            <div class="tz-step-badge active">
+              <i class="fa-solid fa-id-card"></i>
+            </div>
+            <div class="tz-step-info">
+              <div class="tz-step-title" style="color: #38bdf8;">Bước 2: Thông tin cá nhân</div>
+              <div class="tz-step-sub" style="color: #cbd5e1;">Hoàn tất để kích hoạt quyền lợi VIP</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-perks-list">
+          <div class="banner-perk-item">
+            <div class="banner-perk-icon">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+            <div>
+              <div class="banner-perk-title">Voucher chào mừng 100.000đ</div>
+              <div class="banner-perk-desc">Khấu trừ ngay cho đơn hàng đầu tiên tại TechZone.</div>
+            </div>
+          </div>
+
+          <div class="banner-perk-item">
+            <div class="banner-perk-icon">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div>
+              <div class="banner-perk-title">Giao hàng hỏa tốc trong 2h</div>
+              <div class="banner-perk-desc">Tự động điền địa chỉ mặc định khi thanh toán.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-footer-quote">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Thông tin của bạn được mã hóa an toàn theo tiêu chuẩn bảo mật dữ liệu.</span>
+        </div>
+      </aside>
+
+      <!-- CỘT PHẢI: FORM HOÀN THIỆN THÔNG TIN CÁ NHÂN -->
+      <section class="tz-auth-form-col">
+        <div class="tz-auth-header">
+          <h2>Hoàn Thiện Thông Tin Cá Nhân</h2>
+          <p>Vui lòng cung cấp họ tên thật và số điện thoại để thuận tiện nhận hàng và bảo hành thiết bị</p>
+        </div>
+
+        <form class="tz-auth-form" id="tz-complete-profile-form">
+          <!-- 1. Họ và tên thật -->
+          <div class="tz-form-group">
+            <label for="complete-fullname">Họ và tên thật của bạn <span style="color: #ef4444;">*</span></label>
+            <div class="tz-input-with-icon">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="complete-fullname" placeholder="Ví dụ: Nguyễn Văn An" required autofocus>
+            </div>
+          </div>
+
+          <!-- 2. Số điện thoại liên hệ -->
+          <div class="tz-form-group">
+            <label for="complete-phone">Số điện thoại liên hệ <span style="color: #ef4444;">*</span></label>
+            <div class="tz-input-with-icon">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="complete-phone" placeholder="Ví dụ: 0912345678 (10 số)" required>
+            </div>
+          </div>
+
+          <!-- 3. Ngày sinh & 4. Giới tính -->
+          <div class="tz-form-row">
+            <div class="tz-form-group">
+              <label for="complete-birthday">Ngày tháng năm sinh</label>
+              <div class="tz-input-with-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+                <input type="date" id="complete-birthday">
+              </div>
+            </div>
+
+            <div class="tz-form-group">
+              <label>Giới tính</label>
+              <div class="tz-gender-group" style="padding: 0.65rem 0;">
+                <label class="tz-gender-label">
+                  <input type="radio" name="complete-gender" value="nam" checked> Nam
+                </label>
+                <label class="tz-gender-label">
+                  <input type="radio" name="complete-gender" value="nu"> Nữ
+                </label>
+                <label class="tz-gender-label">
+                  <input type="radio" name="complete-gender" value="khac"> Khác
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Tỉnh / Thành phố -->
+          <div class="tz-form-group">
+            <label for="complete-city">Tỉnh / Thành phố bạn đang sống <span style="color: #ef4444;">*</span></label>
+            <select id="complete-city" class="tz-form-select" required>
+              <option value="">-- Chọn Tỉnh / Thành phố nhận hàng --</option>
+              <option value="Hà Nội" selected>Hà Nội</option>
+              <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+              <option value="Cần Thơ">Cần Thơ</option>
+              <option value="Hải Phòng">Hải Phòng</option>
+              <option value="Đồng Nai">Đồng Nai</option>
+              <option value="Bình Dương">Bình Dương</option>
+              <option value="Quảng Ninh">Quảng Ninh</option>
+              <option value="Khác">Tỉnh / Thành khác</option>
+            </select>
+          </div>
+
+          <!-- 6. Địa chỉ nhận hàng chi tiết -->
+          <div class="tz-form-group">
+            <label for="complete-address">Địa chỉ chi tiết (Số nhà, tên đường, phường/xã)</label>
+            <div class="tz-input-with-icon">
+              <i class="fa-solid fa-location-dot"></i>
+              <input type="text" id="complete-address" placeholder="Ví dụ: 68 Đường Cầu Giấy, P. Dịch Vọng">
+            </div>
+          </div>
+
+          <!-- Nút Hoàn tất đăng ký -->
+          <button type="submit" class="tz-btn-auth-submit" id="btn-complete-register" style="margin-top: 1rem;">
+            <i class="fa-solid fa-circle-check"></i> Hoàn Tất Đăng Ký & Bắt Đầu Mua Sắm
+          </button>
+        </form>
+
+        <div style="margin-top: 1.25rem; text-align: center; font-size: 0.8rem; color: #64748b;">
+          Đã có tài khoản? <a href="login.html" style="color: #0284c7; font-weight: 700; text-decoration: none;">Đăng nhập ngay</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="tz-footer">
+    <div class="container footer-main-grid">
+      <div class="tz-footer-col">
+        <h4>Tổng Đài Hỗ Trợ Miễn Phí</h4>
+        <div class="tz-hotlines">
+          <div class="tz-hotline-row">Tư vấn mua hàng: <strong>1800.6868</strong></div>
+          <div class="tz-hotline-row">Hỗ trợ kỹ thuật: <strong>1800.6869</strong></div>
+          <div class="tz-hotline-row">Bảo hành chính hãng: <strong>1800.6870</strong></div>
+        </div>
+        <p style="margin-top: 1rem;">Đơn vị vận chuyển: <strong>Hỏa Tốc TechZone 2H (FastExpress)</strong></p>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Chính Sách Bán Hàng</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Chính sách bảo hành 1 đổi 1</a></li>
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Chính sách đổi trả linh hoạt</a></li>
+          <li><a href="#"><i class="fa-solid fa-angle-right"></i> Giao hàng hỏa tốc trong 2h</a></li>
+        </ul>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Đặc Quyền Thành Viên Smember</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fa-solid fa-crown"></i> Tích điểm tới 5% giá trị</a></li>
+          <li><a href="#"><i class="fa-solid fa-gift"></i> Quà tặng sinh nhật đến 500k</a></li>
+          <li><a href="#"><i class="fa-solid fa-wrench"></i> Vệ sinh máy định kỳ miễn phí</a></li>
+        </ul>
+      </div>
+
+      <div class="tz-footer-col">
+        <h4>Phương Thức Thanh Toán</h4>
+        <div class="payment-methods">
+          <span class="pay-badge"><i class="fa-solid fa-money-bill-wave"></i> COD Tiền mặt</span>
+          <span class="pay-badge"><i class="fa-brands fa-cc-visa"></i> Visa / Master</span>
+          <span class="pay-badge"><i class="fa-solid fa-qrcode"></i> VNPAY / VietQR</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-copyright">
+      <div class="container">
+        <p>© 2026 TechZone - Hệ thống bán lẻ thiết bị công nghệ chính hãng hàng đầu Việt Nam.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main JavaScript Bundle -->
+  <script src="js/main.js"></script>
+</body>
+</html>

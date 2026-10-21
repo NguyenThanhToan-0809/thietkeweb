@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 50" width="240" height="50">
+  <defs>
+    <linearGradient id="tzChipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <!-- Chip Box -->
+  <rect x="2" y="5" width="40" height="40" rx="10" fill="url(#tzChipGrad)"/>
+  <!-- Chip microchip inner -->
+  <rect x="13" y="16" width="18" height="18" rx="3" fill="#0f172a"/>
+  <!-- Chip pins -->
+  <line x1="8" y1="20" x2="13" y2="20" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="8" y1="25" x2="13" y2="25" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="8" y1="30" x2="13" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="31" y1="20" x2="36" y2="20" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="31" y1="25" x2="36" y2="25" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="31" y1="30" x2="36" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="11" x2="20" y2="16" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="25" y1="11" x2="25" y2="16" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="34" x2="20" y2="39" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="25" y1="34" x2="25" y2="39" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="22" cy="25" r="3" fill="#38bdf8"/>
+  <!-- Typography -->
+  <text x="52" y="34" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="800" fill="#ffffff" letter-spacing="-0.5">Tech<tspan fill="#38bdf8">Zone</tspan></text>
+</svg>
