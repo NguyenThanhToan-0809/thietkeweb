@@ -2875,9 +2875,9 @@ function openHistoryTimelineModal(orderId) {
           </div>
           `}
 
-          <!-- Shipper info if shipping -->
-          ${order.shipper && order.status !== 'Đã hủy' ? `
-            <div style="margin-top: 1.5rem; padding: 12px 14px; background: #fffbf8; border: 1px solid #fed7aa; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+          <!-- Shipper info if active delivery, or Warehouse notice if preparing -->
+          ${((order.status === 'Đang giao' || order.status === 'Đang vận chuyển') && order.shipper) ? `
+            <div class="tz-modal-shipper-card" style="margin-top: 1.25rem; padding: 12px 14px; background: #fffbf8; border: 1px solid #fed7aa; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <img src="${order.shipper.avatar}" alt="${order.shipper.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #ee4d2d;">
                 <div>
@@ -2888,6 +2888,16 @@ function openHistoryTimelineModal(orderId) {
               <a href="tel:${order.shipper.phone}" class="btn-shopee-primary" style="padding: 5px 12px; font-size: 0.78rem;">
                 <i class="fa-solid fa-phone"></i> Gọi ngay
               </a>
+            </div>
+          ` : (order.status !== 'Đã hủy' && order.status !== 'Đã giao') ? `
+            <div class="tz-modal-warehouse-notice" style="margin-top: 1.25rem; padding: 11px 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; gap: 10px; color: #475569; font-size: 0.82rem;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 0.95rem; flex-shrink: 0;">
+                <i class="fa-solid fa-boxes-packing"></i>
+              </div>
+              <div>
+                <span style="font-weight: 700; color: #1e293b;">Đang chuẩn bị kiện hàng:</span>
+                <span style="display: block; color: #64748b; font-size: 0.78rem; margin-top: 2px;">Kiện hàng đang được chuẩn bị tại kho, chưa bàn giao cho tài xế.</span>
+              </div>
             </div>
           ` : ''}
 

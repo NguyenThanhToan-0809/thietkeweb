@@ -9747,3 +9747,322 @@ a.btn-smart-track-main:active,
     margin-left: 0 !important;
   }
 }
+
+
+/* ==========================================================================
+   PROMPT 52: SỬA LỖI ICON CHE CHỮ TRONG INPUT & CĂN GIỮA TUYỆT ĐỐI TIMELINE DỌC
+   ========================================================================== */
+
+/* 1. SỬA TRIỆT ĐỂ LỖI ICON CHE CHỮ TRONG Ô NHẬP LIỆU (login.html, register.html) */
+.tz-input-with-icon,
+.tz-password-wrapper {
+  position: relative !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Icon bên trái: luôn căn giữa theo chiều dọc, không cản trở click chuột */
+.tz-input-with-icon > i,
+.tz-password-wrapper .tz-input-with-icon > i {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  color: #94a3b8 !important;
+  font-size: 0.95rem !important;
+  margin: 0 !important;
+  width: 18px !important;
+  text-align: center !important;
+}
+
+/* Input bắt buộc padding-left 40px để chữ không bao giờ đè lên icon bên trái */
+.tz-input-with-icon input,
+.tz-form-group .tz-input-with-icon input,
+.tz-auth-form .tz-input-with-icon input {
+  padding-left: 40px !important;
+  padding-right: 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Riêng ô mật khẩu có thêm nút ẩn/hiện mắt ở bên phải: padding-right 42px */
+.tz-password-wrapper input,
+.tz-password-wrapper .tz-input-with-icon input,
+.tz-form-group .tz-password-wrapper input,
+.tz-auth-form .tz-password-wrapper input {
+  padding-left: 40px !important;
+  padding-right: 42px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Nút ẩn/hiện mật khẩu ở mép phải */
+.tz-password-toggle {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 3 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  font-size: 0.95rem !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  transition: color 0.2s ease !important;
+}
+
+.tz-password-toggle:hover {
+  color: #0284c7 !important;
+}
+
+/* 2. CĂN GIỮA TUYỆT ĐỐI CHẤM TRÒN TIMELINE DỌC (Ảnh 2 & Ảnh 3) */
+/* Keyframe hiệu ứng pulse lan tỏa bằng box-shadow mềm mại, không viền cứng */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(2, 132, 199, 0) !important;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0) !important;
+  }
+}
+
+/* 2.1 TRANG THEO DÕI CHI TIẾT (tracking-detail.html) */
+.spx-vertical-timeline,
+#spx-vertical-timeline-container {
+  position: relative !important;
+  padding-left: 28px !important;
+  margin-top: 1rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Trục dọc timeline: left: 8px, width: 2px -> Tâm = 8 + 1 = 9px */
+.spx-vertical-timeline::before,
+#spx-vertical-timeline-container::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 10px !important;
+  bottom: 12px !important;
+  left: 8px !important;
+  width: 2px !important;
+  background-color: #e2e8f0 !important;
+  z-index: 1 !important;
+}
+
+/* Khung từng checkpoint */
+.spx-v-checkpoint {
+  position: relative !important;
+  margin-left: -28px !important;
+  padding-left: 28px !important;
+  padding-bottom: 22px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+.spx-v-checkpoint:last-child {
+  padding-bottom: 0 !important;
+}
+
+/* Chấm tròn checkpoint: left: 2px, width: 14px -> Tâm = 2 + 7 = 9px (Trùng khít 100% tâm đường kẻ 9px) */
+.spx-v-checkpoint::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 2px !important;
+  top: 3px !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background-color: #ffffff !important;
+  border: 2.5px solid #cbd5e1 !important;
+  z-index: 3 !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Chấm tròn bước đang thực hiện (Active / Latest) */
+.spx-v-checkpoint.latest::before {
+  background-color: #0284c7 !important;
+  border-color: #bae6fd !important;
+  animation: pulseGlow 1.8s infinite ease-out !important;
+  box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
+}
+
+.spx-v-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 2.2 MODAL XEM NHANH LỊCH TRÌNH (history.html - Quick View Modal) */
+/* Cụm timeline 4 bước phía trên trong Modal */
+.order-timeline.modal-mode {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  margin: 1rem 0 !important;
+  padding: 4px 0 4px 28px !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Đường kẻ trục dọc trong modal: left: 8px, width: 2px -> Tâm = 9px */
+.order-timeline.modal-mode::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 10px !important;
+  bottom: 14px !important;
+  width: 2px !important;
+  height: auto !important;
+  background-color: #e2e8f0 !important;
+  border-radius: 0 !important;
+  z-index: 1 !important;
+}
+
+.order-timeline.modal-mode::after {
+  display: none !important;
+}
+
+.order-timeline.modal-mode .timeline-step {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 2px !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* Chấm tròn icon bước: left: -26px (vì container padding-left: 28px -> vị trí thực là 28 - 26 = 2px, tâm = 9px) */
+.order-timeline.modal-mode .timeline-dot {
+  position: absolute !important;
+  left: -26px !important;
+  top: 3px !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: #cbd5e1 !important;
+  border: 2px solid #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 3 !important;
+  box-sizing: border-box !important;
+}
+
+.order-timeline.modal-mode .timeline-dot i {
+  font-size: 7px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.order-timeline.modal-mode .timeline-step.active .timeline-dot {
+  background: #10b981 !important;
+  border-color: #a7f3d0 !important;
+  color: #ffffff !important;
+}
+
+.order-timeline.modal-mode .timeline-step.current .timeline-dot {
+  background: #0284c7 !important;
+  border-color: #bae6fd !important;
+  color: #ffffff !important;
+  animation: pulseGlow 1.8s infinite ease-out !important;
+  box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
+}
+
+/* Cụm nhật ký 3 chặng phía dưới trong Modal (.spx-vertical-timeline.modal-vert) */
+.spx-vertical-timeline.modal-vert {
+  position: relative !important;
+  background: #f8fafc !important;
+  padding: 14px 14px 6px 36px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-top: 0.5rem !important;
+  box-sizing: border-box !important;
+}
+
+.spx-vertical-timeline.modal-vert::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 18px !important;
+  bottom: 20px !important;
+  left: 16px !important;
+  width: 2px !important;
+  background-color: #cbd5e1 !important;
+  z-index: 1 !important;
+}
+
+.spx-vert-step {
+  position: relative !important;
+  display: block !important;
+  padding-left: 0 !important;
+  padding-bottom: 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+.spx-vert-step:last-child {
+  padding-bottom: 8px !important;
+}
+
+/* Chấm tròn nhật ký di chuyển: left: -26px (vị trí thực trong box là 36 - 26 = 10px -> tâm = 10 + 7 = 17px, trùng khít tâm line: 16 + 1 = 17px) */
+.spx-vert-dot {
+  position: absolute !important;
+  left: -26px !important;
+  top: 3px !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background-color: #cbd5e1 !important;
+  border: 2px solid #ffffff !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+}
+
+.spx-vert-step.current .spx-vert-dot {
+  background-color: #0284c7 !important;
+  border-color: #bae6fd !important;
+  animation: pulseGlow 1.8s infinite ease-out !important;
+  box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
+}
+
+.spx-vert-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  width: 100% !important;
+}
+
+/* 3. THẺ THÔNG BÁO CHUẨN BỊ KHO TRONG MODAL */
+.tz-modal-warehouse-notice {
+  transition: all 0.25s ease;
+}
+.tz-modal-warehouse-notice:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}

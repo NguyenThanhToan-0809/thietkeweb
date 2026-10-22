@@ -55,6 +55,7 @@
 49. [Prompt 49: Hiệu ứng pulseGlow cho bước đang xử lý & Sửa tràn chữ / cắt nút trên card đơn hàng](#prompt-49)
 50. [Prompt 50: Sửa hàng nút hành động chân thẻ đơn hàng trên mobile (< 640px)](#prompt-50)
 51. [Prompt 51: Chuẩn hóa bố cục hàng thành tiền thẻ đơn hàng sát mép phải chuẩn Shopee (history.html)](#prompt-51)
+52. [Prompt 52: Sửa lỗi icon che chữ ô input (login, register) & Căn giữa tuyệt đối timeline dọc (tracking, quick-view modal)](#prompt-52)
 
 
 
@@ -1800,4 +1801,38 @@ Hãy chỉnh sửa lại CSS cho hàng hiển thị thành tiền trong thẻ đ
 - Đảm bảo hiển thị chuẩn đẹp trên cả màn hình Laptop lẫn Responsive điện thoại di động mà không bị vỡ hàng.
 
 Cung cấp đoạn mã CSS cập nhật để dán vào file style.css!
+````
+
+
+---
+
+## <a id="prompt-52"></a>Prompt 52: Sửa lỗi icon che chữ ô input (login, register) & Căn giữa tuyệt đối timeline dọc (tracking, quick-view modal)
+
+- **Thời gian gửi:** `2026-10-22T08:35:49+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy sửa lại CSS và JavaScript cho trang đăng nhập/đăng ký (login.html, register.html) và modal xem nhanh tiến trình đơn hàng (quick-view modal / history.html):
+
+1. SỬA LỖI ICON CHE CHỮ TRONG Ô NHẬP LIỆU (Ảnh 1):
+- Tại các ô input có icon (Email, Mật khẩu):
+  + Đảm bảo thẻ bọc ngoài là `position: relative; width: 100%;`.
+  + Icon bên trái: `position: absolute; left: 12px; top: 50%; transform: translateY(-50%); z-index: 2; pointer-events: none;`.
+  + Ô input BẮT BUỘC có khoảng đệm: `padding-left: 40px !important; padding-right: 42px !important; width: 100%; box-sizing: border-box;`.
+  + Đảm bảo chữ nhập vào không bao giờ bị đè lên icon bên trái và icon ẩn/hiện mật khẩu bên phải.
+
+2. CĂN GIỮA TUYỆT ĐỐI CHẤM TRÒN TIMELINE DỌC (Ảnh 2 & 3):
+- Trục dọc timeline (`.timeline-line` hoặc container): Đặt `position: relative; padding-left: 28px;`.
+- Đường kẻ dọc: `position: absolute; left: 8px; top: 0; bottom: 0; width: 2px;`.
+- Chấm tròn: `position: absolute; left: 2px; width: 14px; height: 14px; border-radius: 50%;` -> Tâm chấm tròn nằm chính xác tại 2 + 7 = 9px, trùng khít tâm đường kẻ dọc 8 + 1 = 9px.
+- Khung nội dung text: Giữ nguyên padding-left: 28px của trục dọc để chữ không bao giờ đè lên chấm tròn.
+- Chấm tròn bước đang thực hiện (Active): Dùng hiệu ứng pulse lan tỏa bằng `box-shadow` nhẹ nhàng, tuyệt đối không tạo thêm viền cứng hay vòng tròn thứ 2 bị lệch tâm.
+
+3. SỬA LỖI MODAL XEM NHANH (quick-view modal / history.html):
+- Ở modal xem nhanh, thông tin shipper ("Bưu tá: Nguyễn Quang Hải...") chỉ hiển thị khi `order.status === 'Đang giao'` hoặc `'Đang vận chuyển'`.
+- Với đơn hàng đang ở trạng thái `'Chờ xác nhận'`, `'Đã xác nhận'`, `'Đã đặt'`, `'Đang đóng gói'`: Ẩn thông tin shipper và hiển thị thông báo:
+  `"Kiện hàng đang được chuẩn bị tại kho, chưa bàn giao cho tài xế."` kèm icon kho/hộp hàng.
+
+Cung cấp đoạn mã CSS và JS cập nhật chi tiết!
 ````
