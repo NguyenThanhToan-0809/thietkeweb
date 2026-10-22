@@ -56,6 +56,25 @@
 50. [Prompt 50: Sửa hàng nút hành động chân thẻ đơn hàng trên mobile (< 640px)](#prompt-50)
 51. [Prompt 51: Chuẩn hóa bố cục hàng thành tiền thẻ đơn hàng sát mép phải chuẩn Shopee (history.html)](#prompt-51)
 52. [Prompt 52: Sửa lỗi icon che chữ ô input (login, register) & Căn giữa tuyệt đối timeline dọc (tracking, quick-view modal)](#prompt-52)
+53. [Prompt 53: Xây dựng Trang Chi tiết sản phẩm (product-detail.html) & Nút CSKH nổi góc dưới bên trái](#prompt-53)
+54. [Prompt 54: Sửa vị trí Popup Chat CSKH, Phân hóa dữ liệu 20 sản phẩm & Chuẩn hóa lưới sản phẩm tương tự 4 cột](#prompt-54)
+55. [Prompt 55: Tối ưu Khung Chat CSKH (Avatar Logo Chip & Ẩn tĩnh Soạn tin), 3 Thẻ Badge Hàng ngang & Ảnh Full Tràn Ô 1:1](#prompt-55)
+56. [Prompt 56: Bổ sung Mục Tra Cứu Bảo Hành Thiết Bị & Kho Mã Giảm Giá Cá Nhân Hóa (Voucher Wallet & Auto-Discount)](#prompt-56)
+57. [Prompt 57: Tra cứu bảo hành điện tử (history.html) & Kho voucher cá nhân hóa theo từng tài khoản (checkout.html)](#prompt-57)
+58. [Prompt 58: Dọn dẹp dư thừa icon/nút tra cứu bảo hành & Kích hoạt modal kho voucher (history.html)](#prompt-58)
+59. [Prompt 59: Tạo trang mới vouchers.html (Kho Voucher của tôi), Nút Kho Voucher trên Header chính & Nút Kho Voucher link chuẩn](#prompt-59)
+60. [Prompt 60: Sửa lỗi bung menu tỉnh/thành trên Topbar & Bổ sung mục Kho voucher vào dropdown tài khoản](#prompt-60)
+61. [Prompt 61: Đồng bộ 100% Header vouchers.html theo index.html, Sửa lỗi click tài khoản & Căn chỉnh Dropdown](#prompt-61)
+62. [Prompt 62: Tinh gọn Header trên toàn trang & Cập nhật logic tính tổng tiền, điểm Smember và đơn hoàn tất](#prompt-62)
+63. [Prompt 63: Sửa thanh tìm kiếm, khoảng cách 16px cụm 2 nút Header & Cô lập hover Giỏ hàng](#prompt-63)
+64. [Prompt 64: Dàn hàng ngang Header cùng hàng với ô Tìm kiếm & Sửa lỗi mục Kho voucher bị xanh nền](#prompt-64)
+65. [Prompt 65: Sửa lỗi hover menu tài khoản bị mất (Invisible Bridge) & Sửa ảnh sản phẩm lỗi](#prompt-65)
+66. [Prompt 66: Điều chỉnh kích thước và vị trí Popup Chat CSKH chống tràn Header và zoom lớn](#prompt-66)
+67. [Prompt 67: Thu nhỏ popup chat CSKH (.cskh-chat-popup) theo phong cách widget mini (Rộng 280px, cao 360px)](#prompt-67)
+68. [Prompt 68: Xử lý đăng xuất trên vouchers.html và tạo hiệu ứng loading xoay tròn chuyển trang (Page Transition Loader) toàn website](#prompt-68)
+69. [Prompt 69: Tối ưu Responsive trang Chi tiết sản phẩm (product-detail.html) và chống nút CSKH đè chữ (< 768px)](#prompt-69)
+70. [Prompt 70: Khắc phục lỗi tự động bung popup "Đăng nhập bằng Google" khi cuộn xuống cuối trang chi tiết sản phẩm](#prompt-70)
+
 
 
 
@@ -1836,3 +1855,654 @@ Hãy sửa lại CSS và JavaScript cho trang đăng nhập/đăng ký (login.ht
 
 Cung cấp đoạn mã CSS và JS cập nhật chi tiết!
 ````
+
+
+---
+
+## <a id="prompt-53"></a>Prompt 53: Xây dựng Trang Chi tiết sản phẩm (product-detail.html) & Nút CSKH nổi góc dưới bên trái
+60. [Prompt 54: Sửa vị trí Popup Chat CSKH, Phân hóa dữ liệu 20 sản phẩm & Chuẩn hóa lưới sản phẩm tương tự 4 cột](#prompt-54)
+61. [Prompt 55: Tối ưu Khung Chat CSKH (Avatar Logo Chip & Ẩn tĩnh Soạn tin), 3 Thẻ Badge Hàng ngang & Ảnh Full Tràn Ô 1:1](#prompt-55)
+62. [Prompt 56: Bổ sung Mục Tra Cứu Bảo Hành Thiết Bị & Kho Mã Giảm Giá Cá Nhân Hóa (Voucher Wallet & Auto-Discount)](#prompt-56)
+
+- **Thời gian gửi:** `2026-10-22T13:15:39+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy bổ sung 2 tính năng lớn cho website TechZone:
+
+---
+
+### 1. TRANG CHI TIẾT SẢN PHẨM (product-detail.html) HOẶC MODAL XEM CHI TIẾT:
+Khi người dùng bấm vào hình ảnh hoặc tên của bất kỳ sản phẩm nào trên trang chủ:
+- Chuyển hướng sang trang `product-detail.html?id=[id_san_pham]` (hoặc mở Modal Quick View sản phẩm đầy đủ):
+- Giao diện gồm 2 cột chính:
+  + Cột trái:
+    * Hình ảnh sản phẩm lớn (lấy từ thư mục images/), có hiệu ứng zoom khi hover.
+    * Hàng ảnh thumbnail nhỏ bên dưới để chọn xem góc khác.
+  + Cột phải (Thông tin chi tiết):
+    * Tên sản phẩm đầy đủ (font to, rõ ràng).
+    * Đánh giá sao (⭐⭐⭐⭐⭐ 4.9/5) kèm số lượt đánh giá (VD: 1.2k đánh giá) và Lượt bán (VD: Đã bán 2.4k).
+    * Mức giá hiện tại (màu đỏ to nổi bật), giá gốc gạch ngang và huy hiệu giảm giá.
+    * Bảng thông số kỹ thuật nổi bật / Mô tả sản phẩm chi tiết dạng gạch đầu dòng.
+    * Chọn số lượng mua (nút - 1 +).
+    * 2 nút hành động lớn:
+      - Nút "Thêm vào giỏ hàng" (viền xanh/nền nhạt).
+      - Nút "Mua ngay" (nền đỏ/cam nổi bật, bấm vào dẫn thẳng sang checkout.html).
+      - RÀNG BUỘC: Nếu chưa đăng nhập tài khoản, bấm vào 2 nút này đều hiển thị thông báo yêu cầu đăng nhập trước.
+  + Khối Đánh giá & Bình luận (Reviews & Comments) ở bên dưới:
+    * Thống kê số sao trung bình (5 sao, 4 sao...).
+    * Danh sách bình luận thực tế có tên người mua, avatar, ngày đánh giá, số sao chấm và nội dung nhận xét có tâm.
+    * Khung cho phép người dùng đang đăng nhập nhập bình luận và chọn số sao để gửi đánh giá mới (lưu vào localStorage).
+
+---
+
+### 2. NÚT CSKH & GỌI ĐIỆN NỔI Ở GÓC DƯỚI BÊN TRÁI (Floating Support Widget):
+- Vị trí: Cố định ở góc dưới bên trái màn hình (`position: fixed; bottom: 24px; left: 24px; z-index: 9999;`).
+- Nút bấm chính:
+  + Nút tròn màu xanh công nghệ hoặc cam nổi bật, chứa icon tai nghe CSKH (🎧) hoặc icon gọi điện (📞).
+  + Có hiệu ứng lan tỏa sóng nước nhẹ liên tục (Wave Pulse Ring) để thu hút chú ý.
+- Khi người dùng click vào nút:
+  + Nút xoay nhẹ đổi thành icon dấu nhân (✕) đóng mở mượt mà.
+  + Bật mở ngay tại góc dưới bên trái một Hộp thoại Chat CSKH TechZone (kích thước khoảng 340px x 450px):
+    * Header khung chat: Avatar nhân viên hỗ trợ, tên "Hỗ trợ trực tuyến TechZone", trạng thái chấm xanh "Đang online", hotline 1800.6868 kèm nút gọi nhanh `tel:18006868`.
+    * Body tin nhắn: Tin nhắn chào tự động: "Xin chào! TechZone có thể hỗ trợ gì cho bạn về sản phẩm, đơn hàng hay khuyến mãi hôm nay?".
+    * Ô nhập tin nhắn và nút gửi (cho phép gửi tin nhắn trò chuyện giả lập phản hồi tự động sau 1 giây).
+    * Đảm bảo hiển thị chuẩn đẹp, không bị tràn màn hình khi xem trên responsive mobile.
+
+Hãy cung cấp mã nguồn HTML, CSS và JavaScript hoàn chỉnh cho 2 chức năng trên!
+````
+
+---
+
+## <a id="prompt-54"></a>Prompt 54: Sửa vị trí Popup Chat CSKH, Phân hóa dữ liệu 20 sản phẩm & Chuẩn hóa lưới sản phẩm tương tự 4 cột
+61. [Prompt 55: Tối ưu Khung Chat CSKH (Avatar Logo Chip & Ẩn tĩnh Soạn tin), 3 Thẻ Badge Hàng ngang & Ảnh Full Tràn Ô 1:1](#prompt-55)
+62. [Prompt 56: Bổ sung Mục Tra Cứu Bảo Hành Thiết Bị & Kho Mã Giảm Giá Cá Nhân Hóa (Voucher Wallet & Auto-Discount)](#prompt-56)
+
+- **Thời gian gửi:** `2026-10-22T13:45:00+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy cập nhật lại mã nguồn trong main.js, style.css và product-detail.html để xử lý triệt để 3 vấn đề sau:
+
+### 1. SỬA LỖI VỊ TRÍ VÀ HIỂN THỊ CỦA POPUP CHAT CSKH (Hình 1):
+- Tinh chỉnh CSS cho popup chat (.cskh-chat-popup):
+  + Đặt `position: fixed; bottom: 85px; left: 24px; z-index: 9999999 !important;`.
+  + Giới hạn kích thước chuẩn: `width: 360px; max-width: calc(100vw - 32px); height: 500px; max-height: calc(100vh - 120px); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.25);`.
+  + Đảm bảo Header của khung chat luôn hiển thị đầy đủ, không bao giờ bị chìm dưới thanh Header chính hay Topbar của website.
+  + Thêm nút thu nhỏ/đóng (✕ / ➖) rõ ràng ở góc phải của header chat.
+
+### 2. PHÂN HÓA DỮ LIỆU ĐÁNH GIÁ, SỐ SAO, LƯỢT BÁN, MÔ TẢ CHO TỪNG SẢN PHẨM:
+- Trong mảng dữ liệu sản phẩm `products` (main.js), cập nhật dữ liệu độc lập cho từng mã sản phẩm:
+  + `rating`: Điểm đánh giá riêng biệt (VD: iPhone 16 Pro Max 4.9 sao, ROG Strix 4.8 sao, AirPods Pro 4.7 sao, v.v.).
+  + `reviewCount`: Số lượt đánh giá tương ứng (VD: 1.820, 430, 2.150, v.v.).
+  + `soldCount`: Lượt bán cụ thể (VD: "3.2k", "850", "5.4k", v.v.).
+  + `specs`: Mảng các thông số kỹ thuật đặc thù của sản phẩm đó.
+  + `description`: Đoạn mô tả chi tiết chuẩn xác về sản phẩm.
+  + `reviews`: Danh sách 3-4 nhận xét thực tế, chất lượng cao của khách hàng phù hợp với đúng sản phẩm đó (khen đúng tính năng như chip Apple A18 Pro, màn hình OLED, pin trâu, v.v.).
+- Trên trang `product-detail.html?id=[id_san_pham]`:
+  + Hiển thị chính xác điểm số sao, số lượt đánh giá, lượt bán, bảng thông số và danh sách nhận xét tương ứng của sản phẩm được chọn (không dùng chung dữ liệu của 1 sản phẩm mẫu).
+
+### 3. CHUẨN HÓA BỐ CỤC LƯỚI "SẢN PHẨM TƯƠNG TỰ BẠN CÓ THỂ THÍCH" (Hình 3):
+- Chuyển toàn bộ khu vực `#tz-related-products-grid` thành CSS Grid chuẩn:
+  + Màn hình máy tính (> 1024px): Chia 4 cột đều nhau (`repeat(4, 1fr)`).
+  + Màn hình laptop / Zoom 150% (768px - 1024px): Chia 3 cột (`repeat(3, 1fr)`).
+  + Màn hình điện thoại (< 768px): Chia 2 cột (`repeat(2, 1fr)`).
+  + Khoảng cách giữa các sản phẩm đồng nhất (`gap: 16px`).
+- Thẻ sản phẩm trong danh sách này:
+  + Giữ khung thẻ gọn gàng, ảnh sản phẩm vuông vắn căn giữa.
+  + Tiêu đề sản phẩm giới hạn 2 dòng.
+  + Giá tiền đỏ đậm nổi bật.
+  + Nút "🛒 Thêm vào giỏ hàng" chiếm trọn chiều ngang ở chân thẻ.
+
+Cung cấp toàn bộ mã nguồn cập nhật cho 3 file main.js, style.css và product-detail.html!
+````
+
+---
+
+## <a id="prompt-55"></a>Prompt 55: Tối ưu Khung Chat CSKH (Avatar Logo Chip & Ẩn tĩnh Soạn tin), 3 Thẻ Badge Hàng ngang & Ảnh Full Tràn Ô 1:1
+
+- **Thời gian gửi:** `2026-10-22T14:12:36+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy cập nhật lại code trong style.css, main.js và product-detail.html để hoàn thiện 3 chi tiết sau:
+
+### 1. TỐI ƯU KHUNG CHAT CSKH:
+- Avatar đại diện:
+  + Thay toàn bộ ảnh đại diện nhân viên (cả ở Header chat và avatar tin nhắn bot) bằng Logo chính thức của TechZone: Dùng ảnh logo trong thư mục `images/logo.png` hoặc thẻ `<div class="brand-avatar-chip">⚙️</div>` nền xanh đậm công nghệ.
+- Dòng chữ "Chuyên viên đang soạn tin...":
+  + XÓA BỎ hoàn toàn trạng thái hiện tĩnh này khỏi giao diện. Chỉ khi nào người dùng gửi tin nhắn thì mới bật hiệu ứng này lên trong 1 giây, sau khi bot trả lời xong thì biến mất ngay lập tức.
+
+### 2. SẮP XẾP LẠI 3 THẺ BADGE (GIẢM GIÁ, TRẢ GÓP 0%, CHÍNH HÃNG 100%):
+- Không để 3 thẻ xếp chồng thành 3 tầng dày cộm che mất góc ảnh sản phẩm nữa.
+- CHUYỂN 3 THẺ NÀY THÀNH 1 HÀNG NGANG:
+  + Vị trí hợp lý: Đặt nằm ngay phía trên Tiêu đề tên sản phẩm ở cột thông tin bên phải (hoặc gom thành 1 hàng ngang mini đè ở mép trên ảnh với padding nhỏ 4px 8px, font 11px).
+  + Style: Bo góc 6px, font chữ nhỏ gọn, có icon đồng bộ (⚡ Giảm 18% | 💳 Trả góp 0% | 🛡️ Chính hãng 100%).
+
+### 3. CHỈNH ẢNH SẢN PHẨM NẰM FULL TRÀN Ô:
+- Khung chứa ảnh lớn (.product-main-img-box):
+  + Xóa bỏ padding thừa của container.
+  + Đặt `width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; position: relative;`.
+- Thẻ <img> bên trong:
+  + Đặt `width: 100% !important; height: 100% !important; object-fit: cover !important; display: block;`.
+  + Đảm bảo ảnh lấp kín toàn bộ ô khung hình chữ nhật/vuông mà không để lộ khoảng trống thừa xung quanh.
+
+Cung cấp đoạn mã HTML cập nhật và đoạn CSS dán vào file style.css!
+````
+
+---
+
+## <a id="prompt-56"></a>Prompt 56: Bổ sung Mục Tra Cứu Bảo Hành Thiết Bị & Kho Mã Giảm Giá Cá Nhân Hóa (Voucher Wallet & Auto-Discount)
+
+- **Thời gian gửi:** `2026-10-22T15:03:01+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+ngay trong mục đơn hàng, tôi muốn làm thêm 1 mục là tra cứu bảo hành, và có thêm 1 tính năng mã giảm giá, để khách hàng biết có mã giảm giá gì, mỗi mã giảm giá của mỗi người là khác nhau, và khi đã áp dụng mã giảm giá thì tiền sẽ áp dụng theo mã
+````
+
+---
+
+## <a id="prompt-57"></a>Prompt 57: Tra cứu bảo hành điện tử (history.html) & Kho voucher cá nhân hóa theo từng tài khoản (checkout.html)
+
+- **Thời gian gửi:** `2026-10-22T15:20:00+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy cập nhật hệ thống Quản lý Đơn hàng (history.html), Thanh toán (checkout.html) và logic trong main.js để bổ sung 2 tính năng sau:
+
+### 1. TÍNH NĂNG TRA CỨU BẢO HÀNH ĐIỆN TỬ (Trong trang Đơn hàng):
+- Tại trang history.html:
+  + Thêm 1 tab mới vào thanh điều hướng đơn hàng: [Tất cả] | [Chờ xác nhận] | [Đang giao] | [Đã giao] | [Đã hủy] | [🛡️ Tra cứu bảo hành].
+  + Khi bấm vào tab [Tra cứu bảo hành]:
+    * Hiển thị thanh tìm kiếm nhanh: Ô nhập Số điện thoại hoặc Số IMEI/Mã đơn hàng.
+    * Danh sách các sản phẩm ĐÃ GIAO THÀNH CÔNG của chính tài khoản đang đăng nhập (currentUser.email):
+      - Tên sản phẩm, ảnh thiết bị, Số Serial/IMEI giả lập (VD: TZ-VN/A-992812).
+      - Thời hạn bảo hành: 12 tháng (hoặc 24 tháng) kể từ ngày đơn hàng giao thành công.
+      - Trạng thái: Badge xanh "Còn hạn bảo hành (còn 285 ngày)" hoặc "Hết hạn bảo hành".
+      - Nút "Yêu cầu bảo hành / Sửa chữa": Bấm vào hiện Modal hỗ trợ gửi máy qua bưu tá (SPX), gửi trực tiếp tại cửa hàng gần nhất (Hà Nội, TP.HCM, Đà Nẵng) hoặc gọi Hotline 1800.6868.
+
+### 2. KHO MÃ GIẢM GIÁ CÁ NHÂN HÓA (LOCALSTORAGE & CHECKOUT):
+- Cấu trúc lưu trữ Voucher trong localStorage (`tz_user_vouchers_${email}`):
+  + Mỗi tài khoản sở hữu danh sách voucher riêng:
+    * Tài khoản mới: Mã Chào mừng WELCOME100 (giảm 100k cho đơn từ 500k), FREESHIP (miễn phí vận chuyển 30k), mã cá nhân theo tên tài khoản.
+    * Tài khoản VIP/Smember: TECHVIP500 (giảm 500k cho đơn từ 10tr), APPLER5 (giảm 5% tối đa 1tr cho đơn từ 5tr), NAM-VIP200K (giảm 200k đơn từ 2tr), FREESHIP (30k).
+  + Thuộc tính: mã, tên voucher, loại giảm (tiền mặt / %), giá trị giảm, đơn tối thiểu, ngày hết hạn, trạng thái đã dùng (isUsed: true/false).
+- Tại trang Checkout (checkout.html):
+  + Thêm nút bấm "Chọn Voucher từ ví của bạn" để mở Popup danh sách mã giảm giá của chính khách hàng đang đăng nhập.
+  + Hiển thị rõ: Điều kiện áp dụng (Đơn tối thiểu bao nhiêu), hạn dùng.
+  + Khi người dùng bấm "Áp dụng":
+    * Kiểm tra điều kiện đơn hàng.
+    * TỰ ĐỘNG TRỪ TIỀN TRỰC TIẾP: Cập nhật dòng "Khuyến mãi / Voucher: -[Số tiền] đ" và trừ thẳng vào "Tổng tiền thanh toán".
+    * Khi đặt hàng thành công: Đánh dấu voucher đó là đã sử dụng (isUsed: true) để không thể dùng lại lần thứ hai.
+
+Cung cấp toàn bộ mã HTML Modal Voucher, HTML Tab Tra cứu bảo hành, CSS và JavaScript tính toán tiền giảm giá để copy vào dự án!
+````
+
+---
+
+## <a id="prompt-58"></a>Prompt 58: Dọn dẹp dư thừa icon/nút tra cứu bảo hành & Kích hoạt modal kho voucher (history.html)
+
+- **Thời gian gửi:** `2026-10-22T15:37:20+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy cập nhật file history.html và logic JavaScript trong main.js để sửa 2 lỗi sau:
+
+### 1. DỌN DẸP DƯ THỪA ICON & NÚT MỤC TRA CỨU BẢO HÀNH:
+- Ở góc trên bên phải tiêu đề "QUẢN LÝ ĐƠN HÀNG CÁ NHÂN": XÓA BỎ nút "Tra cứu bảo hành" độc lập.
+- Ở thanh tab bên dưới:
+  + Sửa lại tab: Chỉ để duy nhất 1 icon khiên bảo vệ kèm text: `🛡️ Tra cứu bảo hành` (Xóa bỏ hoàn toàn icon khiên đỏ/xanh thừa bị dính kép).
+  + Khi bấm vào tab này: Gắn class active đổi màu cam, ẩn danh sách đơn mua và hiển thị giao diện Tra cứu bảo hành điện tử chính hãng.
+
+### 2. KÍCH HOẠT NÚT "KHO VOUCHER (4)" & BẬT MODAL HIỂN THỊ VOUCHER:
+- Thêm thuộc tính `onclick="openVoucherModal()"` cho nút "Kho Voucher (4)".
+- Bổ sung cấu trúc HTML Modal (#voucherModal) vào cuối file history.html (nếu chưa có).
+- Trong JavaScript:
+  + Khi bấm nút "Kho Voucher (4)": Mở popup hiển thị danh sách 4 mã giảm giá khả dụng của tài khoản (VD: TECHZONE100, FREESHIP30, SMEMBERVIP, APPLER5...).
+  + Mỗi voucher hiển thị rõ: Mã code, Mức giảm, Hạn sử dụng, Điều kiện đơn tối thiểu và nút "Sao chép mã" hoặc "Dùng khi mua sắm".
+  + Có nút (✕) đóng modal nhanh chóng.
+
+Hãy cung cấp mã nguồn HTML đã làm sạch và code JavaScript mở modal hoàn chỉnh!
+````
+
+---
+
+## <a id="prompt-59"></a>Prompt 59: Tạo trang mới vouchers.html (Kho Voucher của tôi), Nút Kho Voucher trên Header chính & Nút Kho Voucher link chuẩn
+
+- **Thời gian gửi:** `2026-10-22T15:59:59+07:00`
+
+### Nội dung yêu cầu:
+
+````markdown
+Hãy thực hiện 3 yêu cầu sau cho website TechZone:
+
+1. TẠO TRANG MỚI vouchers.html (KHO VOUCHER CỦA TÔI):
+- Bố cục đồng bộ giao diện với header/footer của TechZone.
+- Nội dung trang gồm:
+  + Header trang: Tiêu đề "🎟️ KHO VOUCHER CÁ NHÂN", ô nhập mã voucher thủ công để lưu vào ví.
+  + Thanh tab lọc: [Tất cả (4)] | [Mã Giảm Giá TechZone] | [Miễn Phí Vận Chuyển] | [Đặc Quyền VIP] | [Hết hạn].
+  + Danh sách Voucher dạng lưới (Grid 2 cột trên PC, 1 cột trên Mobile):
+    * Thẻ Voucher thiết kế dạng cuống vé có đường cắt răng cưa (Shopee style):
+      - Cột trái (màu xanh hoặc cam): Icon % hoặc Xe tải Freeship.
+      - Cột phải: Mã code (in đậm), Tên ưu đãi, Điều kiện đơn tối thiểu, Hạn dùng (Progress bar hạn dùng).
+      - Nút hành động: "Dùng ngay" (bấm vào lưu mã vào clipboard hoặc localStorage rồi chuyển sang trang index.html / checkout.html).
+  + Dữ liệu voucher lấy động từ localStorage theo currentUser.email (nếu chưa có thì tự khởi tạo 4 mã mẫu: TECHZONE100, FREESHIP30, SMEMBERVIP, FLASHSALE50).
+
+2. CẬP NHẬT HEADER CHÍNH (Áp dụng cho mọi trang index.html, history.html, profile.html, checkout.html):
+- Ở góc trên bên phải thanh Header (cạnh nút "Tài khoản" và nút "Quản lý Đơn mua"):
+  + Bổ sung thêm nút bấm "Kho Voucher":
+    * Icon: 🎟️ (hoặc icon vé ưu đãi SVG).
+    * Text: "Kho voucher" (ẩn chữ trên mobile, chỉ chừa icon tròn có badge).
+    * Huy hiệu: Badge số lượng màu cam/đỏ nổi bật (hiển thị số 4).
+    * Thẻ liên kết: `<a href="vouchers.html" ...>` chuyển hướng trực tiếp khi click.
+
+3. SỬA NÚT "Kho Voucher (4)" TRONG history.html:
+- Thay thẻ hiện tại bằng thẻ link chuẩn:
+  `<a href="vouchers.html" class="btn-voucher-counter">🎟️ Kho Voucher ( 4 )</a>`
+- Đảm bảo click vào là chuyển trang ngay lập tức 100%, không bị kẹt hay lỗi JavaScript.
+
+Hãy cung cấp toàn bộ mã nguồn file vouchers.html, đoạn cập nhật Header và CSS tương ứng!
+````
+
+---
+
+## <a id="prompt-60"></a>Prompt 60: Sửa lỗi bung menu tỉnh/thành trên Topbar & Bổ sung mục Kho voucher vào dropdown tài khoản
+
+- **Thời gian gửi:** `2026-10-22T17:14:49+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy cập nhật mã nguồn HTML, CSS và JS cho file vouchers.html và thanh Header chung:
+
+1. KHẮC PHỤC LỖI BUNG MENU TỈNH THÀNH TRÊN TOPBAR (Hình 1):
+- Menu dropdown "CHỌN TỈNH THÀNH GIAO HÀNG" (chứa Hà Nội, TP.HCM, Cần Thơ...) đang bị bung xổ xuống mặc định, làm bung thanh Topbar đen che mất giao diện.
+- Sửa lại trong CSS/JS: 
+  + Thẻ dropdown tỉnh thành phải có `display: none; position: absolute; z-index: 99999;`.
+  + Chỉ hiển thị (`display: block;`) khi người dùng chủ động click hoặc hover vào nút "Giao đến: Hà Nội".
+  + Đảm bảo thanh Topbar giữ nguyên chiều cao chuẩn (~36px - 40px), không bị phình to.
+
+2. BỔ SUNG MỤC "KHO VOUCHER CỦA TÔI" VÀO DROPDOWN TÀI KHOẢN (Hình 2):
+- Trong menu dropdown xổ xuống khi click/hover vào tài khoản khách hàng ("Xin chào, Nguyễn Văn An!"), bổ sung thêm 1 mục:
+  + Vị trí: Đặt nằm giữa "Đơn mua của tôi" và "Thông tin tài khoản" (hoặc ngay dưới "Thông tin tài khoản").
+  + Cấu trúc mục:
+    * Icon: 🎟️
+    * Tên: "Kho voucher của tôi"
+    * Badge số lượng: Huy hiệu nhỏ nền cam chứa số 4.
+    * Đường dẫn: href="vouchers.html"
+  + Khi click vào sẽ chuyển hướng mượt mà sang trang vouchers.html.
+
+Hãy cung cấp đoạn HTML cập nhật cho menu dropdown và đoạn CSS sửa lỗi hiển thị topbar!
+hãy tự rà soát lại mọi thứ trước khi hoàn thành
+```
+
+---
+
+## <a id="prompt-61"></a>Prompt 61: Đồng bộ 100% Header vouchers.html theo index.html, Sửa lỗi click tài khoản & Căn chỉnh Dropdown
+
+- **Thời gian gửi:** `2026-10-22T17:29:26+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy đồng bộ và sửa toàn bộ Header trong file vouchers.html cho giống hệt 100% với file index.html:
+
+1. ĐỒNG BỘ 100% GIAO DIỆN HEADER (HTML & CSS):
+- Thay thế toàn bộ khối <header> trong vouchers.html bằng đúng cấu trúc HTML header chuẩn của index.html:
+  + Logo: Sử dụng icon chip phát sáng màu xanh chuẩn của TechZone (thay vì chữ vuông TZ).
+  + Nút "Trang chủ": Thiết kế nổi bật đồng bộ.
+  + Thanh tìm kiếm: Có nút "Tìm kiếm" màu xanh bo góc nằm bên trong ô nhập.
+  + Đảm bảo thanh Topbar (Hà Nội, 86 chi nhánh, Tin tức, CSKH Hotline 1800.6868) hiển thị đúng font và khoảng cách.
+
+2. SỬA LỖI CLICK VÀO TÀI KHOẢN BỊ ĐƯA VỀ TRANG LOGIN (login.html):
+- Kiểm tra thẻ <a> của nút Tài khoản ("Nguyễn Văn An"):
+  + Hiện tại thẻ này đang bị gán href="login.html" nên khi click bị văng ra trang đăng nhập.
+  + SỬA LẠI:
+    * Nếu người dùng ĐÃ ĐĂNG NHẬP (currentUser tồn tại): Đặt `href="profile.html"` HOẶC `href="javascript:void(0)"` kèm sự kiện click để bật/tắt (toggle) menu dropdown tài khoản.
+    * Chỉ dẫn sang "login.html" khi CHƯA đăng nhập.
+
+3. SỬA VỊ TRÍ VÀ HIỂN THỊ MENU DROPDOWN TÀI KHOẢN:
+- Căn chỉnh vị trí menu dropdown xổ xuống (.user-dropdown-menu):
+  + Nút cha bọc ngoài: `position: relative; display: inline-flex;`
+  + Khung dropdown con: `position: absolute; top: calc(100% + 8px); right: 0; min-width: 230px; z-index: 99999;`
+  + Đảm bảo dropdown bám chuẩn ngay dưới chân nút tài khoản, không bị lệch lơ lửng, hiển thị mượt mà đầy đủ các mục:
+    1. "Xin chào, [Tên khách]!"
+    2. "🕒 Đơn mua của tôi" -> history.html
+    3. "🎟️ Kho voucher của tôi (4)" -> vouchers.html
+    4. "💳 Thông tin tài khoản" -> profile.html
+    5. "🚪 Đăng xuất" -> hàm logout()
+
+Cung cấp toàn bộ đoạn mã HTML Header chuẩn và đoạn CSS/JS cập nhật cho vouchers.html!
+```
+
+---
+
+## <a id="prompt-62"></a>Prompt 62: Tinh gọn Header trên toàn trang & Cập nhật logic tính tổng tiền, điểm Smember và đơn hoàn tất
+
+- **Thời gian gửi:** `2026-10-22T18:54:38+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy thực hiện 2 thay đổi lớn trên toàn bộ website TechZone:
+
+1. TINH GỌN HEADER TRÊN TẤT CẢ CÁC TRANG (index.html, profile.html, history.html, checkout.html, vouchers.html, product-detail.html):
+- XÓA BỎ 2 nút bấm ngoài thanh Header:
+  + Nút "Ưu đãi Kho voucher (4)"
+  + Nút "Quản lý Đơn mua"
+- Sau khi xóa, góc phải thanh Header chỉ giữ lại duy nhất 2 thành phần:
+  1. Khối "Tài khoản [Tên khách]" (di chuột hoặc bấm vào mở dropdown menu: chứa Đơn mua của tôi, Kho voucher của tôi (4), Thông tin tài khoản, Đăng xuất).
+  2. Nút "Giỏ hàng / Thanh toán".
+- Đảm bảo bố cục Header cân đối, thanh tìm kiếm ở giữa được giãn rộng thoáng hơn.
+
+2. CẬP NHẬT CHÍNH XÁC LOGIC TÍNH TỔNG TIỀN, ĐIỂM SMEMBER VÀ ĐƠN HOÀN TẤT (profile.html & main.js):
+- Trong trang Hồ sơ cá nhân (profile.html), hiện đang bị lỗi Tổng chi tiêu là 27.990.000đ nhưng Điểm Smember lại bằng 0:
+  + Công thức tính điểm Smember: 1% của Tổng chi tiêu tích lũy, làm tròn số nguyên (`Math.round(totalSpent * 0.01)`).
+    * Ví dụ: Tổng chi tiêu 27.990.000 đ => Điểm tích lũy Smember = 279.900 điểm.
+  + Điều kiện lọc đơn hợp lệ:
+    * Chỉ cộng tiền vào "Tổng chi tiêu tích lũy", cộng điểm vào "Điểm tích lũy Smember", và tăng số đếm ở "Đơn hàng hoàn tất" đối với các đơn hàng có trạng thái HOÀN THÀNH / ĐÃ GIAO (status === 'Đã giao' || status === 'Giao hàng thành công').
+    * RÀNG BUỘC TUYỆT ĐỐI: Những đơn hàng có trạng thái "Đã hủy" (cancelled) hoặc "Chờ xác nhận" KHÔNG ĐƯỢC CỘNG vào Tổng chi tiêu, KHÔNG ĐƯỢC CỘNG Điểm tích lũy Smember, và KHÔNG ĐƯỢC TÍNH vào số lượng đơn hoàn tất.
+    * Khi người dùng bấm hủy một đơn hàng bất kỳ, hệ thống phải tự động tính toán lại và trừ số tiền/điểm tương ứng khỏi hồ sơ cá nhân ngay lập tức.
+
+Cung cấp đoạn mã HTML Header đã tinh gọn và đoạn JavaScript tính điểm chuẩn xác!
+```
+
+---
+
+## <a id="prompt-63"></a>Prompt 63: Sửa thanh tìm kiếm, khoảng cách 16px cụm 2 nút Header & Cô lập hover Giỏ hàng
+
+- **Thời gian gửi:** `2026-10-22T19:09:37+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy cập nhật lại CSS trong style.css và JavaScript trong main.js/vouchers.html để sửa dứt điểm các lỗi sau:
+
+### 1. SỬA THANH TÌM KIẾM VÀ KHOẢNG CÁCH 2 NÚT HEADER:
+- Thanh tìm kiếm (.search-bar-wrapper / .header-search):
+  + Giới hạn độ rộng tối đa: max-width: 500px !important; margin: 0 auto;
+  + Không để thanh search phình to chiếm hết diện tích header.
+- Cụm 2 nút bên phải (Tài khoản và Giỏ hàng):
+  + Container bọc (.header-right-actions): display: flex; align-items: center; gap: 16px !important;
+  + Tách rời 2 nút rõ ràng, không để dính sát vào nhau.
+
+### 2. SỬA LỖI DI CHUỘT VÀO GIỎ HÀNG CŨNG HIỆN MENU TÀI KHOẢN:
+- Tách biệt độc lập nút Giỏ hàng và nút Tài khoản.
+- CSS Hover: CHỈ kích hoạt menu dropdown khi di chuột trực tiếp vào đúng khối tài khoản:
+  /* Chỉ hover vào đúng nút tài khoản mới hiện dropdown */
+  .user-account-wrapper:hover > .user-dropdown-menu,
+  .tz-user-wrapper:hover > .tz-user-dropdown {
+    display: block !important;
+  }
+  /* Tuyệt đối không để hover giỏ hàng làm ảnh hưởng menu tài khoản */
+  .header-cart-btn:hover ~ .user-dropdown-menu,
+  .header-right-actions:hover .user-dropdown-menu {
+    /* Hủy bỏ các selector hover bao trùm cũ */
+  }
+```
+
+---
+
+## <a id="prompt-64"></a>Prompt 64: Dàn hàng ngang Header (Search 400px), drop-down hover voucher, và quản lý voucher động theo tài khoản (không số ảo)
+
+- **Thời gian gửi:** `2026-10-22T19:23:18+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lại CSS trong style.css và cập nhật file vouchers.html cùng logic trong main.js để giải quyết triệt để các lỗi sau:
+
+### 1. ĐƯA 2 NÚT HEADER LÊN CÙNG 1 HÀNG VỚI Ô TÌM KIẾM (Hình ảnh đính kèm):
+- Header chính (.header-main / .header-nav-wrap):
+  + Sử dụng Flexbox dàn hàng ngang: display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 16px;
+  + Cụm Logo + Trang chủ + Danh mục: flex-shrink: 0;
+- Ô tìm kiếm (.header-search / .search-bar-wrap):
+  + Thu ngắn chiều ngang lại: max-width: 400px !important; width: 100%; flex: 1 1 360px;
+  + Đảm bảo thanh search không đẩy các nút khác rớt xuống dòng.
+- Cụm 2 nút bên phải (Tài khoản & Giỏ hàng):
+  + display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  + Nằm thẳng hàng ngang tuyệt đối cùng hàng với Logo và ô Tìm kiếm.
+
+### 2. SỬA LỖI MỤC "KHO VOUCHER CỦA TÔI" TỰ ĐỘNG BỊ XANH NỀN:
+- Trong dropdown menu tài khoản:
+  + Xóa bỏ class 'active', 'active-link' hoặc style nền xanh tĩnh đang bị gán cố định cho dòng "Kho voucher của tôi".
+  + Trạng thái mặc định: background: transparent; color: #334155;
+  + Chỉ đổi nền sang xanh nhạt khi người dùng rê chuột vào (:hover).
+
+### 3. HIỂN THỊ ĐÚNG SỐ LƯỢNG VOUCHER THỰC TẾ CỦA TÀI KHOẢN (KHÔNG DÙNG SỐ ẢO):
+- Trong trang vouchers.html:
+  + XÓA BỎ các con số tĩnh như (4), (1), (0) đang bị hardcode ở các tab và huy hiệu trong mã nguồn HTML.
+  + Gán ID định danh rõ ràng cho từng tab và huy hiệu:
+    * Huy hiệu trên menu: `<span id="userVoucherBadge"></span>` (chỉ hiện khi có voucher thật)
+    * Tab Tất cả: `<button class="v-tab-btn active" id="tabAll">Tất cả (0)</button>`
+    * Tab Mã Giảm Giá: `<button class="v-tab-btn" id="tabDiscount">Mã Giảm Giá TechZone (0)</button>`
+    * Tab Miễn Phí Vận Chuyển: `<button class="v-tab-btn" id="tabFreeship">Miễn Phí Vận Chuyển (0)</button>`
+    * Tab Đặc Quyền VIP: `<button class="v-tab-btn" id="tabVip">Đặc Quyền VIP (0)</button>`
+    * Tab Hết hạn / Đã dùng: `<button class="v-tab-btn" id="tabUsed">Hết hạn / Đã dùng (0)</button>`
+- Trong JavaScript (main.js):
+  + Lấy danh sách voucher từ localStorage theo khóa: `vouchers_${currentUser.email}`
+  + Nếu tài khoản chưa có voucher nào (mảng rỗng hoặc null):
+    * Huy hiệu menu tự động ẩn (display: none).
+    * Toàn bộ 5 tab đều hiển thị là (0).
+    * Vùng hiển thị voucher hiện thông báo: "Bạn chưa có mã giảm giá nào." kèm nút "Khám phá ưu đãi ngay".
+  + Nếu tài khoản CÓ voucher thật:
+    * Đếm đúng số lượng voucher chưa sử dụng (!v.isUsed) theo từng phân loại (Tất cả, Giảm giá, Freeship, VIP, Hết hạn).
+    * Cập nhật số đếm thực tế vào text của từng tab tương ứng.
+    * Hiển thị số lượng lên huy hiệu badge ở menu tài khoản.
+```
+
+
+---
+
+## <a id="prompt-65"></a>Prompt 65: Sửa hover dropdown menu tài khoản, chuẩn hóa ảnh sản phẩm 180px và tách biệt huy hiệu badge đơn hàng
+
+- **Thời gian gửi:** `2026-10-22T19:41:29+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy cập nhật CSS và JavaScript trong style.css và main.js để giải quyết 2 lỗi sau:
+
+### 1. SỬA LỖI DROPDOWN MENU TÀI KHOẢN BỊ MẤT KHI CHƯA KỊP DI CHUỘT VÀO:
+- Vấn đề: Menu dropdown đang có khoảng trống/kẽ hở với nút cha khiến hover bị ngắt giữa chừng.
+- Xử lý:
+  + Dùng pseudo-element ::before tạo một lớp cầu nối vô hình (invisible bridge) phủ kín khoảng trống giữa nút tài khoản và menu:
+    ```css
+    .user-dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -15px; /* Phủ kín khoảng hở phía trên menu */
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: transparent;
+    }
+    ```
+  + Đảm bảo khi di chuột từ nút "Tài khoản" xuống menu, chuột luôn nằm trong vùng hover, không bị tắt giật cục.
+
+### 2. SỬA LỖI ĐƯỜNG DẪN ẢNH VÀ HIỂN THỊ THẺ SẢN PHẨM:
+- Trong mảng dữ liệu sản phẩm `products` (main.js):
+  + Kiểm tra lại đường dẫn ảnh của:
+    * Củ sạc nhanh GaN Anker 735: đảm bảo trỏ đúng file ảnh thật trong thư mục `images/` (hoặc ảnh online hợp lệ, không dùng link placeholder hỏng).
+    * Pin sạc dự phòng Baseus Blade 100W: kiểm tra và sửa đúng file ảnh.
+    * Loa Bluetooth Marshall Emberton II: đặt đúng ảnh loa.
+- CSS khung ảnh sản phẩm (.product-card-img-wrap / .product-img-box):
+  + Đặt kích thước chuẩn đồng nhất:
+    ```css
+    .product-img-box {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .product-img-box img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain; /* Giữ nguyên tỉ lệ ảnh thiết bị không bị cắt góc */
+      transition: transform 0.3s ease;
+    }
+    ```
+- Ở thanh trạng thái đơn hàng (Ảnh 3): Tách biệt khung ảnh nhỏ với huy hiệu badge đỏ, không để badge đè lên mép viền ảnh.
+
+Cung cấp đoạn mã CSS cập nhật và mảng đường dẫn ảnh đã sửa!
+```
+
+
+---
+
+## <a id="prompt-66"></a>Prompt 66: Tối ưu khung chat CSKH (.cskh-chat-popup) khắc phục lỗi tràn Header và zoom màn hình (Viewport Adaptive)
+
+- **Thời gian gửi:** `2026-10-22T19:54:54+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lại CSS cho Popup Chat CSKH (.cskh-chat-popup) trong file style.css để khắc phục lỗi bị tràn lên Header và phóng to màn hình vẫn bị lỗi:
+
+1. NGUYÊN NHÂN LỖI:
+- Khung chat đang dùng chiều cao cố định (height: 500px hoặc bottom quá cao) khiến trên màn hình laptop có độ cao hẹp hoặc khi zoom 125% - 150%, đỉnh của khung chat bị đâm xuyên qua thanh Header làm mất thanh tiêu đề xanh.
+
+2. YÊU CẦU ĐIỀU CHỈNH CHUẨN XÁC:
+- Định vị theo màn hình:
+  + position: fixed !important;
+  + bottom: 85px !important;
+  + left: 24px !important;
+  + z-index: 999999 !important;
+- Giới hạn kích thước linh hoạt theo Viewport:
+  + Chiều rộng: width: 330px !important; max-width: calc(100vw - 40px) !important;
+  + Chiều cao linh hoạt: height: 440px !important; max-height: calc(100vh - 120px) !important;
+- Cấu trúc bên trong khung chat (Flexbox):
+  + display: flex; flex-direction: column; overflow: hidden; border-radius: 14px;
+  + Phần Header chat: flex-shrink: 0; (luôn cố định hiển thị đầy đủ tiêu đề, avatar, hotline và nút đóng ✕).
+  + Phần thân tin nhắn (.chat-body): flex: 1 1 auto; overflow-y: auto; (tự động co ngắn lại và xuất hiện thanh cuộn khi chiều cao màn hình bị hẹp).
+  + Phần chân nhập tin (.chat-footer): flex-shrink: 0;
+- Khi màn hình nhỏ hoặc zoom lớn (@media max-height: 600px):
+  + Tự động giảm height xuống 360px để đảm bảo luôn hở một khoảng an toàn với Header phía trên.
+
+Cung cấp đoạn mã CSS cập nhật để dán đè vào style.css!
+```
+
+
+---
+
+## <a id="prompt-67"></a>Prompt 67: Thu nhỏ popup chat CSKH (.cskh-chat-popup) theo phong cách widget mini (Rộng 280px, cao 360px)
+
+- **Thời gian gửi:** `2026-10-22T19:59:39+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy cập nhật CSS cho popup chat CSKH (.cskh-chat-popup) trong style.css:
+- Thu nhỏ kích thước toàn diện theo phong cách widget mini:
+  + Chiều rộng cố định: 280px (thay vì 330px - 360px).
+  + Chiều cao cố định: 360px (thay vì 430px - 500px).
+  + Đặt bottom: 80px, left: 20px, max-height: calc(100vh - 120px).
+- Tinh gọn font chữ và khoảng đệm bên trong:
+  + Header chat: padding 8px 10px, tiêu đề font 12px, hotline font 10px.
+  + Thân tin nhắn: font-size 11.5px, padding bong bóng 6px 10px.
+  + Ô nhập tin nhắn: padding 6px 10px, font 11.5px, nút gửi tròn 30px.
+- Đảm bảo widget hiển thị nhỏ nhắn, gọn gàng ở góc màn hình và tuyệt đối không che lấn banner chính của website.
+```
+
+
+---
+
+## <a id="prompt-68"></a>Prompt 68: Xử lý đăng xuất trên vouchers.html và tạo hiệu ứng loading xoay tròn chuyển trang (Page Transition Loader) toàn website
+
+- **Thời gian gửi:** `2026-10-22T20:07:30+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy cập nhật mã nguồn cho website TechZone với 2 yêu cầu:
+
+1. XỬ LÝ ĐĂNG XUẤT TRÊN TRANG VOUCHERS.HTML:
+- Khi người dùng bấm nút "Đăng xuất" trong dropdown tài khoản ở trang vouchers.html:
+  + Xóa `currentUser` khỏi localStorage.
+  + Chuyển hướng trực tiếp về trang chủ `index.html` (thay vì đưa ra login.html).
+
+2. TẠO HIỆU ỨNG LOADING XOAY TRÒN (PAGE TRANSITION LOADER) CHO TOÀN BỘ WEBSITE:
+- Tạo lớp phủ toàn màn hình (#pageLoader) chứa vòng tròn xoay spinner (viền xám, vệt xoay màu xanh công nghệ #0284c7) có backdrop mờ nhẹ.
+- Tự động bắt sự kiện click trên các thẻ liên kết chuyển trang (<a>):
+  + Bật spinner xoay trong khoảng 300ms rồi chuyển hướng mượt sang trang mới.
+  + Tự động ẩn spinner ngay khi trang mới hoàn tất quá trình tải (window.addEventListener('load')).
+
+Cung cấp đoạn HTML, CSS và JavaScript dùng chung để áp dụng ngay!
+```
+
+
+---
+
+## <a id="prompt-69"></a>Prompt 69: Tối ưu Responsive trang Chi tiết sản phẩm (product-detail.html) và chống nút CSKH đè chữ (< 768px)
+
+- **Thời gian gửi:** `2026-10-22T20:22:06+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy tối ưu responsive cho trang chi tiết sản phẩm (product-detail.html) và file style.css trên màn hình điện thoại di động (@media max-width: 768px):
+
+1. SỬA LỖI ẢNH TRÀN KHUNG & NÚT PHÓNG TO BỊ CẮT (Hình 1):
+- Khung bọc ảnh lớn (.product-main-view / .product-gallery-main):
+  + Đặt `width: 100% !important; max-width: 100% !important; box-sizing: border-box; overflow: hidden; border-radius: 12px;`.
+  + Ảnh thẻ <img> bên trong: `width: 100% !important; height: auto !important; max-height: 340px; object-fit: contain !important; display: block; margin: 0 auto;`.
+- Ẩn nút "Rê chuột để phóng to" trên màn hình cảm ứng/mobile (vì điện thoại không có chuột rê):
+  `@media (max-width: 768px) { .zoom-hint-btn, .zoom-overlay-text { display: none !important; } }`
+
+2. SẮP XẾP LẠI THỨ TỰ BỐ CỤC MOBILE HỢP LÝ (Hình 2):
+- Chuyển bố cục 2 cột sang 1 cột duy nhất (`flex-direction: column; width: 100%;`).
+- Thứ tự hiển thị chuẩn từ trên xuống dưới trên Mobile:
+  1. Breadcrumb (Trang chủ > Danh mục)
+  2. Khung ảnh sản phẩm lớn + ảnh thumbnail nhỏ
+  3. Cụm Badge (⚡ Giảm 25% | 💳 Trả góp 0% | 🛡️ Chính hãng)
+  4. Tên sản phẩm (Font 18px - 20px, xuống dòng mượt mà `word-break: break-word`, không bị cắt cụt)
+  5. Đánh giá sao & lượt bán
+  6. Khung Giá tiền (Giá bán to đỏ, giá gạch ngang, % giảm)
+  7. Nút Mua Ngay & Thêm Giỏ Hàng
+  8. Khối Cam kết dịch vụ (100% Chính hãng, Giao 2H... ĐẨY XUỐNG DƯỚI CÙNG thay vì nằm đè lên trên như hiện tại).
+
+3. CHỐNG TRÀN TOÀN TRANG & TRÁNH NÚT CSKH ĐÈ CHỮ:
+- Body và .product-detail-container: Đặt `overflow-x: hidden; padding: 12px; max-width: 100%;`.
+- Nút tròn CSKH trên mobile:
+  + Thu nhỏ gọn gàng: `width: 44px; height: 44px; font-size: 20px; bottom: 16px; left: 16px;`.
+  + Thêm khoảng đệm đáy cho trang (`padding-bottom: 70px;`) để nút CSKH không che mất giá hoặc nút mua hàng.
+
+Cung cấp đoạn mã CSS Responsive cập nhật để dán vào style.css!
+```
+
+
+---
+
+## <a id="prompt-70"></a>Prompt 70: Khắc phục lỗi tự động bung popup "Đăng nhập bằng Google" khi cuộn xuống cuối trang chi tiết sản phẩm
+
+- **Thời gian gửi:** `2026-10-22T20:47:06+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lại logic trong product-detail.html và main.js để khắc phục lỗi: Kéo xuống cuối trang sản phẩm bị tự động bung popup "Đăng nhập bằng Google" dù tài khoản đã đăng nhập:
+
+1. NGUYÊN NHÂN:
+- Có một hàm kiểm tra hoặc tự kích hoạt Popup Google Sign-in / One Tap khi cuộn trang (scroll to bottom/footer) mà quên kiểm tra `localStorage.getItem('currentUser')`.
+
+2. CÁCH SỬA CHUẨN XÁC:
+- Kiểm tra trạng thái đăng nhập trước khi kích hoạt bất kỳ popup đăng nhập nào:
+  + Nếu `localStorage.getItem('currentUser')` đã tồn tại: 
+    * HỦY BỎ hoàn toàn việc hiển thị modal Google Login (#googleLoginModal, .google-one-tap, v.v.).
+    * Đóng/ẩn triệt để popup nếu nó đang có class 'active' hoặc 'show'.
+- Xóa bỏ hoặc vô hiệu hóa logic tự động gọi popup đăng nhập khi sự kiện window.onscroll chạm đáy trang (footer).
+- Chỉ hiển thị popup đăng nhập khi khách hàng THỰC SỰ CHƯA ĐĂNG NHẬP và chủ động bấm vào nút "Mua ngay", "Thêm vào giỏ hàng" hoặc nút "Đăng nhập" trên Header.
+
+Cung cấp đoạn mã JavaScript sửa đổi để cập nhật ngay!
+```

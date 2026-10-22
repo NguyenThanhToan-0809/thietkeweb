@@ -12,6 +12,16 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Page Transition Loader -->
+  <div id="pageLoader" class="page-loader-overlay">
+    <div class="loader-spinner-wrap">
+      <div class="loader-spinner"></div>
+      <div class="loader-brand">
+        <span class="loader-dot"></span> TechZone
+      </div>
+    </div>
+  </div>
+
 
   <!-- TechZone Header -->
   <header class="tz-header">
@@ -88,49 +98,53 @@
           <span class="tz-title-sep">|</span> Giỏ Hàng & Thanh Toán
         </div>
 
-        <div class="tz-header-actions">
-          <!-- User Account Button (Đăng nhập / Tên người dùng) -->
-          <div class="tz-user-wrapper" id="tz-user-wrapper">
-            <a href="login.html" class="tz-user-btn" id="tz-user-btn" title="Tài khoản">
+                <!-- Action Group on the Right (Tách rời độc lập Tài khoản và Giỏ hàng, khoảng cách 16px) -->
+        <div class="tz-header-actions header-right-actions">
+          
+          <!-- Khối Tài khoản độc lập -->
+          <div class="tz-user-wrapper user-account-wrapper" id="tz-user-wrapper">
+            <a href="login.html" class="tz-user-btn" id="tz-user-btn" title="Tài khoản" onclick="if(window.toggleUserDropdown) { toggleUserDropdown(event); }">
               <i class="fa-solid fa-circle-user"></i>
               <div class="meta">
                 <span class="sub">Tài khoản</span>
                 <span id="tz-user-name-display">Đăng nhập</span>
               </div>
             </a>
-            <div class="tz-user-dropdown" id="tz-user-dropdown">
+            <div class="tz-user-dropdown user-dropdown-menu" id="tz-user-dropdown">
               <div class="tz-user-dropdown-header">
                 <i class="fa-solid fa-user-check"></i>
                 <span id="tz-dropdown-greeting">Xin chào, Bạn!</span>
               </div>
               <a href="history.html" class="tz-user-dropdown-item">
-                <i class="fa-solid fa-clock-rotate-left"></i> Đơn mua của tôi
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Đơn mua của tôi</span>
+              </a>
+              <a href="vouchers.html" class="tz-user-dropdown-item">
+                <span class="tz-dropdown-item-icon">🎟️</span>
+                <span>Kho voucher của tôi</span>
+                <span class="tz-dropdown-voucher-badge" id="userVoucherBadge" style="display: none;"></span>
               </a>
               <a href="profile.html" class="tz-user-dropdown-item" id="tz-btn-profile-info">
-                <i class="fa-solid fa-id-card"></i> Thông tin tài khoản
+                <i class="fa-solid fa-id-card"></i>
+                <span>Thông tin tài khoản</span>
               </a>
               <div class="tz-user-dropdown-item logout" id="tz-btn-logout">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Đăng xuất</span>
               </div>
             </div>
           </div>
 
-          <a href="products.html" class="tz-nav-btn" title="Tiếp tục mua sắm">
-            <i class="fa-solid fa-arrow-left"></i>
+          <!-- Nút Giỏ hàng độc lập hoàn toàn -->
+          <a href="checkout.html" class="tz-nav-btn tz-cart-btn header-cart-btn" title="Xem giỏ hàng TechZone">
+            <i class="fa-solid fa-cart-shopping"></i>
             <div class="meta">
-              <span class="sub">Tiếp tục</span>
-              <span>Mua sắm</span>
+              <span class="sub">Giỏ hàng</span>
+              <span>Thanh toán</span>
             </div>
+            <span class="tz-cart-badge">0</span>
           </a>
 
-          <!-- Single Order History / Đơn Mua Button -->
-          <a href="history.html" class="tz-nav-btn" id="nav-orders-btn" title="Đơn mua & Tra cứu lộ trình">
-            <i class="fa-solid fa-box-archive"></i>
-            <div class="meta">
-              <span class="sub">Quản lý</span>
-              <span>Đơn mua</span>
-            </div>
-          </a>
         </div>
       </div>
     </div>
@@ -329,12 +343,24 @@
 
             <!-- Voucher Code Box -->
             <div style="margin: 1.25rem 0; padding-top: 1rem; border-top: 1px dashed var(--border);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.84rem; font-weight: 700; color: #334155; margin: 0; display: flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-ticket" style="color: #ea580c;"></i> Mã giảm giá TechZone
+                </label>
+                <button type="button" class="btn-select-voucher-link" id="btn-open-voucher-modal">
+                  <i class="fa-solid fa-wallet"></i> Chọn Voucher từ ví của bạn (<span id="checkout-voucher-avail-count">0</span>)
+                </button>
+              </div>
               <form id="voucher-form" style="display: flex; gap: 0.45rem;">
-                <input type="text" id="voucher-code" class="tz-input" placeholder="Mã giảm giá (Thử: TECHZONE50)" style="font-size: 0.82rem; padding: 0.55rem 0.75rem; text-transform: uppercase;">
+                <input type="text" id="voucher-code" class="tz-input" placeholder="Nhập mã hoặc bấm Chọn Voucher..." style="font-size: 0.82rem; padding: 0.55rem 0.75rem; text-transform: uppercase;">
                 <button type="submit" class="btn-tz-primary" style="padding: 0.55rem 1rem; font-size: 0.82rem; flex-shrink: 0;">
                   Áp dụng
                 </button>
               </form>
+              <!-- Banner voucher đang áp dụng -->
+              <div id="applied-voucher-tag" class="applied-voucher-tag" style="display: none; margin-top: 8px;">
+                <!-- Injected dynamically by JS -->
+              </div>
             </div>
 
             <!-- Price Breakdown -->
@@ -566,6 +592,26 @@
         <button type="button" id="btn-toggle-add-addr-form" class="btn-outline-add-addr">
           <i class="fa-solid fa-plus"></i> Thêm địa chỉ mới
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Chọn Mã Giảm Giá Của Bạn (Personalized Voucher Picker Modal) -->
+  <div class="tz-modal-overlay" id="tz-voucher-modal" role="dialog" aria-modal="true" aria-labelledby="tz-voucher-modal-title">
+    <div class="tz-voucher-modal-card">
+      <div class="voucher-modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="voucher-modal-icon"><i class="fa-solid fa-ticket"></i></div>
+          <div>
+            <h3 id="tz-voucher-modal-title" style="margin: 0; font-size: 1.15rem; color: #1e293b; font-weight: 800;">Kho Mã Giảm Giá Của Bạn</h3>
+            <p style="margin: 0; font-size: 0.82rem; color: #64748b;">Chọn 1 mã ưu đãi độc quyền để áp dụng cho đơn hàng này</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-voucher-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="voucher-modal-body" id="voucher-modal-list">
+        <!-- Rendered dynamically by JS -->
       </div>
     </div>
   </div>

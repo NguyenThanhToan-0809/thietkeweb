@@ -1,3 +1,136 @@
+
+// ==========================================================================
+// PROMPT 68: HIỆU ỨNG LOADING XOAY TRÒN (PAGE TRANSITION LOADER) & VOUCHER LOGOUT
+// ==========================================================================
+
+function showPageLoader() {
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    loader.classList.add('active');
+  }
+}
+
+function hidePageLoader() {
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    loader.classList.remove('active');
+  }
+}
+
+// Tự động ẩn loader khi trang tải xong và khi khôi phục từ bfcache (Back/Forward)
+window.addEventListener('load', hidePageLoader);
+window.addEventListener('pageshow', () => {
+  hidePageLoader();
+});
+
+function initPageLoader() {
+  // Ẩn loader khi DOM khởi tạo
+  hidePageLoader();
+
+  // Tự động bắt sự kiện click trên các thẻ liên kết chuyển trang (<a>)
+  document.addEventListener('click', (e) => {
+    // Chỉ xử lý click chuột trái thông thường (không kèm Ctrl, Meta, Shift, Alt)
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+      return;
+    }
+
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    // Bỏ qua nếu sự kiện đã bị chặn trước đó
+    if (e.defaultPrevented) return;
+
+    // Bỏ qua file download, mở tab mới (_blank), hoặc class .no-loader
+    if (link.hasAttribute('download')) return;
+    if (link.getAttribute('target') === '_blank') return;
+    if (link.classList.contains('no-loader')) return;
+
+    // Bỏ qua nút toggle tài khoản, chat CSKH, modal triggers
+    if (link.id === 'tz-user-btn' || link.classList.contains('tz-user-btn') || link.closest('#tz-user-wrapper') || link.closest('.cskh-chat-popup')) {
+      return;
+    }
+
+    const hrefAttr = link.getAttribute('href');
+    if (!hrefAttr) return;
+
+    const trimmedHref = hrefAttr.trim();
+    // Bỏ qua liên kết neo (#), javascript:, tel:, mailto:
+    if (trimmedHref === '' || trimmedHref.startsWith('#') || trimmedHref.startsWith('javascript:') || trimmedHref.startsWith('tel:') || trimmedHref.startsWith('mailto:')) {
+      return;
+    }
+
+    try {
+      const targetUrl = new URL(link.href, window.location.origin);
+
+      // Bỏ qua liên kết ra bên ngoài domain
+      if (targetUrl.origin !== window.location.origin) {
+        return;
+      }
+
+      // Bỏ qua chuyển neo trên cùng trang hiện tại
+      if (targetUrl.pathname === window.location.pathname && targetUrl.hash && !targetUrl.search) {
+        return;
+      }
+
+      // Kích hoạt hiệu ứng loading: bật spinner 300ms rồi chuyển hướng mượt sang trang mới
+      e.preventDefault();
+      showPageLoader();
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 300);
+    } catch (err) {
+      // Bỏ qua nếu parse URL thất bại
+    }
+  }, false);
+}
+
+// Xử lý đăng xuất riêng biệt cho trang vouchers.html: Xóa currentUser và chuyển thẳng về index.html
+function handleVoucherLogout(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  // 1. Xóa currentUser và các khóa liên quan khỏi localStorage
+  try {
+    if (typeof Auth !== 'undefined' && typeof Auth.logout === 'function') {
+      Auth.logout();
+    } else {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('techzone_current_user');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('techzone_remember_login');
+    }
+  } catch (err) {
+    localStorage.removeItem('currentUser');
+  }
+
+  // 2. Đóng dropdown tài khoản nếu đang mở
+  const dropdown = document.getElementById('tz-user-dropdown');
+  if (dropdown) {
+    dropdown.classList.remove('show');
+  }
+
+  // 3. Hiển thị thông báo Toast nếu có
+  if (typeof showToast === 'function') {
+    showToast('Đã đăng xuất tài khoản thành công!', 'info', 'Đăng xuất');
+  }
+
+  // 4. Kích hoạt spinner xoay chuyển trang
+  showPageLoader();
+
+  // 5. Chuyển hướng trực tiếp về trang chủ index.html (thay vì đưa ra login.html)
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 300);
+}
+
+window.showPageLoader = showPageLoader;
+window.hidePageLoader = hidePageLoader;
+window.initPageLoader = initPageLoader;
+window.handleVoucherLogout = handleVoucherLogout;
+
+
 /**
  * ==========================================================================
  * TECHZONE ECOSYSTEM - CORE JAVASCRIPT ENGINE (ES6)
@@ -7,365 +140,1030 @@
 
 // --- 1. MOCK DATA: TECHZONE TECH CATALOG (20 SẢN PHẨM LƯU ẢNH CỤC BỘ images/spX.jpg) ---
 const allProducts = [
-  // 1. FLASH SALE 1: iPhone 16 Pro Max
   {
-    id: 'sp1',
-    name: 'iPhone 16 Pro Max 256GB - Titanium Tự Nhiên',
-    category: 'phone',
-    brand: 'Apple',
-    originalPrice: 36990000,
-    price: 34490000,
-    oldPrice: 36990000,
-    discountPercent: 7,
-    isInstallment: true,
-    soldCount: 88,
-    totalStock: 100,
-    isFlashSale: true,
-    specs: ['6.9" Super Retina XDR', 'Chip Apple A18 Pro', 'Camera Control 48MP', 'Titanium Grade 5'],
-    image: 'images/sp1.jpg',
-    description: 'Flagship đỉnh cao từ Apple với phím điều khiển Camera Control, chip A18 Pro và viền màn hình siêu mỏng.'
+    "id": "sp1",
+    "name": "iPhone 16 Pro Max 256GB - Titanium Tự Nhiên",
+    "category": "phone",
+    "brand": "Apple",
+    "originalPrice": 36990000,
+    "price": 34490000,
+    "oldPrice": 36990000,
+    "discountPercent": 7,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 1820,
+    "soldCount": "3.2k",
+    "totalStock": 100,
+    "isFlashSale": true,
+    "specs": [
+      "6.9\" Super Retina XDR 120Hz",
+      "Chip Apple A18 Pro 3nm",
+      "Camera Control 48MP Fusion",
+      "Khung viền Titanium Grade 5",
+      "Pin 33 giờ, sạc MagSafe 25W"
+    ],
+    "image": "images/sp1.jpg",
+    "description": "Flagship đỉnh cao từ Apple với phím điều khiển Camera Control hoàn toàn mới, chip A18 Pro tiến trình 3nm xử lý Apple Intelligence cực nhanh và viền màn hình mỏng nhất lịch sử iPhone.",
+    "reviews": [
+      {
+        "id": "rev_sp1_1",
+        "author": "Hoàng Nam",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Titan Tự Nhiên, 256GB",
+        "comment": "Màu Titan Tự Nhiên bên ngoài đẹp sang trọng vượt kỳ vọng, nút Camera Control bấm chụp rất nhạy. Bưu tá SPX giao 2h đóng gói cẩn thận 3 lớp chống sốc.",
+        "likes": 24,
+        "verified": true
+      },
+      {
+        "id": "rev_sp1_2",
+        "author": "Bích Ngọc",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+        "stars": 5,
+        "date": "3 ngày trước",
+        "variant": "Titan Sa Mạc, 256GB",
+        "comment": "Màn hình 6.9 inch cực rộng nhưng viền siêu mỏng nên cầm không bị cấn tay. Pin dùng cả ngày liên tục lướt web và chụp ảnh vẫn còn trên 35%.",
+        "likes": 18,
+        "verified": true
+      },
+      {
+        "id": "rev_sp1_3",
+        "author": "Tuấn Kiệt",
+        "avatar": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Titan Đen, 512GB",
+        "comment": "Nâng cấp từ 13 Pro Max lên thấy đáng từng đồng, camera chụp đêm bắt sáng tốt hơn hẳn, loa ngoài to và âm trường rất rộng.",
+        "likes": 11,
+        "verified": true
+      }
+    ]
   },
-  // 2. FLASH SALE 2: Samsung Galaxy S24 Ultra
   {
-    id: 'sp2',
-    name: 'Samsung Galaxy S24 Ultra 12GB 256GB Titanium Gray',
-    category: 'phone',
-    brand: 'Samsung',
-    originalPrice: 33990000,
-    price: 27990000,
-    oldPrice: 33990000,
-    discountPercent: 18,
-    isInstallment: true,
-    soldCount: 92,
-    totalStock: 100,
-    isFlashSale: true,
-    specs: ['Snapdragon 8 Gen 3 for Galaxy', 'RAM 12GB', 'Bút S-Pen tích hợp', 'Camera Zoom 100x'],
-    image: 'images/sp2.jpg',
-    description: 'Trí tuệ nhân tạo Galaxy AI đột phá, khung viền Titanium sang trọng, màn hình Dynamic AMOLED 2X sắc nét.'
+    "id": "sp2",
+    "name": "Samsung Galaxy S24 Ultra 12GB 256GB Titanium Gray",
+    "category": "phone",
+    "brand": "Samsung",
+    "originalPrice": 33990000,
+    "price": 27990000,
+    "oldPrice": 33990000,
+    "discountPercent": 18,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 1248,
+    "soldCount": "2.4k",
+    "totalStock": 100,
+    "isFlashSale": true,
+    "specs": [
+      "Snapdragon 8 Gen 3 for Galaxy",
+      "RAM 12GB, ROM 256GB",
+      "Bút S-Pen tích hợp đa năng",
+      "Camera Zoom 100x Space Zoom",
+      "Khung viền Titanium chuẩn hàng không",
+      "Màn Dynamic AMOLED 2X 120Hz"
+    ],
+    "image": "images/sp2.jpg",
+    "description": "Trí tuệ nhân tạo Galaxy AI đột phá hỗ trợ khoanh vùng tìm kiếm Circle to Search và phiên dịch trực tiếp cuộc gọi, kết hợp camera 200MP zoom quang 100x và bút S-Pen quyền năng.",
+    "reviews": [
+      {
+        "id": "rev_sp2_1",
+        "author": "Hoàng Nam",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Titanium Gray, 256GB",
+        "comment": "Máy chụp zoom 10x và 100x cực nét, giữ chi tiết rất tốt ngay cả khi quay concert ban đêm. Màn hình phẳng chống chói xuất sắc.",
+        "likes": 32,
+        "verified": true
+      },
+      {
+        "id": "rev_sp2_2",
+        "author": "Mai Anh",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80",
+        "stars": 5,
+        "date": "5 ngày trước",
+        "variant": "Titanium Black, 256GB",
+        "comment": "AI dịch trực tiếp cuộc gọi và tóm tắt ghi âm cuộc họp rất tiện cho công việc. Bút S-Pen viết ký hợp đồng điện tử êm ru.",
+        "likes": 21,
+        "verified": true
+      },
+      {
+        "id": "rev_sp2_3",
+        "author": "Quốc Đạt",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Titanium Yellow, 512GB",
+        "comment": "Snapdragon 8 Gen 3 quá mạnh, chiến game Genshin hay PUBG đều max settings 60fps mượt mà, máy chỉ hơi ấm nhẹ không hề tụt xung.",
+        "likes": 14,
+        "verified": true
+      }
+    ]
   },
-  // 3. FLASH SALE 3: Laptop Gaming ASUS ROG Strix G16
   {
-    id: 'sp3',
-    name: 'Laptop Gaming ASUS ROG Strix G16 i9 RTX 4080',
-    category: 'laptop',
-    brand: 'Asus',
-    originalPrice: 56990000,
-    price: 49990000,
-    oldPrice: 56990000,
-    discountPercent: 12,
-    isInstallment: true,
-    soldCount: 74,
-    totalStock: 100,
-    isFlashSale: true,
-    specs: ['Core i9-14900HX', 'RTX 4080 12GB', 'RAM 32GB DDR5', 'Màn 2.5K 240Hz Nebula'],
-    image: 'images/sp3.jpg',
-    description: 'Quái thú gaming cấu hình cực đại, tản nhiệt kim loại lỏng Tri-Fan êm mát sẵn sàng chinh phục mọi tác vụ nặng.'
+    "id": "sp3",
+    "name": "Laptop Gaming ASUS ROG Strix G16 i9 RTX 4080",
+    "category": "laptop",
+    "brand": "Asus",
+    "originalPrice": 56990000,
+    "price": 49990000,
+    "oldPrice": 56990000,
+    "discountPercent": 12,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 420,
+    "soldCount": "850",
+    "totalStock": 100,
+    "isFlashSale": true,
+    "specs": [
+      "Core i9-14900HX 24 nhân 32 luồng",
+      "NVIDIA RTX 4080 12GB GDDR6",
+      "RAM 32GB DDR5 5600MHz",
+      "Màn 16\" 2.5K 240Hz Nebula 100% DCI-P3",
+      "Tản nhiệt 3 quạt kim loại lỏng Tri-Fan"
+    ],
+    "image": "images/sp3.jpg",
+    "description": "Cỗ máy gaming đỉnh cao với hệ thống tản nhiệt 3 quạt kim loại lỏng Conductonaut Extreme, màn hình ROG Nebula 240Hz sắc nét, cân mượt mọi tựa game AAA và render 3D hạng nặng.",
+    "reviews": [
+      {
+        "id": "rev_sp3_1",
+        "author": "Đức Trọng",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+        "stars": 5,
+        "date": "3 ngày trước",
+        "variant": "Eclipse Gray, i9 / RTX 4080",
+        "comment": "Cân mượt Cyberpunk 2077 bật Ray Tracing ở độ phân giải 2K vẫn giữ vững trên 95fps. Hệ thống 3 quạt tản nhiệt kim loại lỏng làm mát cực nhanh.",
+        "likes": 19,
+        "verified": true
+      },
+      {
+        "id": "rev_sp3_2",
+        "author": "Minh Hải",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Eclipse Gray, 32GB RAM",
+        "comment": "Màn hình 240Hz chuẩn 100% DCI-P3 màu sắc chuẩn chỉnh cho cả edit Premiere lẫn bắn Valorant. Bàn phím gõ êm, led RGB per-key cực bắt mắt.",
+        "likes": 15,
+        "verified": true
+      },
+      {
+        "id": "rev_sp3_3",
+        "author": "Quang Huy",
+        "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&q=80",
+        "stars": 4,
+        "date": "2 tuần trước",
+        "variant": "Eclipse Gray, 1TB SSD",
+        "comment": "Máy build chắc chắn, hiệu năng i9-14900HX quá khủng. Quạt chạy full load có hơi hú nhẹ ở chế độ Turbo nhưng nhiệt độ CPU chỉ loanh quanh 78 độ.",
+        "likes": 8,
+        "verified": true
+      }
+    ]
   },
-  // 4. FLASH SALE 4: Tai nghe Apple AirPods Pro 2 Type-C
   {
-    id: 'sp4',
-    name: 'Tai nghe Bluetooth Apple AirPods Pro 2 2023 Type-C',
-    category: 'audio',
-    brand: 'Apple',
-    originalPrice: 6190000,
-    price: 5390000,
-    oldPrice: 6190000,
-    discountPercent: 13,
-    isInstallment: true,
-    soldCount: 97,
-    totalStock: 100,
-    isFlashSale: true,
-    specs: ['Chip Apple H2', 'Cổng sạc Type-C', 'Chống ồn ANC 2x', 'Âm thanh vòm Spatial'],
-    image: 'images/sp4.jpg',
-    description: 'Khử ồn chủ động gấp đôi, chế độ xuyên âm thích ứng mượt mà và hộp sạc tích hợp loa tìm kiếm Find My.'
+    "id": "sp4",
+    "name": "Tai nghe Bluetooth Apple AirPods Pro 2 2023 Type-C",
+    "category": "audio",
+    "brand": "Apple",
+    "originalPrice": 6190000,
+    "price": 5390000,
+    "oldPrice": 6190000,
+    "discountPercent": 13,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 2350,
+    "soldCount": "4.8k",
+    "totalStock": 100,
+    "isFlashSale": true,
+    "specs": [
+      "Chip âm thanh Apple H2 thế hệ mới",
+      "Cổng sạc Type-C chuẩn mới & MagSafe",
+      "Chống ồn chủ động ANC 2X mạnh mẽ",
+      "Âm thanh vòm Spatial Audio theo dõi đầu",
+      "Thời lượng pin 30 giờ kèm hộp sạc"
+    ],
+    "image": "images/sp4.jpg",
+    "description": "Khử ồn chủ động gấp 2 lần, chế độ Xuyên âm thích ứng thông minh cùng cổng sạc USB-C hiện đại, chống bụi chống nước chuẩn IP54 bền bỉ và hộp sạc tích hợp loa tìm kiếm Find My.",
+    "reviews": [
+      {
+        "id": "rev_sp4_1",
+        "author": "Khánh Linh",
+        "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Trắng Type-C MagSafe",
+        "comment": "Khả năng chống ồn ANC đỉnh thực sự, đi xe bus hay ngồi quán cafe ồn ào bật lên là như ở không gian riêng. Cổng Type-C đồng bộ với iPhone 16 rất tiện.",
+        "likes": 28,
+        "verified": true
+      },
+      {
+        "id": "rev_sp4_2",
+        "author": "Anh Tuấn",
+        "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "Trắng Type-C",
+        "comment": "Âm bass chắc và ấm hơn đời 1 rõ rệt, tính năng Adaptive Audio tự hạ âm lượng khi mình nói chuyện cực kỳ thông minh.",
+        "likes": 16,
+        "verified": true
+      },
+      {
+        "id": "rev_sp4_3",
+        "author": "Thảo My",
+        "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Trắng Type-C MagSafe",
+        "comment": "Hộp sạc có loa phát tiếng kêu khi tìm qua Find My rất hữu ích với đứa hay quên như mình. Giao hàng 2h nhận ngay trong chiều.",
+        "likes": 12,
+        "verified": true
+      }
+    ]
   },
-  // 5. FLASH SALE 5: Apple Watch Ultra 2 49mm Titan
   {
-    id: 'sp5',
-    name: 'Đồng hồ Apple Watch Ultra 2 49mm Titan Dây Alpine',
-    category: 'watch',
-    brand: 'Apple',
-    originalPrice: 25990000,
-    price: 19490000,
-    oldPrice: 25990000,
-    discountPercent: 25,
-    isInstallment: true,
-    soldCount: 28,
-    totalStock: 30,
-    isFlashSale: true,
-    specs: ['Vỏ Titan 49mm', 'Màn hình 3000 nits', 'Chống nước 100m', 'Thời lượng pin 72h'],
-    image: 'images/sp5.jpg',
-    description: 'Đỉnh cao đồng hồ thể thao chuyên nghiệp với độ sáng 3000 nits, định vị GPS tần số kép và độ bền chuẩn quân sự.'
+    "id": "sp5",
+    "name": "Đồng hồ Apple Watch Ultra 2 49mm Titan Dây Alpine",
+    "category": "watch",
+    "brand": "Apple",
+    "originalPrice": 25990000,
+    "price": 19490000,
+    "oldPrice": 25990000,
+    "discountPercent": 25,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 680,
+    "soldCount": "1.1k",
+    "totalStock": 30,
+    "isFlashSale": true,
+    "specs": [
+      "Vỏ Titanium 49mm chống va đập",
+      "Độ sáng màn hình 3000 nits đỉnh cao",
+      "GPS băng tần kép tần số L1 và L5",
+      "Thời lượng pin đến 72 giờ chế độ tiết kiệm",
+      "Chống nước 100m, lặn sâu 40m"
+    ],
+    "image": "images/sp5.jpg",
+    "description": "Đỉnh cao đồng hồ thể thao chuyên nghiệp với màn hình sáng 3000 nits thách thức nắng gắt, định vị GPS tần số kép chuẩn xác và thời lượng pin bền bỉ đến 72 giờ cho thám hiểm dã ngoại.",
+    "reviews": [
+      {
+        "id": "rev_sp5_1",
+        "author": "Việt Dũng",
+        "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&q=80",
+        "stars": 5,
+        "date": "3 ngày trước",
+        "variant": "Titanium, Dây Alpine Cam",
+        "comment": "Màn hình 3000 nits chạy bộ dưới trời trưa nắng gắt vẫn nhìn rõ mồn một. Vỏ titan cứng cáp va quẹt không để lại vết xước nào.",
+        "likes": 17,
+        "verified": true
+      },
+      {
+        "id": "rev_sp5_2",
+        "author": "Thanh Phong",
+        "avatar": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Titanium, Dây Alpine Xanh",
+        "comment": "Pin dùng bình thường được gần 3 ngày mới phải sạc. Thao tác cử chỉ Double Tap chạm 2 ngón tay nghe cuộc gọi rất tiện khi đang lái xe.",
+        "likes": 14,
+        "verified": true
+      }
+    ]
   },
-  // 6. Xiaomi 14 Ultra Leica
   {
-    id: 'sp6',
-    name: 'Xiaomi 14 Ultra 16GB 512GB Leica Summilux',
-    category: 'phone',
-    brand: 'Xiaomi',
-    originalPrice: 32990000,
-    price: 29990000,
-    oldPrice: 32990000,
-    discountPercent: 9,
-    isInstallment: true,
-    soldCount: 45,
-    totalStock: 60,
-    isFlashSale: false,
-    specs: ['Cảm biến 1 inch LYT-900', 'Snapdragon 8 Gen 3', 'RAM 16GB', 'Sạc siêu nhanh 90W'],
-    image: 'images/sp6.jpg',
-    description: 'Nhiếp ảnh di động đỉnh cao với hệ thống 4 camera quang học Leica huyền thoại và màn hình WQHD+ AMOLED.'
+    "id": "sp6",
+    "name": "Xiaomi 14 Ultra 16GB 512GB Leica Summilux",
+    "category": "phone",
+    "brand": "Xiaomi",
+    "originalPrice": 32990000,
+    "price": 28990000,
+    "oldPrice": 32990000,
+    "discountPercent": 12,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 540,
+    "soldCount": "920",
+    "totalStock": 50,
+    "isFlashSale": false,
+    "specs": [
+      "Ống kính quang học Leica Summilux 4 camera",
+      "Cảm biến Sony LYT-900 1 inch cao cấp",
+      "Snapdragon 8 Gen 3, RAM 16GB LPDDR5X",
+      "Màn hình 2K AMOLED 120Hz 3000 nits",
+      "Pin 5000mAh, sạc nhanh 90W có dây & 80W không dây"
+    ],
+    "image": "images/sp6.jpg",
+    "description": "Kiệt tác nhiếp ảnh di động đỉnh cao hợp tác cùng Leica, trang bị cảm biến 1 inch thế hệ mới với khẩu độ vô cấp mượt mà từ f/1.63 đến f/4.0 cùng màn hình cong bốn cạnh siêu đẹp.",
+    "reviews": [
+      {
+        "id": "rev_sp6_1",
+        "author": "Văn Hưng",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Đen Da Nano, 512GB",
+        "comment": "Màu ảnh Leica chân thực, chụp chân dung xóa phông tự nhiên như máy ảnh cơ chuyên nghiệp. Màn hình 2K siêu sáng và trong trẻo.",
+        "likes": 19,
+        "verified": true
+      },
+      {
+        "id": "rev_sp6_2",
+        "author": "Tấn Tài",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Trắng Da Nano, 512GB",
+        "comment": "Khẩu độ cơ học thay đổi được f/1.63 - f/4.0 chụp ngược sáng không bị cháy. Sạc 90W chỉ 30 phút là đầy 100% pin.",
+        "likes": 11,
+        "verified": true
+      }
+    ]
   },
-  // 7. MacBook Pro 14 M3 Pro
   {
-    id: 'sp7',
-    name: 'MacBook Pro 14 inch M3 Pro 18GB 512GB Space Black',
-    category: 'laptop',
-    brand: 'Apple',
-    originalPrice: 49990000,
-    price: 45490000,
-    oldPrice: 49990000,
-    discountPercent: 9,
-    isInstallment: true,
-    soldCount: 38,
-    totalStock: 50,
-    isFlashSale: false,
-    specs: ['Chip Apple M3 Pro 11-Core', 'GPU 14-Core', 'RAM 18GB', 'Màn Liquid Retina XDR 120Hz'],
-    image: 'images/sp7.jpg',
-    description: 'Hiệu năng đồ họa đỉnh cao, màu sắc Space Black quyến rũ và thời lượng pin đột phá lên đến 18 tiếng.'
+    "id": "sp7",
+    "name": "MacBook Pro 14 inch M3 Pro 18GB 512GB Space Black",
+    "category": "laptop",
+    "brand": "Apple",
+    "originalPrice": 49990000,
+    "price": 45490000,
+    "oldPrice": 49990000,
+    "discountPercent": 9,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 890,
+    "soldCount": "1.5k",
+    "totalStock": 40,
+    "isFlashSale": false,
+    "specs": [
+      "Chip Apple M3 Pro 11-core CPU, 14-core GPU",
+      "RAM 18GB Unified Memory",
+      "SSD 512GB siêu tốc 5000MB/s",
+      "Màn Liquid Retina XDR 120Hz ProMotion",
+      "Thời lượng pin lên tới 18 giờ liên tục"
+    ],
+    "image": "images/sp7.jpg",
+    "description": "Sức mạnh đồ họa đỉnh cao với chip M3 Pro tiến trình 3nm, màu đen Space Black chống bám vân tay sang trọng và màn hình Liquid Retina XDR độ sáng 1600 nits đỉnh cao.",
+    "reviews": [
+      {
+        "id": "rev_sp7_1",
+        "author": "Hoàng Bách",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "Space Black, 18GB/512GB",
+        "comment": "Màu Space Black nhìn thực tế sang và ngầu hơn hẳn đời trước, lớp phủ anode chống bám vân tay hoạt động rất tốt.",
+        "likes": 22,
+        "verified": true
+      },
+      {
+        "id": "rev_sp7_2",
+        "author": "Nhật Minh",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Space Black, 18GB/512GB",
+        "comment": "Render video 4K trên Final Cut Pro nhanh như gió mà máy vẫn êm ru không nghe tiếng quạt. Pin dùng làm việc cả ngày ở quán cafe không cần mang sạc.",
+        "likes": 17,
+        "verified": true
+      }
+    ]
   },
-  // 8. Sony WH-1000XM5
   {
-    id: 'sp8',
-    name: 'Tai nghe Chống ồn Sony WH-1000XM5 Hi-Res Audio',
-    category: 'audio',
-    brand: 'Sony',
-    originalPrice: 8990000,
-    price: 6990000,
-    oldPrice: 8990000,
-    discountPercent: 22,
-    isInstallment: true,
-    soldCount: 65,
-    totalStock: 80,
-    isFlashSale: false,
-    specs: ['2 vi xử lý V1 & QN1', '8 micro chống ồn', 'Driver 30mm sợi Carbon', 'Pin 30 giờ sạc nhanh'],
-    image: 'images/sp8.jpg',
-    description: 'Chuẩn mực tai nghe chống ồn hàng đầu thế giới với chất âm Hi-Res sắc sảo và đệm tai da êm ái.'
+    "id": "sp8",
+    "name": "Tai nghe Chống ồn Sony WH-1000XM5 Hi-Res Audio",
+    "category": "audio",
+    "brand": "Sony",
+    "originalPrice": 8990000,
+    "price": 6990000,
+    "oldPrice": 8990000,
+    "discountPercent": 22,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 1120,
+    "soldCount": "2.1k",
+    "totalStock": 60,
+    "isFlashSale": false,
+    "specs": [
+      "Bộ xử lý chống ồn V1 & HD QN1 kép đỉnh cao",
+      "8 micro thu âm lọc ồn đàm thoại AI",
+      "Driver 30mm màng sợi carbon siêu nhẹ",
+      "Hỗ trợ Hi-Res Audio & codec LDAC không dây",
+      "Pin 30 giờ, sạc nhanh 3 phút dùng 3 giờ"
+    ],
+    "image": "images/sp8.jpg",
+    "description": "Chuẩn mực tai nghe chống ồn over-ear hàng đầu thế giới với hệ thống 8 micro lọc ồn thông minh, âm thanh chuẩn Hi-Res không dây qua codec LDAC và trọng lượng siêu nhẹ 250g.",
+    "reviews": [
+      {
+        "id": "rev_sp8_1",
+        "author": "Đình Trọng",
+        "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Đen Nhám Hi-Res",
+        "comment": "Chống ồn tốt nhất phân khúc, đeo lên tai bay chuyến dài không hề mệt hay bí tai. Đệm da êm ái, đàm thoại lọc gió rất rõ.",
+        "likes": 18,
+        "verified": true
+      },
+      {
+        "id": "rev_sp8_2",
+        "author": "Thu Trang",
+        "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+        "stars": 5,
+        "date": "5 ngày trước",
+        "variant": "Bạc Platinum",
+        "comment": "Chất âm chi tiết, dải mid và treble trong veo, nghe acoustic hay ballad đều rất cảm xúc. Pin trâu nghe cả tuần mới sạc một lần.",
+        "likes": 12,
+        "verified": true
+      }
+    ]
   },
-  // 9. Garmin Forerunner 265
   {
-    id: 'sp9',
-    name: 'Đồng hồ thông minh Garmin Forerunner 265 GPS',
-    category: 'watch',
-    brand: 'Garmin',
-    originalPrice: 11990000,
-    price: 9990000,
-    oldPrice: 11990000,
-    discountPercent: 17,
-    isInstallment: true,
-    soldCount: 52,
-    totalStock: 70,
-    isFlashSale: false,
-    specs: ['Màn AMOLED cảm ứng', 'GPS đa băng tần', 'Đo HRV & Sẵn sàng tập', 'Pin 13 ngày'],
-    image: 'images/sp9.jpg',
-    description: 'Đồng hồ thể thao chuyên biệt cho chạy bộ với màn hình AMOLED rực rỡ và giáo án tập luyện chuẩn Garmin Coach.'
+    "id": "sp9",
+    "name": "Đồng hồ thông minh Garmin Forerunner 265 GPS",
+    "category": "watch",
+    "brand": "Garmin",
+    "originalPrice": 11990000,
+    "price": 10490000,
+    "oldPrice": 11990000,
+    "discountPercent": 12,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 630,
+    "soldCount": "1.3k",
+    "totalStock": 45,
+    "isFlashSale": false,
+    "specs": [
+      "Màn hình AMOLED cảm ứng rực rỡ 1.3\"",
+      "Đo chỉ số sẵn sàng luyện tập Training Readiness",
+      "GPS đa băng tần siêu chính xác",
+      "Thời lượng pin 13 ngày chế độ smartwatch",
+      "Bộ nhớ lưu nhạc trực tiếp Spotify"
+    ],
+    "image": "images/sp9.jpg",
+    "description": "Người bạn đồng hành hoàn hảo cho runner chuyên nghiệp với màn hình cảm ứng AMOLED rực rỡ, GPS đa băng tần chính xác tuyệt đối và gợi ý bài tập thích ứng hàng ngày.",
+    "reviews": [
+      {
+        "id": "rev_sp9_1",
+        "author": "Phan Anh",
+        "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "Đen Dây Silicone Vàng",
+        "comment": "Màn hình AMOLED hiển thị dưới nắng cực rõ, GPS bắt sóng nhanh chỉ mất 3 giây. Tính năng đo độ sẵn sàng luyện tập giúp mình tránh chấn thương hiệu quả.",
+        "likes": 20,
+        "verified": true
+      },
+      {
+        "id": "rev_sp9_2",
+        "author": "Hải Yến",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Trắng Dây Xanh",
+        "comment": "Nhẹ tênh khi đeo chạy marathon 42km, đo nhịp tim và cadence chuẩn xác. Pin 13 ngày cực kỳ trâu không lo hết pin giữa chừng.",
+        "likes": 15,
+        "verified": true
+      }
+    ]
   },
-  // 10. Keychron K2 Pro Custom Keyboard
   {
-    id: 'sp10',
-    name: 'Bàn phím cơ không dây Keychron K2 Pro QMK/VIA',
-    category: 'accessory',
-    brand: 'Keychron',
-    originalPrice: 2890000,
-    price: 2390000,
-    oldPrice: 2890000,
-    discountPercent: 17,
-    isInstallment: true,
-    soldCount: 84,
-    totalStock: 100,
-    isFlashSale: false,
-    specs: ['Hot-swap switch', 'Keycap PBT Double-shot', 'Kết nối Bluetooth 5.1/Dây', 'Đèn LED RGB'],
-    image: 'images/sp10.jpg',
-    description: 'Bàn phím cơ layout 75% kinh điển, hỗ trợ lập trình layout phím QMK/VIA và tương thích hoàn hảo Mac/Windows.'
+    "id": "sp10",
+    "name": "Bàn phím cơ không dây Keychron K2 Pro QMK/VIA",
+    "category": "accessory",
+    "brand": "Keychron",
+    "originalPrice": 2490000,
+    "price": 2090000,
+    "oldPrice": 2490000,
+    "discountPercent": 16,
+    "isInstallment": false,
+    "rating": 4.8,
+    "reviewCount": 780,
+    "soldCount": "1.9k",
+    "totalStock": 80,
+    "isFlashSale": false,
+    "specs": [
+      "Layout 75% gọn gàng 84 phím bấm",
+      "Tùy biến keymap qua phần mềm QMK/VIA",
+      "Keycap PBT Double-shot OSA profile",
+      "Mạch Hotswap thay switch nóng dễ dàng",
+      "Kết nối Bluetooth 5.1 & Type-C cho Mac/Win"
+    ],
+    "image": "images/sp10.jpg",
+    "description": "Bàn phím cơ công thái học hoàn hảo cho lập trình viên và dân văn phòng với khả năng tùy biến keymap qua QMK/VIA, foam tiêu âm silicon êm ái và switch hotswap tiện lợi.",
+    "reviews": [
+      {
+        "id": "rev_sp10_1",
+        "author": "Minh Tuấn",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Red Switch, Khung Nhôm",
+        "comment": "Gõ cực kỳ đầm tay, switch Red bôi trơn sẵn mượt mà không bị lọc xọc. Kết nối mượt mà giữa MacBook và máy bàn Windows chỉ qua 1 nút gạt.",
+        "likes": 16,
+        "verified": true
+      },
+      {
+        "id": "rev_sp10_2",
+        "author": "Hoàng Long",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Brown Switch, Khung Nhựa",
+        "comment": "Keycap PBT double-shot chống bóng mồ hôi tay rất tốt, layout 75% nhỏ gọn để vừa balo đi làm. Pin dùng Bluetooth hơn 2 tuần mới phải sạc.",
+        "likes": 11,
+        "verified": true
+      }
+    ]
   },
-  // 11. Chuột Logitech G Pro X Superlight
   {
-    id: 'sp11',
-    name: 'Chuột Gaming không dây Logitech G Pro X Superlight',
-    category: 'accessory',
-    brand: 'Logitech',
-    originalPrice: 3490000,
-    price: 2690000,
-    oldPrice: 3490000,
-    discountPercent: 23,
-    isInstallment: true,
-    soldCount: 112,
-    totalStock: 150,
-    isFlashSale: false,
-    specs: ['Trọng lượng siêu nhẹ <63g', 'Cảm biến HERO 25K', 'Không dây Lightspeed', 'Feet chuột PTFE lớn'],
-    image: 'images/sp11.jpg',
-    description: 'Vũ khí vô địch của các game thủ eSports hàng đầu với độ trễ 1ms và trọng lượng siêu nhẹ.'
+    "id": "sp11",
+    "name": "Chuột Gaming không dây Logitech G Pro X Superlight",
+    "category": "accessory",
+    "brand": "Logitech",
+    "originalPrice": 3290000,
+    "price": 2490000,
+    "oldPrice": 3290000,
+    "discountPercent": 24,
+    "isInstallment": false,
+    "rating": 4.9,
+    "reviewCount": 1650,
+    "soldCount": "3.6k",
+    "totalStock": 90,
+    "isFlashSale": false,
+    "specs": [
+      "Trọng lượng siêu nhẹ dưới 63 gram",
+      "Cảm biến HERO 25K DPI chuẩn xác từng pixel",
+      "Công nghệ không dây Lightspeed độ trễ 1ms",
+      "Feet chuột PTFE nguyên chất lướt êm ái",
+      "Thời lượng pin lên tới 70 giờ liên tục"
+    ],
+    "image": "images/sp11.jpg",
+    "description": "Vũ khí tối thượng của các tuyển thủ eSports chuyên nghiệp với trọng lượng siêu nhẹ dưới 63g, cảm biến HERO 25K chính xác từng pixel và kết nối không dây Lightspeed không độ trễ.",
+    "reviews": [
+      {
+        "id": "rev_sp11_1",
+        "author": "Bá Tùng",
+        "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&q=80",
+        "stars": 5,
+        "date": "3 ngày trước",
+        "variant": "Trắng White Edition",
+        "comment": "Chuột nhẹ như không cầm gì, vẩy flick trong CS2 và Valorant cực kỳ chuẩn xác. Pin cả tháng mới cần cắm sạc một lần.",
+        "likes": 25,
+        "verified": true
+      },
+      {
+        "id": "rev_sp11_2",
+        "author": "Quang Anh",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Đen Black Edition",
+        "comment": "Cảm biến HERO 25K không bao giờ bị giật hay mất tracking, feet chuột trượt trên lót chuột êm ru không một chút cọ xát.",
+        "likes": 13,
+        "verified": true
+      }
+    ]
   },
-  // 12. Củ sạc nhanh GaN Anker 65W
   {
-    id: 'sp12',
-    name: 'Củ sạc nhanh GaN Anker 735 65W 3 Cổng Type-C',
-    category: 'accessory',
-    brand: 'Anker',
-    originalPrice: 1290000,
-    price: 890000,
-    oldPrice: 1290000,
-    discountPercent: 31,
-    isInstallment: true,
-    soldCount: 150,
-    totalStock: 200,
-    isFlashSale: false,
-    specs: ['Công nghệ GaNPrime', 'Công suất 65W', '2 Cổng Type-C + 1 USB-A', 'Bảo vệ ActiveShield'],
-    image: 'images/sp12.jpg',
-    description: 'Củ sạc nhỏ gọn sạc cùng lúc 3 thiết bị MacBook, iPhone, Apple Watch với công nghệ PowerIQ 4.0.'
+    "id": "sp12",
+    "name": "Củ sạc nhanh GaN Anker 735 65W 3 Cổng Type-C",
+    "category": "accessory",
+    "brand": "Anker",
+    "originalPrice": 1290000,
+    "price": 890000,
+    "oldPrice": 1290000,
+    "discountPercent": 31,
+    "isInstallment": false,
+    "rating": 4.9,
+    "reviewCount": 3100,
+    "soldCount": "6.5k",
+    "totalStock": 150,
+    "isFlashSale": false,
+    "specs": [
+      "Công nghệ GaNPrime thế hệ mới nhỏ gọn",
+      "Công suất tối đa 65W sạc nhanh laptop & điện thoại",
+      "3 cổng ra (2 Type-C + 1 USB-A)",
+      "Công nghệ phân bổ nguồn thông minh PowerIQ 4.0",
+      "Bảo vệ nhiệt độ ActiveShield 2.0 an toàn"
+    ],
+    "image": "images/sp12.jpg",
+    "description": "Củ sạc công nghệ bán dẫn GaNPrime siêu nhỏ gọn chỉ bằng 50% sạc truyền thống, công suất mạnh mẽ 65W sạc cùng lúc MacBook, iPhone và tai nghe an toàn tuyệt đối.",
+    "reviews": [
+      {
+        "id": "rev_sp12_1",
+        "author": "Thanh Tùng",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Đen Nhám GaNPrime 65W",
+        "comment": "Sạc được cả MacBook Air và iPhone cùng lúc mà củ sạc chỉ ấm nhẹ, không hề nóng ran như củ sạc cũ. Kích thước nhỏ gọn mang đi du lịch tiện lợi.",
+        "likes": 34,
+        "verified": true
+      },
+      {
+        "id": "rev_sp12_2",
+        "author": "Mai Phương",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "Xám Bạc GaNPrime",
+        "comment": "Hàng Anker thì khỏi lo về độ bền, sạc chuẩn Power Delivery nhận sạc nhanh lập tức. Đóng gói cẩn thận, shipper giao nhanh.",
+        "likes": 19,
+        "verified": true
+      }
+    ]
   },
-  // 13. iPad Air M2 11 inch
   {
-    id: 'sp13',
-    name: 'iPad Air M2 11 inch 128GB Wifi Chính Hãng Apple',
-    category: 'phone',
-    brand: 'Apple',
-    originalPrice: 16990000,
-    price: 14990000,
-    oldPrice: 16990000,
-    discountPercent: 12,
-    isInstallment: true,
-    soldCount: 42,
-    totalStock: 60,
-    isFlashSale: false,
-    specs: ['Chip Apple M2', 'Màn Liquid Retina 11"', 'Hỗ trợ Apple Pencil Pro', 'Camera trước ngang 12MP'],
-    image: 'images/sp13.jpg',
-    description: 'Sức mạnh chip M2 bứt phá, thiết kế nhôm nguyên khối siêu mỏng và hỗ trợ bút Apple Pencil Pro mới nhất.'
+    "id": "sp13",
+    "name": "iPad Air M2 11 inch 128GB Wifi Chính Hãng Apple",
+    "category": "phone",
+    "brand": "Apple",
+    "originalPrice": 16990000,
+    "price": 14790000,
+    "oldPrice": 16990000,
+    "discountPercent": 13,
+    "isInstallment": true,
+    "rating": 4.9,
+    "reviewCount": 1150,
+    "soldCount": "2.2k",
+    "totalStock": 55,
+    "isFlashSale": false,
+    "specs": [
+      "Chip Apple M2 mạnh mẽ đồ họa vượt trội",
+      "Màn hình Liquid Retina 11\" True Tone",
+      "Hỗ trợ Apple Pencil Pro & Magic Keyboard",
+      "Camera trước ngang 12MP Center Stage",
+      "Wifi 6E siêu tốc, loa kép stereo"
+    ],
+    "image": "images/sp13.jpg",
+    "description": "Chiếc máy tính bảng đa năng hoàn hảo với sức mạnh chip Apple M2, hỗ trợ bút Apple Pencil Pro thế hệ mới với cử chỉ bóp thông minh và camera trước đặt ngang thuận tiện cho họp online.",
+    "reviews": [
+      {
+        "id": "rev_sp13_1",
+        "author": "Ngọc Ánh",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Xanh Dương Starlight, 128GB",
+        "comment": "Vẽ trên iPad Air M2 với Apple Pencil Pro cực mượt, lực nhấn và cảm biến xoay nét cọ rất nhạy. Màn hình màu sắc chuẩn chỉnh.",
+        "likes": 21,
+        "verified": true
+      },
+      {
+        "id": "rev_sp13_2",
+        "author": "Duy Khoa",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Xám Không Gian, 128GB",
+        "comment": "Chip M2 xử lý file đồ họa và dựng clip CapCut 4K mượt mà, máy mỏng nhẹ cầm đọc tài liệu rất thoải mái.",
+        "likes": 14,
+        "verified": true
+      }
+    ]
   },
-  // 14. Dell XPS 15 9530
   {
-    id: 'sp14',
-    name: 'Laptop Dell XPS 15 9530 Core i7 RTX 4050 OLED',
-    category: 'laptop',
-    brand: 'Dell',
-    originalPrice: 54990000,
-    price: 48990000,
-    oldPrice: 54990000,
-    discountPercent: 11,
-    isInstallment: true,
-    soldCount: 25,
-    totalStock: 40,
-    isFlashSale: false,
-    specs: ['Core i7-13700H', 'RTX 4050 6GB', 'RAM 16GB DDR5', 'Màn 3.5K OLED Touch'],
-    image: 'images/sp14.jpg',
-    description: 'Kiệt tác laptop mỏng nhẹ doanh nhân với khung viền nhôm CNC, chiếu nghỉ tay sợi carbon và màn hình OLED cảm ứng tuyệt đẹp.'
+    "id": "sp14",
+    "name": "Laptop Dell XPS 15 9530 Core i7 RTX 4050 OLED",
+    "category": "laptop",
+    "brand": "Dell",
+    "originalPrice": 52990000,
+    "price": 46990000,
+    "oldPrice": 52990000,
+    "discountPercent": 11,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 360,
+    "soldCount": "680",
+    "totalStock": 35,
+    "isFlashSale": false,
+    "specs": [
+      "Intel Core i7-13700H 14 nhân 20 luồng",
+      "NVIDIA GeForce RTX 4050 6GB GDDR6",
+      "Màn hình 15.6\" 3.5K OLED Cảm ứng 400 nits",
+      "RAM 16GB DDR5, SSD 1TB NVMe",
+      "Vỏ nhôm CNC nguyên khối & sợi carbon"
+    ],
+    "image": "images/sp14.jpg",
+    "description": "Biểu tượng laptop doanh nhân và sáng tạo nội dung đỉnh cao với khung nhôm CNC nguyên khối kết hợp chiếu nghỉ tay sợi carbon, màn hình 3.5K OLED rực rỡ và card đồ họa rời RTX 4050.",
+    "reviews": [
+      {
+        "id": "rev_sp14_1",
+        "author": "Hoàng Nam",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "Platinum Silver / Carbon Black",
+        "comment": "Màn hình 3.5K OLED màu đen sâu tuyệt đối, làm ảnh Photoshop hay xem phim HDR màu sắc đẹp mê ly. Vỏ nhôm CNC sờ vào cực kỳ mát và sang.",
+        "likes": 16,
+        "verified": true
+      },
+      {
+        "id": "rev_sp14_2",
+        "author": "Vũ Hoàng",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+        "stars": 4,
+        "date": "10 ngày trước",
+        "variant": "16GB RAM / 1TB SSD",
+        "comment": "Touchpad to bản rê chuột chính xác nhất giới laptop Windows, bàn phím gõ êm, máy chạy đồ họa mượt mà.",
+        "likes": 9,
+        "verified": true
+      }
+    ]
   },
-  // 15. Marshall Emberton II
   {
-    id: 'sp15',
-    name: 'Loa Bluetooth di động Marshall Emberton II 20W',
-    category: 'audio',
-    brand: 'Marshall',
-    originalPrice: 4990000,
-    price: 3890000,
-    oldPrice: 4990000,
-    discountPercent: 22,
-    isInstallment: true,
-    soldCount: 68,
-    totalStock: 80,
-    isFlashSale: false,
-    specs: ['Âm thanh đa hướng 360 độ', 'Chống nước bụi IP67', 'Pin 30 giờ nghe liên tục', 'Chế độ Stack Mode'],
-    image: 'images/sp15.jpg',
-    description: 'Biểu tượng âm thanh cổ điển phong cách rock n roll với thời lượng pin 30 giờ và khả năng chống nước IP67 bền bỉ.'
+    "id": "sp15",
+    "name": "Loa Bluetooth di động Marshall Emberton II 20W",
+    "category": "audio",
+    "brand": "Marshall",
+    "originalPrice": 4490000,
+    "price": 3690000,
+    "oldPrice": 4490000,
+    "discountPercent": 18,
+    "isInstallment": false,
+    "rating": 4.8,
+    "reviewCount": 1420,
+    "soldCount": "2.8k",
+    "totalStock": 75,
+    "isFlashSale": false,
+    "specs": [
+      "Âm thanh đa hướng True Stereophonic 360°",
+      "Công suất 20W RMS âm thanh chi tiết",
+      "Thời lượng pin hơn 30 giờ chơi nhạc",
+      "Kháng nước & kháng bụi chuẩn IP67",
+      "Chế độ ghép đôi Stack Mode nhiều loa"
+    ],
+    "image": "images/sp15.jpg",
+    "description": "Chất âm rock mộc mạc đặc trưng của Marshall trong thân hình di động nhỏ gọn, công nghệ âm thanh đa hướng 360 độ và khả năng chơi nhạc bền bỉ trên 30 giờ cho mọi chuyến dã ngoại.",
+    "reviews": [
+      {
+        "id": "rev_sp15_1",
+        "author": "Trung Hiếu",
+        "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Black & Brass (Đen Viền Vàng)",
+        "comment": "Thiết kế vintage kinh điển để bàn làm việc rất đẹp, âm bass chắc nịch và vocal ca sĩ nổi rõ. Pin 30 tiếng nghe mãi không hết.",
+        "likes": 23,
+        "verified": true
+      },
+      {
+        "id": "rev_sp15_2",
+        "author": "Hà My",
+        "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "Cream (Kem Sữa)",
+        "comment": "Chống nước IP67 mang ra bờ biển hay hồ bơi tiệc tùng thoải mái. Loa cầm đầm tay, chất lượng hoàn thiện da cao cấp.",
+        "likes": 15,
+        "verified": true
+      }
+    ]
   },
-  // 16. Pin sạc dự phòng Baseus Blade 100W
   {
-    id: 'sp16',
-    name: 'Pin sạc dự phòng Baseus Blade 100W 20.000mAh',
-    category: 'accessory',
-    brand: 'Baseus',
-    originalPrice: 1690000,
-    price: 1190000,
-    oldPrice: 1690000,
-    discountPercent: 30,
-    isInstallment: true,
-    soldCount: 95,
-    totalStock: 120,
-    isFlashSale: false,
-    specs: ['Công suất khủng 100W', 'Dung lượng 20.000mAh', 'Thiết kế dẹt 18mm siêu mỏng', 'Màn hình LED kỹ thuật số'],
-    image: 'images/sp16.jpg',
-    description: 'Pin dự phòng siêu mỏng sạc được cho cả MacBook Pro và laptop gaming với màn hình hiển thị công suất thời gian thực.'
+    "id": "sp16",
+    "name": "Pin sạc dự phòng Baseus Blade 100W 20.000mAh",
+    "category": "accessory",
+    "brand": "Baseus",
+    "originalPrice": 1690000,
+    "price": 1250000,
+    "oldPrice": 1690000,
+    "discountPercent": 26,
+    "isInstallment": false,
+    "rating": 4.8,
+    "reviewCount": 1890,
+    "soldCount": "3.7k",
+    "totalStock": 110,
+    "isFlashSale": false,
+    "specs": [
+      "Công suất sạc cực đại 100W Type-C",
+      "Dung lượng 20.000mAh chuẩn an toàn hàng không",
+      "Màn hình LED kỹ thuật số hiển thị điện áp & thời gian",
+      "Thiết kế siêu mỏng 18mm để vừa ngăn balo",
+      "4 cổng sạc (2 Type-C + 2 USB-A)"
+    ],
+    "image": "images/sp16.jpg",
+    "description": "Cục pin dự phòng mỏng nhất phân khúc sạc nhanh 100W, sạc đầy laptop MacBook Pro chỉ trong 1.5 giờ, màn hình LED hiển thị trực quan thông số điện áp và thời gian còn lại.",
+    "reviews": [
+      {
+        "id": "rev_sp16_1",
+        "author": "Quốc Cường",
+        "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Đen Nhám 100W Blade",
+        "comment": "Sạc được cho laptop ThinkPad và Dell XPS ở công suất 100W mượt mà, mỏng dẹt như cuốn sổ nhét balo rất tiện.",
+        "likes": 26,
+        "verified": true
+      },
+      {
+        "id": "rev_sp16_2",
+        "author": "Kim Ngân",
+        "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&q=80",
+        "stars": 5,
+        "date": "5 ngày trước",
+        "variant": "20.000mAh 100W",
+        "comment": "Màn hình báo phần trăm pin và số phút sạc còn lại rất trực quan, mang lên máy bay đi công tác vô tư.",
+        "likes": 14,
+        "verified": true
+      }
+    ]
   },
-  // 17. SSD Samsung 990 Pro 1TB
   {
-    id: 'sp17',
-    name: 'Ổ cứng SSD Samsung 990 Pro 1TB NVMe PCIe Gen 4',
-    category: 'accessory',
-    brand: 'Samsung',
-    originalPrice: 3290000,
-    price: 2590000,
-    oldPrice: 3290000,
-    discountPercent: 21,
-    isInstallment: true,
-    soldCount: 78,
-    totalStock: 100,
-    isFlashSale: false,
-    specs: ['Tốc độ đọc 7450 MB/s', 'Tốc độ ghi 6900 MB/s', 'Bộ nhớ V-NAND TLC', 'Hỗ trợ PS5 & PC'],
-    image: 'images/sp17.jpg',
-    description: 'Ổ cứng SSD NVMe nhanh nhất thế giới cho tốc độ tải game thần tốc và xử lý đồ họa chuyên sâu 8K.'
+    "id": "sp17",
+    "name": "Ổ cứng SSD Samsung 990 Pro 1TB NVMe PCIe Gen 4",
+    "category": "accessory",
+    "brand": "Samsung",
+    "originalPrice": 3290000,
+    "price": 2790000,
+    "oldPrice": 3290000,
+    "discountPercent": 15,
+    "isInstallment": false,
+    "rating": 4.9,
+    "reviewCount": 1720,
+    "soldCount": "3.9k",
+    "totalStock": 85,
+    "isFlashSale": false,
+    "specs": [
+      "Tốc độ đọc tuần tự lên đến 7450 MB/s",
+      "Tốc độ ghi tuần tự 6900 MB/s",
+      "Giao thức PCIe Gen 4.0 x4, NVMe 2.0",
+      "Chip điều khiển Pascal tối ưu nhiệt độ",
+      "Độ bền 600 TBW, bảo hành chính hãng 5 năm"
+    ],
+    "image": "images/sp17.jpg",
+    "description": "Tốc độ đọc ghi chạm giới hạn băng thông PCIe 4.0 lên tới 7450 MB/s, tối ưu cho PC gaming hạng nặng, máy trạm workstation và tương thích hoàn hảo để nâng cấp ổ cứng máy chơi game PS5.",
+    "reviews": [
+      {
+        "id": "rev_sp17_1",
+        "author": "Thái Sơn",
+        "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&q=80",
+        "stars": 5,
+        "date": "3 ngày trước",
+        "variant": "1TB PCIe Gen 4.0",
+        "comment": "Tốc độ đọc 7450MB/s load game Cyberpunk và Hogwarts Legacy trong 2 giây. Lắp vào PS5 nhận ngay lập tức.",
+        "likes": 28,
+        "verified": true
+      },
+      {
+        "id": "rev_sp17_2",
+        "author": "Huy Hoàng",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+        "stars": 5,
+        "date": "1 tuần trước",
+        "variant": "1TB Không Tản",
+        "comment": "Samsung 990 Pro thì ổn định hàng đầu rồi, nhiệt độ khi copy file nặng 100GB chỉ tầm 48 độ với tản nhiệt bo mạch.",
+        "likes": 16,
+        "verified": true
+      }
+    ]
   },
-  // 18. Samsung Galaxy Z Fold6
   {
-    id: 'sp18',
-    name: 'Samsung Galaxy Z Fold6 5G 12GB 256GB Silver',
-    category: 'phone',
-    brand: 'Samsung',
-    originalPrice: 43990000,
-    price: 37990000,
-    oldPrice: 43990000,
-    discountPercent: 14,
-    isInstallment: true,
-    soldCount: 30,
-    totalStock: 50,
-    isFlashSale: false,
-    specs: ['Màn chính 7.6" Dynamic AMOLED 2X', 'Bản lề Flex gập phẳng', 'Snapdragon 8 Gen 3', 'Galaxy AI thế hệ mới'],
-    image: 'images/sp18.jpg',
-    description: 'Tuyệt tác smartphone màn hình gập thế hệ mới, mỏng nhẹ hơn, trang bị Galaxy AI thông minh và độ bền chuẩn IP48.'
+    "id": "sp18",
+    "name": "Samsung Galaxy Z Fold6 5G 12GB 256GB Silver",
+    "category": "phone",
+    "brand": "Samsung",
+    "originalPrice": 43990000,
+    "price": 38990000,
+    "oldPrice": 43990000,
+    "discountPercent": 11,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 710,
+    "soldCount": "1.2k",
+    "totalStock": 40,
+    "isFlashSale": false,
+    "specs": [
+      "Thiết kế bản lề rãnh kép FlexHinge gập khít",
+      "Màn hình chính 7.6\" Dynamic AMOLED 2X 2600 nits",
+      "Snapdragon 8 Gen 3 for Galaxy tối ưu đa nhiệm",
+      "Bộ công cụ Galaxy AI trên màn hình lớn",
+      "Khung nhôm Armor Aluminum & kính Victus 2"
+    ],
+    "image": "images/sp18.jpg",
+    "description": "Đỉnh cao smartphone màn hình gập mỏng nhẹ và vuông vắn nhất từ trước đến nay, mở ra không gian làm việc đa nhiệm 7.6 inch kết hợp cùng sức mạnh Galaxy AI đột phá.",
+    "reviews": [
+      {
+        "id": "rev_sp18_1",
+        "author": "Trần Lâm",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+        "stars": 5,
+        "date": "2 ngày trước",
+        "variant": "Silver Shadow, 256GB",
+        "comment": "Bản lề gập khít hoàn toàn, màn hình ngoài rộng hơn gõ bàn phím không bị hụt tay như Fold5. Mở màn hình lớn xem biểu đồ chứng khoán cực đã.",
+        "likes": 22,
+        "verified": true
+      },
+      {
+        "id": "rev_sp18_2",
+        "author": "Thảo Uyên",
+        "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+        "stars": 5,
+        "date": "6 ngày trước",
+        "variant": "Navy Blue, 256GB",
+        "comment": "Tính năng dịch song ngữ 2 chiều trên 2 màn hình khi đi du lịch nước ngoài cực kỳ xịn sò. Máy mỏng và nhẹ hơn đáng kể.",
+        "likes": 13,
+        "verified": true
+      }
+    ]
   },
-  // 19. Màn hình gaming ASUS TUF 27
   {
-    id: 'sp19',
-    name: 'Màn hình gaming ASUS TUF VG27AQ3A 27" 2K 180Hz',
-    category: 'laptop',
-    brand: 'Asus',
-    originalPrice: 6990000,
-    price: 5490000,
-    oldPrice: 6990000,
-    discountPercent: 21,
-    isInstallment: true,
-    soldCount: 56,
-    totalStock: 75,
-    isFlashSale: false,
-    specs: ['Độ phân giải 2K QHD', 'Fast IPS 180Hz', 'Thời gian phản hồi 1ms GTG', '130% sRGB & HDR10'],
-    image: 'images/sp19.jpg',
-    description: 'Màn hình gaming chuẩn thi đấu eSports cho hình ảnh sắc nét, màu sắc chuẩn đồ họa và không hề xé hình với G-Sync.'
+    "id": "sp19",
+    "name": "Màn hình gaming ASUS TUF VG27AQ3A 27\" 2K 180Hz",
+    "category": "laptop",
+    "brand": "Asus",
+    "originalPrice": 6990000,
+    "price": 5490000,
+    "oldPrice": 6990000,
+    "discountPercent": 21,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 940,
+    "soldCount": "2.1k",
+    "totalStock": 70,
+    "isFlashSale": false,
+    "specs": [
+      "Kích thước 27 inch độ phân giải 2K QHD (2560x1440)",
+      "Tần số quét 180Hz mượt mà",
+      "Tấm nền Fast IPS tốc độ phản hồi 1ms GTG",
+      "Công nghệ đồng bộ G-Sync Compatible & FreeSync",
+      "Hỗ trợ HDR10 và 130% sRGB chuẩn màu"
+    ],
+    "image": "images/sp19.jpg",
+    "description": "Màn hình gaming chuẩn thi đấu eSports với độ phân giải 2K sắc nét trên kích thước 27 inch, tần số quét 180Hz kết hợp tấm nền Fast IPS 1ms loại bỏ hoàn toàn hiện tượng bóng mờ và xé hình.",
+    "reviews": [
+      {
+        "id": "rev_sp19_1",
+        "author": "Nam Phong",
+        "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&q=80",
+        "stars": 5,
+        "date": "4 ngày trước",
+        "variant": "27 inch 2K 180Hz Fast IPS",
+        "comment": "Độ phân giải 2K 180Hz quá mượt cho các tựa game FPS, tấm nền Fast IPS màu sắc trong trẻo không bị hở sáng.",
+        "likes": 19,
+        "verified": true
+      },
+      {
+        "id": "rev_sp19_2",
+        "author": "Văn Chiến",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+        "stars": 4,
+        "date": "1 tuần trước",
+        "variant": "27 inch 2K",
+        "comment": "Chân đế chắc chắn, hỗ trợ ngàm VESA để gắn arm màn hình. Giá quá tốt cho một chiếc màn 2K 180Hz từ ASUS.",
+        "likes": 10,
+        "verified": true
+      }
+    ]
   },
-  // 20. Galaxy Watch 6 Classic
   {
-    id: 'sp20',
-    name: 'Đồng hồ Samsung Galaxy Watch 6 Classic 43mm LTE',
-    category: 'watch',
-    brand: 'Samsung',
-    originalPrice: 8990000,
-    price: 6490000,
-    oldPrice: 8990000,
-    discountPercent: 28,
-    isInstallment: true,
-    soldCount: 48,
-    totalStock: 65,
-    isFlashSale: false,
-    specs: ['Viền xoay bezel vật lý cổ điển', 'Kính Sapphire chống trầy', 'Đo huyết áp & ECG', 'Hỗ trợ eSIM nghe gọi'],
-    image: 'images/sp20.jpg',
-    description: 'Sự trở lại của viền bezel xoay trứ danh kết hợp kính sapphire cao cấp và tính năng theo dõi giấc ngủ chuyên sâu.'
+    "id": "sp20",
+    "name": "Đồng hồ Samsung Galaxy Watch 6 Classic 43mm LTE",
+    "category": "watch",
+    "brand": "Samsung",
+    "originalPrice": 8990000,
+    "price": 6490000,
+    "oldPrice": 8990000,
+    "discountPercent": 28,
+    "isInstallment": true,
+    "rating": 4.8,
+    "reviewCount": 820,
+    "soldCount": "1.6k",
+    "totalStock": 65,
+    "isFlashSale": false,
+    "specs": [
+      "Viền xoay bezel vật lý cổ điển trứ danh",
+      "Kính Sapphire chống trầy xước cao cấp",
+      "Cảm biến BioActive đo ECG & huyết áp",
+      "Theo dõi giấc ngủ chuyên sâu phân tích giấc ngủ",
+      "Hỗ trợ eSIM độc lập nghe gọi không cần điện thoại"
+    ],
+    "image": "images/sp20.jpg",
+    "description": "Sự trở lại của viền bezel xoay vật lý trứ danh kết hợp kính sapphire cao cấp, tính năng theo dõi giấc ngủ chuyên sâu và hỗ trợ eSIM nghe gọi độc lập không cần mang theo điện thoại.",
+    "reviews": [
+      {
+        "id": "rev_sp20_1",
+        "author": "Thanh Hải",
+        "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80",
+        "stars": 5,
+        "date": "Hôm qua",
+        "variant": "Đen Black 43mm LTE",
+        "comment": "Viền xoay vật lý lách cách cực kỳ thích tay và chuẩn xác, kính sapphire bóng bẩy không trầy xước. Đo điện tâm đồ ECG rất tiện theo dõi sức khỏe.",
+        "likes": 21,
+        "verified": true
+      },
+      {
+        "id": "rev_sp20_2",
+        "author": "Quỳnh Nga",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80",
+        "stars": 5,
+        "date": "5 ngày trước",
+        "variant": "Bạc Silver 43mm LTE",
+        "comment": "Add eSIM Viettel vào chạy bộ ngoài công viên vẫn nghe gọi và nhận tin nhắn bình thường, không cần cầm điện thoại lỉnh kỉnh.",
+        "likes": 15,
+        "verified": true
+      }
+    ]
   }
 ];
 
@@ -805,6 +1603,211 @@ const Storage = {
   }
 };
 
+// --- 2.1 VOUCHER SERVICE (CÁ NHÂN HÓA THEO TỪNG TÀI KHOẢN) ---
+const VoucherService = {
+  getUserVouchers(user) {
+    if (!user) user = (typeof Auth !== 'undefined' ? Auth.getUser() : null);
+    if (!user) return [];
+
+    // Lấy danh sách voucher từ localStorage theo khóa: vouchers_${currentUser.email}
+    const storageKey = `vouchers_${user.email || user.username || ''}`;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch (e) {
+        // fallback
+      }
+    }
+
+    // Nếu tài khoản chưa có voucher nào (mảng rỗng hoặc null): KHÔNG DÙNG SỐ ẢO
+    return [];
+  },
+
+  generateVouchersForUser(user) {
+    const rawName = (user.fullname || user.username || 'KHACH').trim();
+    const isVipOrAdmin = user.username === 'admin' || user.email === 'admin@gmail.com' || (user.fullname && user.fullname.includes('Trần Hoàng Nam'));
+
+    const now = new Date();
+    const exp = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()).toLocaleDateString('vi-VN');
+
+    return [
+      {
+        code: 'TECHZONE100',
+        title: 'Mã Giảm Giá TechZone: Giảm 100.000đ cho đơn từ 500.000đ',
+        category: 'discount',
+        discountType: 'fixed',
+        discountValue: 100000,
+        minOrder: 500000,
+        expiryDate: exp,
+        isUsed: false,
+        badgeColor: '#ef4444',
+        badgeText: 'GIẢM 100K'
+      },
+      {
+        code: 'FREESHIP30',
+        title: 'Miễn Phí Vận Chuyển hỏa tốc toàn quốc (Tối đa 30.000đ)',
+        category: 'freeship',
+        discountType: 'fixed',
+        discountValue: 30000,
+        minOrder: 200000,
+        expiryDate: exp,
+        isUsed: false,
+        badgeColor: '#10b981',
+        badgeText: 'FREESHIP 30K'
+      },
+      {
+        code: 'SMEMBERVIP',
+        title: isVipOrAdmin ? 'Đặc Quyền VIP TechZone: Giảm 200.000đ cho đơn từ 2.000.000đ' : 'Đặc Quyền Smember: Giảm 150.000đ cho đơn từ 1.500.000đ',
+        category: 'vip',
+        discountType: 'fixed',
+        discountValue: isVipOrAdmin ? 200000 : 150000,
+        minOrder: isVipOrAdmin ? 2000000 : 1500000,
+        expiryDate: exp,
+        isUsed: false,
+        badgeColor: '#8b5cf6',
+        badgeText: 'VIP ONLY'
+      },
+      {
+        code: 'FLASHSALE50',
+        title: 'Flash Sale Công Nghệ: Giảm 50.000đ cho đơn từ 300.000đ',
+        category: 'discount',
+        discountType: 'fixed',
+        discountValue: 50000,
+        minOrder: 300000,
+        expiryDate: exp,
+        isUsed: false,
+        badgeColor: '#f59e0b',
+        badgeText: 'FLASH SALE'
+      }
+    ];
+  },
+
+  addVoucherToUser(voucher, user) {
+    if (!user) user = (typeof Auth !== 'undefined' ? Auth.getUser() : null);
+    if (!user) return { success: false, message: 'Vui lòng đăng nhập để lưu mã vào ví voucher!' };
+    const vouchers = this.getUserVouchers(user);
+    if (vouchers.some(v => v.code.toUpperCase() === voucher.code.toUpperCase())) {
+      return { success: false, message: `Mã ${voucher.code} đã có sẵn trong ví voucher của bạn!` };
+    }
+    vouchers.unshift(voucher);
+    const storageKey = `vouchers_${user.email || user.username || ''}`;
+    localStorage.setItem(storageKey, JSON.stringify(vouchers));
+    return { success: true, message: `Đã lưu thành công mã ${voucher.code} vào ví cá nhân!` };
+  },
+
+  markVoucherAsUsed(code, user, orderId) {
+    if (!user) user = (typeof Auth !== 'undefined' ? Auth.getUser() : null);
+    if (!user || !code) return;
+
+    const vouchers = this.getUserVouchers(user);
+    const target = vouchers.find(v => v.code.toUpperCase() === code.toUpperCase());
+    if (target) {
+      target.isUsed = true;
+      target.usedInOrderId = orderId;
+      target.usedAt = new Date().toISOString();
+      const storageKey = `vouchers_${user.email || user.username || ''}`;
+      localStorage.setItem(storageKey, JSON.stringify(vouchers));
+    }
+  }
+};
+
+// --- 2.2 WARRANTY SERVICE (TRA CỨU BẢO HÀNH THIẾT BỊ ĐÃ GIAO) ---
+const WarrantyService = {
+  getWarrantyInfo(order, item) {
+    if (!order || !item) return null;
+
+    const cleanId = (order.id || 'SPX').replace(/[^a-zA-Z0-9]/g, '');
+    const cleanItemId = (item.id || 'sp1').replace(/[^a-zA-Z0-9]/g, '').slice(-2);
+    // Serial/IMEI giả lập chuẩn VD: TZ-VN/A-992812
+    const imei = `TZ-VN/A-${cleanId.slice(-4)}${cleanItemId || '12'}`;
+    const serial = `SN-${cleanItemId || '01'}-${cleanId.slice(-6)}`;
+
+    // Thời hạn bảo hành: 12 tháng (hoặc 24 tháng cho laptop, Apple)
+    const isAppleOrLaptop = (item.name || '').includes('iPhone') || (item.name || '').includes('MacBook') || (item.name || '').includes('ASUS') || (item.name || '').includes('ROG');
+    const warrantyMonths = isAppleOrLaptop ? 24 : 12;
+
+    const orderDate = new Date(order.createdAt || Date.now());
+    const expiryDate = new Date(orderDate);
+    expiryDate.setMonth(expiryDate.getMonth() + warrantyMonths);
+
+    const now = new Date();
+    const diffTime = expiryDate - now;
+    const daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    const isValid = daysRemaining > 0;
+
+    return {
+      orderId: order.id,
+      customerName: order.customer?.name || 'Khách hàng TechZone',
+      customerPhone: order.customer?.phone || '',
+      item: item,
+      imei: imei,
+      serial: serial,
+      warrantyMonths: warrantyMonths,
+      startDate: orderDate.toLocaleDateString('vi-VN'),
+      expiryDate: expiryDate.toLocaleDateString('vi-VN'),
+      daysRemaining: daysRemaining,
+      isValid: isValid,
+      warrantyType: isAppleOrLaptop ? `Bảo Hành Chính Hãng Cao Cấp (${warrantyMonths} Tháng)` : `Bảo Hành Tiêu Chuẩn (${warrantyMonths} Tháng)`,
+      statusText: isValid ? `Còn hạn bảo hành (còn ${daysRemaining} ngày)` : 'Hết hạn bảo hành'
+    };
+  },
+
+  // Danh sách các sản phẩm ĐÃ GIAO THÀNH CÔNG của chính tài khoản đang đăng nhập
+  getUserDeliveredWarranties(user) {
+    if (!user) user = Auth.getUser();
+    if (!user) return [];
+
+    const allOrders = Storage.getOrders();
+    const cEmail = (user.email || '').toLowerCase().trim();
+
+    // Lọc đơn hàng của user và ĐÃ GIAO THÀNH CÔNG
+    const userOrders = allOrders.filter(o => {
+      const oEmail = (o.userEmail || o.customer?.email || '').toLowerCase().trim();
+      const isUser = (cEmail && oEmail && cEmail === oEmail) || (user.username === 'admin' && (!o.userEmail || o.userEmail === 'admin@gmail.com'));
+      const isDelivered = o.status === 'Đã giao' || o.status === 'Giao thành công';
+      return isUser && isDelivered;
+    });
+
+    const warranties = [];
+    userOrders.forEach(o => {
+      if (o.items) {
+        o.items.forEach(it => {
+          warranties.push(this.getWarrantyInfo(o, it));
+        });
+      }
+    });
+
+    return warranties;
+  },
+
+  // Tra cứu theo SĐT, IMEI hoặc Mã đơn hàng (chỉ tìm trong đơn đã giao thành công)
+  lookup(keyword, user) {
+    if (!keyword || !keyword.trim()) return [];
+    const q = keyword.trim().toLowerCase();
+    const allOrders = Storage.getOrders();
+
+    const results = [];
+    allOrders.forEach(o => {
+      if (o.status === 'Đã giao' || o.status === 'Giao thành công') {
+        const orderMatch = o.id.toLowerCase().includes(q) || (o.customer?.phone && o.customer.phone.includes(q));
+        if (o.items) {
+          o.items.forEach(it => {
+            const w = this.getWarrantyInfo(o, it);
+            if (orderMatch || w.imei.toLowerCase().includes(q) || it.name.toLowerCase().includes(q)) {
+              results.push(w);
+            }
+          });
+        }
+      }
+    });
+    return results;
+  }
+};
+
 // --- 3. UI UTILITIES & TOAST NOTIFICATION ---
 function formatVND(amount) {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
@@ -912,11 +1915,13 @@ function renderTechZoneProductCard(prod, isFlashSale = false) {
         ${installmentBadge}
       </div>
 
-      <div class="product-img tz-card-thumb">
+      <a href="product-detail.html?id=${prod.id}" class="product-img tz-card-thumb product-card-img-wrap product-img-box" title="Xem chi tiết ${prod.name}">
         <img src="${prod.image}" alt="${prod.name}" loading="lazy">
-      </div>
+      </a>
 
-      <h4 class="product-title tz-product-title" title="${prod.name}">${prod.name}</h4>
+      <a href="product-detail.html?id=${prod.id}" class="tz-card-title-link" title="Xem chi tiết ${prod.name}">
+        <h4 class="product-title tz-product-title">${prod.name}</h4>
+      </a>
 
       <div class="tz-spec-pills">
         ${specPills}
@@ -944,6 +1949,7 @@ function bindProductActions(container) {
   addBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const currentUser = Auth.getUser();
       if (!currentUser) {
         showToast('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng và mua sắm!', 'warning', 'Yêu cầu đăng nhập');
@@ -1259,8 +2265,10 @@ function initSmartOrderBanner() {
     container.innerHTML = `
       <div class="tz-smart-banner-card active-delivery" onclick="window.location.href='tracking-detail.html?id=${encodeURIComponent(activeOrder.id)}'" title="Nhấp vào để xem lộ trình giao nhận thời gian thực">
         <div class="smart-banner-left">
-          <div class="smart-banner-thumb-wrap">
-            <img src="${itemImg}" alt="${itemName}" class="smart-banner-thumb">
+          <div class="smart-banner-thumb-col">
+            <div class="smart-banner-thumb-wrap">
+              <img src="${itemImg}" alt="${itemName}" class="smart-banner-thumb">
+            </div>
             <span class="smart-banner-pulse-badge"><i class="fa-solid fa-bolt"></i> SPX</span>
           </div>
           <div class="smart-banner-info">
@@ -1558,7 +2566,6 @@ function initCheckoutPage() {
   const custAddressInput = document.getElementById('cust-address');
 
   // Lấy địa chỉ mặc định từ Sổ địa chỉ
-  const userAddresses = Auth.getUserAddresses(currentUser);
   const defaultAddr = Auth.getDefaultAddress(currentUser);
 
   function applyAddressToCheckoutForm(addr) {
@@ -1570,11 +2577,11 @@ function initCheckoutPage() {
 
     const activeSummary = document.getElementById('active-address-summary');
     if (activeSummary) {
-      const isDef = addr.isDefault === true || addr.isDefault === 'true';
+      const isDef = addr.isDefault;
       activeSummary.innerHTML = `
-        <div class="active-addr-card">
+        <div class="active-addr-box">
           <div class="active-addr-top-row">
-            <div class="active-addr-user-meta">
+            <div class="active-addr-badge-wrap">
               <span class="active-addr-name">${addr.recipientName}</span>
               ${isDef ? '<span class="active-addr-badge-default"><i class="fa-solid fa-star"></i> Mặc định</span>' : '<span class="active-addr-badge-selected"><i class="fa-solid fa-check"></i> Đang chọn</span>'}
             </div>
@@ -1662,7 +2669,6 @@ function initCheckoutPage() {
       </div>
     `).join('');
 
-    // Bind chọn địa chỉ
     addrListContainer.querySelectorAll('.btn-use-addr').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
@@ -1675,7 +2681,6 @@ function initCheckoutPage() {
       };
     });
 
-    // Bind đặt làm mặc định
     addrListContainer.querySelectorAll('.btn-set-default-addr').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
@@ -1690,13 +2695,12 @@ function initCheckoutPage() {
 
   function openAddressBookModal() {
     renderAddressBookList();
-    if (addFormBox) addFormBox.style.display = 'none';
-    if (toggleAddFormBtn) toggleAddFormBtn.style.display = 'flex';
-    if (addrModal) addrModal.classList.add('show');
+    if (addrModal) addrModal.classList.add('active');
   }
 
   function closeAddressBookModal() {
-    if (addrModal) addrModal.classList.remove('show');
+    if (addrModal) addrModal.classList.remove('active');
+    if (addFormBox) addFormBox.style.display = 'none';
   }
 
   if (openAddrModalBtn) openAddrModalBtn.onclick = openAddressBookModal;
@@ -1709,63 +2713,90 @@ function initCheckoutPage() {
 
   if (toggleAddFormBtn && addFormBox) {
     toggleAddFormBtn.onclick = () => {
-      addFormBox.style.display = 'block';
-      toggleAddFormBtn.style.display = 'none';
-      const nameInp = document.getElementById('new-addr-name');
-      if (nameInp) nameInp.focus();
+      addFormBox.style.display = addFormBox.style.display === 'none' ? 'block' : 'none';
+      if (addFormBox.style.display === 'block') {
+        document.getElementById('new-addr-name')?.focus();
+      }
     };
   }
 
   if (cancelAddBtn && addFormBox) {
     cancelAddBtn.onclick = () => {
       addFormBox.style.display = 'none';
-      if (toggleAddFormBtn) toggleAddFormBtn.style.display = 'flex';
     };
   }
 
   if (saveNewAddrBtn) {
     saveNewAddrBtn.onclick = () => {
-      const nameVal = document.getElementById('new-addr-name')?.value.trim();
-      const phoneVal = document.getElementById('new-addr-phone')?.value.trim();
-      const cityVal = document.getElementById('new-addr-city')?.value || 'Hà Nội';
-      const detailVal = document.getElementById('new-addr-detail')?.value.trim();
-      const isDefVal = document.getElementById('new-addr-default')?.checked;
+      const name = document.getElementById('new-addr-name')?.value.trim();
+      const phone = document.getElementById('new-addr-phone')?.value.trim();
+      const city = document.getElementById('new-addr-city')?.value;
+      const detail = document.getElementById('new-addr-detail')?.value.trim();
+      const isDef = document.getElementById('new-addr-default')?.checked || false;
 
-      if (!nameVal || !phoneVal || !detailVal) {
-        showToast('Vui lòng điền đầy đủ họ tên, SĐT và địa chỉ chi tiết!', 'warning');
+      if (!name || !phone || !detail) {
+        showToast('Vui lòng điền đủ Họ tên, Số điện thoại và Địa chỉ chi tiết!', 'warning');
         return;
       }
 
-      const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})/;
-      if (!phoneRegex.test(phoneVal)) {
-        showToast('Số điện thoại nhận hàng không hợp lệ!', 'error');
+      const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+      if (!phoneRegex.test(phone)) {
+        showToast('Số điện thoại không hợp lệ!', 'error');
         return;
       }
 
       const newAddr = Auth.addAddress({
-        recipientName: nameVal,
-        phone: phoneVal,
-        city: cityVal,
-        detailAddress: detailVal
-      }, isDefVal);
+        recipientName: name,
+        phone: phone,
+        city: city,
+        detailAddress: detail,
+        isDefault: isDef
+      });
 
-      showToast('Đã lưu địa chỉ nhận hàng mới vĩnh viễn vào tài khoản!', 'success');
+      showToast('Đã lưu địa chỉ nhận hàng mới!', 'success');
       applyAddressToCheckoutForm(newAddr);
+      addFormBox.style.display = 'none';
 
-      // Reset form
       document.getElementById('new-addr-name').value = '';
       document.getElementById('new-addr-phone').value = '';
       document.getElementById('new-addr-detail').value = '';
       document.getElementById('new-addr-default').checked = false;
 
-      addFormBox.style.display = 'none';
-      if (toggleAddFormBtn) toggleAddFormBtn.style.display = 'flex';
-
       renderAddressBookList();
     };
   }
 
+  // --- VOUCHER & PRICING ENGINE ---
   let currentDiscount = 0;
+  let appliedVoucher = null;
+
+  function calculateTotals(cart) {
+    const subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+    let shippingFee = 35000;
+    if (subtotal >= 2000000) {
+      shippingFee = 0; // Free ship for orders >= 2M
+    }
+
+    // Nếu có voucher freeship
+    if (appliedVoucher && appliedVoucher.type === 'freeship') {
+      currentDiscount = Math.min(shippingFee, appliedVoucher.value || 35000);
+    }
+
+    const finalTotal = Math.max(0, subtotal + shippingFee - currentDiscount);
+
+    if (subtotalElem) subtotalElem.textContent = formatVND(subtotal);
+    if (shippingElem) {
+      shippingElem.textContent = shippingFee === 0 ? 'Miễn phí (Đơn > 2tr)' : formatVND(shippingFee);
+      shippingElem.style.color = shippingFee === 0 ? '#10b981' : '';
+    }
+    if (discountElem) {
+      discountElem.textContent = currentDiscount > 0 ? `-${formatVND(currentDiscount)}` : '0 đ';
+      discountElem.style.color = currentDiscount > 0 ? '#ef4444' : '';
+    }
+    if (totalElem) totalElem.textContent = formatVND(finalTotal);
+
+    return { subtotal, shippingFee, discount: currentDiscount, finalTotal };
+  }
 
   function renderCartList() {
     const cart = Storage.getCart();
@@ -1790,10 +2821,10 @@ function initCheckoutPage() {
         </div>
         <div class="tz-qty-controls">
           <button type="button" class="tz-qty-btn btn-minus" data-id="${item.id}">-</button>
-          <span class="tz-qty-num">${item.quantity}</span>
+          <span class="tz-qty-val">${item.quantity || 1}</span>
           <button type="button" class="tz-qty-btn btn-plus" data-id="${item.id}">+</button>
         </div>
-        <button type="button" class="tz-cart-remove-btn" data-id="${item.id}" title="Xóa món">
+        <button type="button" class="tz-cart-remove-btn" data-id="${item.id}" title="Xóa">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
@@ -1801,33 +2832,6 @@ function initCheckoutPage() {
 
     calculateTotals(cart);
     bindCartEvents();
-  }
-
-  function calculateTotals(cart) {
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-    const shippingRadio = document.querySelector('input[name="shipping_service"]:checked');
-    const isExpress = shippingRadio ? shippingRadio.value === 'express' : true;
-
-    let shippingFee = isExpress ? 35000 : 25000;
-    if (subtotal >= 2000000) {
-      shippingFee = 0; // Free ship for orders >= 2M
-    }
-
-    const finalTotal = Math.max(0, subtotal + shippingFee - currentDiscount);
-
-    if (subtotalElem) subtotalElem.textContent = formatVND(subtotal);
-    if (shippingElem) {
-      shippingElem.textContent = shippingFee === 0 ? 'Miễn phí (Đơn > 2tr)' : formatVND(shippingFee);
-      shippingElem.style.color = shippingFee === 0 ? '#10b981' : '';
-    }
-    if (discountElem) {
-      discountElem.textContent = currentDiscount > 0 ? `-${formatVND(currentDiscount)}` : '0 đ';
-      discountElem.style.color = currentDiscount > 0 ? '#0284c7' : '';
-    }
-    if (totalElem) totalElem.textContent = formatVND(finalTotal);
-
-    return { subtotal, shippingFee, discount: currentDiscount, finalTotal };
   }
 
   function bindCartEvents() {
@@ -1839,6 +2843,7 @@ function initCheckoutPage() {
       btn.addEventListener('click', () => {
         Storage.updateQuantity(btn.dataset.id, -1);
         renderCartList();
+        if (appliedVoucher) applyVoucher(appliedVoucher.code, false);
       });
     });
 
@@ -1846,6 +2851,7 @@ function initCheckoutPage() {
       btn.addEventListener('click', () => {
         Storage.updateQuantity(btn.dataset.id, 1);
         renderCartList();
+        if (appliedVoucher) applyVoucher(appliedVoucher.code, false);
       });
     });
 
@@ -1854,27 +2860,207 @@ function initCheckoutPage() {
         Storage.removeFromCart(btn.dataset.id);
         showToast('Đã xóa thiết bị khỏi giỏ hàng', 'info');
         renderCartList();
+        if (appliedVoucher) applyVoucher(appliedVoucher.code, false);
       });
     });
   }
 
-  // Voucher apply
+  // --- LOGIC VOUCHER CHỌN & ÁP DỤNG MÃ ---
+  function updateVoucherUI() {
+    const userVouchers = VoucherService.getUserVouchers(currentUser);
+    const availVouchers = userVouchers.filter(v => !v.isUsed);
+    const countBadge = document.getElementById('checkout-voucher-avail-count');
+    if (countBadge) countBadge.textContent = availVouchers.length;
+
+    const appliedBanner = document.getElementById('applied-voucher-tag');
+    if (appliedBanner) {
+      if (appliedVoucher && currentDiscount > 0) {
+        appliedBanner.innerHTML = `
+          <div class="applied-voucher-chip">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.1rem;"></i>
+              <div>
+                <span style="font-weight: 700; color: #1e293b;">Đã áp dụng mã: <span style="color: #0284c7;">${appliedVoucher.code}</span></span>
+                <span class="badge-discount-amount">-${formatVND(currentDiscount)}</span>
+              </div>
+            </div>
+            <button type="button" class="btn-remove-voucher" id="btn-cancel-applied-voucher" title="Bỏ áp dụng mã">
+              <i class="fa-solid fa-xmark"></i> Bỏ chọn
+            </button>
+          </div>
+        `;
+        appliedBanner.style.display = 'block';
+        const cancelBtn = appliedBanner.querySelector('#btn-cancel-applied-voucher');
+        if (cancelBtn) {
+          cancelBtn.onclick = () => {
+            appliedVoucher = null;
+            currentDiscount = 0;
+            if (voucherInput) voucherInput.value = '';
+            showToast('Đã hủy áp dụng mã giảm giá', 'info');
+            renderCartList();
+            updateVoucherUI();
+          };
+        }
+      } else {
+        appliedBanner.style.display = 'none';
+        appliedBanner.innerHTML = '';
+      }
+    }
+  }
+
+  function applyVoucher(code, notify = true) {
+    if (!code || !code.trim()) return;
+    const cleanCode = code.trim().toUpperCase();
+    const userVouchers = VoucherService.getUserVouchers(currentUser);
+    let target = userVouchers.find(v => v.code.toUpperCase() === cleanCode);
+
+    // Fallback nếu người dùng gõ mã chung
+    if (!target) {
+      if (cleanCode === 'TECHZONE50' || cleanCode === 'TZ50K') {
+        target = { code: 'TECHZONE50', title: 'Giảm 50.000đ', type: 'fixed', value: 50000, minOrder: 300000, isUsed: false };
+      } else if (cleanCode === 'FREESHIP') {
+        target = { code: 'FREESHIP', title: 'Freeship 35k', type: 'freeship', value: 35000, minOrder: 300000, isUsed: false };
+      }
+    }
+
+    if (!target) {
+      if (notify) showToast(`Mã giảm giá "${cleanCode}" không tồn tại hoặc không thuộc về tài khoản này!`, 'error', 'Mã không hợp lệ');
+      return;
+    }
+
+    if (target.isUsed) {
+      if (notify) showToast(`Mã giảm giá "${cleanCode}" đã được sử dụng ở đơn hàng trước!`, 'warning', 'Mã đã sử dụng');
+      return;
+    }
+
+    const cart = Storage.getCart();
+    const subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+
+    if (target.minOrder && subtotal < target.minOrder) {
+      if (notify) showToast(`Đơn hàng cần tối thiểu ${formatVND(target.minOrder)} để áp dụng mã ${target.code}!`, 'warning', 'Chưa đủ điều kiện');
+      return;
+    }
+
+    // Tính toán chiết khấu
+    let discountAmount = 0;
+    if (target.type === 'fixed') {
+      discountAmount = target.value;
+    } else if (target.type === 'freeship') {
+      let shippingFee = subtotal >= 2000000 ? 0 : 35000;
+      discountAmount = Math.min(shippingFee, target.value);
+    } else if (target.type === 'percent') {
+      discountAmount = Math.round((subtotal * target.value) / 100);
+      if (target.maxDiscount && discountAmount > target.maxDiscount) {
+        discountAmount = target.maxDiscount;
+      }
+    }
+
+    currentDiscount = discountAmount;
+    appliedVoucher = target;
+    if (voucherInput) voucherInput.value = target.code;
+
+    if (notify) {
+      showToast(`Áp dụng thành công mã <strong>${target.code}</strong>! Tiết kiệm ${formatVND(currentDiscount)}`, 'success', 'Áp dụng mã thành công');
+    }
+
+    renderCartList();
+    updateVoucherUI();
+  }
+
+  // Bind Submit Voucher Form
   if (voucherForm && voucherInput) {
     voucherForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const code = voucherInput.value.trim().toUpperCase();
-      if (code === 'TECHZONE50' || code === 'TZ50K') {
-        currentDiscount = 50000;
-        showToast('Áp dụng thành công mã giảm giá 50.000đ từ TechZone!', 'success');
-      } else if (code === 'FREESHIP') {
-        currentDiscount = 35000;
-        showToast('Áp dụng mã miễn phí giao hàng hỏa tốc thành công!', 'success');
-      } else {
-        showToast('Mã voucher không hợp lệ. Vui lòng thử mã: TECHZONE50', 'error');
-      }
-      renderCartList();
+      applyVoucher(voucherInput.value);
     });
   }
+
+  // Bind Voucher Picker Modal
+  const openVoucherModalBtn = document.getElementById('btn-open-voucher-modal');
+  const voucherModal = document.getElementById('tz-voucher-modal');
+  const closeVoucherModalBtn = document.getElementById('btn-close-voucher-modal');
+  const voucherModalList = document.getElementById('voucher-modal-list');
+
+  function openVoucherModal() {
+    if (!voucherModal || !voucherModalList) return;
+    const userVouchers = VoucherService.getUserVouchers(currentUser);
+    const cart = Storage.getCart();
+    const subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+
+    if (userVouchers.length === 0) {
+      voucherModalList.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b;">
+          <i class="fa-solid fa-ticket" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 8px;"></i>
+          <p>Hiện bạn chưa có mã giảm giá nào trong ví. Hãy tham gia các chương trình Flash Sale để nhận mã nhé!</p>
+        </div>
+      `;
+    } else {
+      voucherModalList.innerHTML = userVouchers.map(v => {
+        const isEligible = !v.isUsed && subtotal >= (v.minOrder || 0);
+        const isCurrentlyApplied = appliedVoucher && appliedVoucher.code === v.code;
+        return `
+          <div class="voucher-picker-card ${v.isUsed ? 'is-used' : ''} ${isCurrentlyApplied ? 'is-applied' : ''}">
+            <div class="vpc-left" style="background: ${v.badgeColor || '#0284c7'};">
+              <span class="vpc-tag">${v.badgeText || 'VOUCHER'}</span>
+            </div>
+            <div class="vpc-body">
+              <div class="vpc-title">${v.title}</div>
+              <div class="vpc-desc">${v.description}</div>
+              <div class="vpc-meta">
+                <span class="vpc-code">${v.code}</span>
+                <span class="vpc-expiry"><i class="fa-regular fa-clock"></i> HSD: ${v.expiryDate}</span>
+              </div>
+            </div>
+            <div class="vpc-action">
+              ${v.isUsed ? `
+                <span class="badge-used-stamp">Đã dùng</span>
+              ` : isCurrentlyApplied ? `
+                <button type="button" class="btn-applied-status" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>
+              ` : isEligible ? `
+                <button type="button" class="btn-select-vcode btn-shopee-primary" data-code="${v.code}">Áp dụng</button>
+              ` : `
+                <button type="button" class="btn-ineligible" disabled title="Chưa đạt giá trị đơn tối thiểu">Chưa đủ ĐK</button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      voucherModalList.querySelectorAll('.btn-select-vcode').forEach(btn => {
+        btn.onclick = () => {
+          const code = btn.dataset.code;
+          applyVoucher(code);
+          closeVoucherModal();
+        };
+      });
+    }
+
+    voucherModal.classList.add('active');
+  }
+
+  function closeVoucherModal() {
+    if (voucherModal) voucherModal.classList.remove('active');
+  }
+  window.openCheckoutVoucherModal = openVoucherModal;
+
+  if (openVoucherModalBtn) openVoucherModalBtn.onclick = openVoucherModal;
+  if (closeVoucherModalBtn) closeVoucherModalBtn.onclick = closeVoucherModal;
+  if (voucherModal) {
+    voucherModal.onclick = (e) => {
+      if (e.target === voucherModal) closeVoucherModal();
+    };
+  }
+
+  // Tự động áp dụng mã nếu chuyển hướng từ Kho Voucher
+  const preSelectedCode = sessionStorage.getItem('selected_voucher_code');
+  if (preSelectedCode) {
+    setTimeout(() => {
+      applyVoucher(preSelectedCode);
+      sessionStorage.removeItem('selected_voucher_code');
+    }, 300);
+  }
+
+  updateVoucherUI();
 
   const shippingRadios = document.querySelectorAll('input[name="shipping_service"]');
   shippingRadios.forEach(r => {
@@ -1961,16 +3147,23 @@ function initCheckoutPage() {
         shippingFee: shippingFee,
         discountAmount: discount,
         total: finalTotal,
+        voucherCode: appliedVoucher ? appliedVoucher.code : null,
         checkpoints: [
           { time: 'Vừa xong', text: 'Đơn hàng đã được khởi tạo thành công trên hệ thống TechZone Official Store.' },
           { time: 'Chờ xác nhận', text: 'Người bán TechZone đang chuẩn bị bưu kiện và in mã vận đơn Shopee Express.' }
         ]
       };
 
+      // Đánh dấu voucher đã sử dụng trong kho voucher của user
+      if (appliedVoucher) {
+        VoucherService.markVoucherAsUsed(appliedVoucher.code, currentUser, randomId);
+      }
+
       Storage.addOrder(newOrder);
       Storage.clearCart();
 
-      showToast(`Tạo đơn hàng <strong>${randomId}</strong> thành công! Đang chuyển hướng sang tra cứu...`, 'success');
+      const savingMsg = discount > 0 ? ` (Đã tiết kiệm ${formatVND(discount)} với mã ${appliedVoucher.code})` : '';
+      showToast(`Tạo đơn hàng <strong>${randomId}</strong> thành công!${savingMsg}`, 'success');
 
       const submitBtn = checkoutForm.querySelector('button[type="submit"]');
       if (submitBtn) {
@@ -1986,6 +3179,7 @@ function initCheckoutPage() {
 
   renderCartList();
 }
+
 
 // --- 8. PAGE LOGIC: ORDER TRACKING DETAIL (tracking-detail.html) - CHUẨN SHOPEE EXPRESS (SPX) ---
 let trackingTimerInterval = null;
@@ -2436,11 +3630,355 @@ function renderPackageDestinationBlock(order) {
   }
 }
 
+
+// ==========================================================================
+// 10. TRANG KHO VOUCHER CỦA TÔI (vouchers.html)
+// ==========================================================================
+function updateGlobalVoucherBadges() {
+  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
+  const vouchers = currentUser ? VoucherService.getUserVouchers(currentUser) : [];
+  const unusedCount = vouchers.filter(v => !v.isUsed).length;
+
+  // Cập nhật huy hiệu trên menu tài khoản và header (chỉ hiện khi có voucher thật)
+  const allBadges = document.querySelectorAll('#userVoucherBadge, .tz-dropdown-voucher-badge, #tz-dropdown-voucher-count, .tz-voucher-badge, #tz-header-voucher-badge');
+  allBadges.forEach(badge => {
+    if (unusedCount > 0) {
+      badge.textContent = unusedCount;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.textContent = '';
+      badge.style.display = 'none';
+    }
+  });
+
+  const voucherCounterLink = document.querySelector('.btn-voucher-counter');
+  if (voucherCounterLink) {
+    if (unusedCount > 0) {
+      voucherCounterLink.innerHTML = `🎟️ Kho Voucher (${unusedCount})`;
+    } else {
+      voucherCounterLink.innerHTML = `🎟️ Kho Voucher`;
+    }
+  }
+}
+
+function initVouchersPage() {
+  const container = document.getElementById('vouchers-grid-container');
+  if (!container) return;
+
+  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
+  if (!currentUser) {
+    // Ẩn huy hiệu menu
+    const menuBadge = document.getElementById('userVoucherBadge');
+    if (menuBadge) menuBadge.style.display = 'none';
+
+    // Đặt 5 tab về (0)
+    const tabAll = document.getElementById('tabAll');
+    if (tabAll) tabAll.textContent = 'Tất cả (0)';
+    const tabDiscount = document.getElementById('tabDiscount');
+    if (tabDiscount) tabDiscount.textContent = 'Mã Giảm Giá TechZone (0)';
+    const tabFreeship = document.getElementById('tabFreeship');
+    if (tabFreeship) tabFreeship.textContent = 'Miễn Phí Vận Chuyển (0)';
+    const tabVip = document.getElementById('tabVip');
+    if (tabVip) tabVip.textContent = 'Đặc Quyền VIP (0)';
+    const tabUsed = document.getElementById('tabUsed');
+    if (tabUsed) tabUsed.textContent = 'Hết hạn / Đã dùng (0)';
+
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: #fff7ed; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+          <i class="fa-solid fa-ticket" style="font-size: 2.5rem; color: #ea580c;"></i>
+        </div>
+        <h3 style="font-size: 1.3rem; font-weight: 800; color: #1e293b; margin: 0 0 0.5rem;">Vui lòng đăng nhập để xem Kho Voucher của bạn</h3>
+        <p style="color: #64748b; font-size: 0.9rem; max-width: 480px; margin: 0 auto 1.5rem;">
+          Đăng nhập ngay để khám phá và quản lý toàn bộ mã giảm giá cá nhân độc quyền của bạn!
+        </p>
+        <a href="login.html" class="btn-shopee-primary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none;">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Đăng nhập ngay
+        </a>
+      </div>
+    `;
+    return;
+  }
+
+  let currentTab = 'all';
+
+  function renderVouchers() {
+    // Lấy danh sách voucher từ localStorage theo khóa: vouchers_${currentUser.email}
+    const vouchers = VoucherService.getUserVouchers(currentUser);
+
+    // Đếm đúng số lượng voucher chưa sử dụng (!v.isUsed) theo từng phân loại
+    const allCount = vouchers.filter(v => !v.isUsed).length;
+    const discountCount = vouchers.filter(v => !v.isUsed && (v.category === 'discount' || v.discountType === 'percent' || (v.code && (v.code.includes('TECH') || v.code.includes('SALE'))))).length;
+    const freeshipCount = vouchers.filter(v => !v.isUsed && (v.category === 'freeship' || (v.code && v.code.includes('FREESHIP')))).length;
+    const vipCount = vouchers.filter(v => !v.isUsed && (v.category === 'vip' || (v.code && (v.code.includes('VIP') || v.code.includes('SMEMBER'))))).length;
+    const expiredCount = vouchers.filter(v => v.isUsed).length;
+
+    // Cập nhật số đếm thực tế vào text của từng tab tương ứng
+    const tabAllEl = document.getElementById('tabAll');
+    if (tabAllEl) tabAllEl.textContent = `Tất cả (${allCount})`;
+    const tabDiscountEl = document.getElementById('tabDiscount');
+    if (tabDiscountEl) tabDiscountEl.textContent = `Mã Giảm Giá TechZone (${discountCount})`;
+    const tabFreeshipEl = document.getElementById('tabFreeship');
+    if (tabFreeshipEl) tabFreeshipEl.textContent = `Miễn Phí Vận Chuyển (${freeshipCount})`;
+    const tabVipEl = document.getElementById('tabVip');
+    if (tabVipEl) tabVipEl.textContent = `Đặc Quyền VIP (${vipCount})`;
+    const tabUsedEl = document.getElementById('tabUsed');
+    if (tabUsedEl) tabUsedEl.textContent = `Hết hạn / Đã dùng (${expiredCount})`;
+
+    // Hỗ trợ thẻ span cũ
+    const countAllEl = document.getElementById('count-tab-all');
+    if (countAllEl) countAllEl.textContent = allCount;
+    const countDiscountEl = document.getElementById('count-tab-discount');
+    if (countDiscountEl) countDiscountEl.textContent = discountCount;
+    const countFreeshipEl = document.getElementById('count-tab-freeship');
+    if (countFreeshipEl) countFreeshipEl.textContent = freeshipCount;
+    const countVipEl = document.getElementById('count-tab-vip');
+    if (countVipEl) countVipEl.textContent = vipCount;
+    const countExpiredEl = document.getElementById('count-tab-expired');
+    if (countExpiredEl) countExpiredEl.textContent = expiredCount;
+
+    // Hiển thị số lượng lên huy hiệu badge ở menu tài khoản (ẩn nếu không có)
+    const menuBadge = document.getElementById('userVoucherBadge');
+    if (menuBadge) {
+      if (allCount > 0) {
+        menuBadge.textContent = allCount;
+        menuBadge.style.display = 'inline-flex';
+      } else {
+        menuBadge.textContent = '';
+        menuBadge.style.display = 'none';
+      }
+    }
+    updateGlobalVoucherBadges();
+
+    // Nếu tài khoản CHƯA có voucher nào (mảng rỗng hoặc null):
+    if (!vouchers || vouchers.length === 0) {
+      container.innerHTML = `
+        <div class="empty-vouchers-box" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+            <i class="fa-solid fa-ticket-simple" style="font-size: 2.5rem; color: #94a3b8;"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #1e293b; margin: 0 0 0.5rem;">Bạn chưa có mã giảm giá nào.</h3>
+          <p style="color: #64748b; font-size: 0.9rem; max-width: 460px; margin: 0 auto 1.5rem;">
+            Hãy nhập mã ưu đãi thủ công ở trên hoặc ghé thăm các chương trình khuyến mãi để rinh deal công nghệ hời nhất!
+          </p>
+          <a href="index.html" class="btn-shopee-primary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; background: #0284c7; color: #fff;">
+            <i class="fa-solid fa-compass"></i> Khám phá ưu đãi ngay
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    // Lọc danh sách theo Tab
+    let filtered = vouchers;
+    if (currentTab === 'all') {
+      filtered = vouchers.filter(v => !v.isUsed);
+    } else if (currentTab === 'discount') {
+      filtered = vouchers.filter(v => !v.isUsed && (v.category === 'discount' || (v.code && (v.code.includes('TECH') || v.code.includes('SALE'))) || v.discountType === 'percent'));
+    } else if (currentTab === 'freeship') {
+      filtered = vouchers.filter(v => !v.isUsed && (v.category === 'freeship' || (v.code && v.code.includes('FREESHIP'))));
+    } else if (currentTab === 'vip') {
+      filtered = vouchers.filter(v => !v.isUsed && (v.category === 'vip' || (v.code && (v.code.includes('VIP') || v.code.includes('SMEMBER')))));
+    } else if (currentTab === 'expired') {
+      filtered = vouchers.filter(v => v.isUsed);
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3.5rem 1rem; background: #fff; border-radius: 14px; border: 1px solid #e2e8f0;">
+          <i class="fa-solid fa-ticket-simple" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 0.8rem; display: block;"></i>
+          <h4 style="font-weight: 800; color: #1e293b; margin: 0 0 0.35rem;">Chưa có voucher nào trong mục này</h4>
+          <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Nhập thêm mã ưu đãi hoặc khám phá các đợt Flash Sale để nhận thêm quà tặng!</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(v => {
+      const isFreeship = (v.category === 'freeship' || (v.code && v.code.includes('FREESHIP')));
+      const isVip = (v.category === 'vip' || (v.code && (v.code.includes('VIP') || v.code.includes('SMEMBER'))));
+      const stubClass = isFreeship ? 'stub-green' : isVip ? 'stub-purple' : 'stub-orange';
+      const iconHtml = isFreeship ? '<i class="fa-solid fa-truck-fast"></i>' : isVip ? '<i class="fa-solid fa-crown"></i>' : '<i class="fa-solid fa-percent"></i>';
+      const badgeText = v.badgeText || (isFreeship ? 'FREESHIP' : isVip ? 'VIP ONLY' : 'TECHZONE');
+
+      let discountFormatted = '';
+      if (v.discountType === 'percent') {
+        discountFormatted = `Giảm ${v.discountValue}%`;
+        if (v.maxDiscount) discountFormatted += ` (tối đa ${formatPrice(v.maxDiscount)})`;
+      } else {
+        discountFormatted = `Giảm ${formatPrice(v.discountValue)}`;
+      }
+
+      const minOrderFormatted = v.minOrder > 0 ? `Đơn tối thiểu ${formatPrice(v.minOrder)}` : 'Đơn từ 0đ';
+      const isUsed = !!v.isUsed;
+
+      return `
+        <div class="shopee-voucher-ticket ${isUsed ? 'is-used' : ''}">
+          <!-- Cột trái (Cuống vé): Màu cam, xanh lá hoặc tím -->
+          <div class="svt-stub ${stubClass}">
+            <div class="svt-notch top"></div>
+            <div class="svt-notch bottom"></div>
+            <div class="svt-stub-icon">${iconHtml}</div>
+            <div class="svt-stub-badge">${badgeText}</div>
+          </div>
+
+          <!-- Đường cắt răng cưa / nét đứt -->
+          <div class="svt-perforation"></div>
+
+          <!-- Cột phải (Thân vé) -->
+          <div class="svt-body">
+            <div class="svt-header">
+              <span class="svt-code" title="Mã giảm giá">${escapeHtml(v.code)}</span>
+              <span class="svt-category-tag ${isFreeship ? 'tag-green' : isVip ? 'tag-purple' : 'tag-orange'}">
+                ${isFreeship ? 'Vận chuyển' : isVip ? 'VIP' : 'Giảm giá'}
+              </span>
+            </div>
+
+            <h4 class="svt-title">${escapeHtml(v.title || discountFormatted)}</h4>
+            <div class="svt-condition"><i class="fa-solid fa-circle-info"></i> ${minOrderFormatted}</div>
+
+            <!-- Hạn dùng & Progress Bar -->
+            <div class="svt-expiry-wrap">
+              <div class="svt-expiry-meta">
+                <span><i class="fa-regular fa-clock"></i> HSD: ${escapeHtml(v.expiryDate || '31/12/2026')}</span>
+                <span class="svt-days-left">${isUsed ? 'Đã sử dụng' : 'Còn hiệu lực'}</span>
+              </div>
+              <div class="svt-progress-bar">
+                <div class="svt-progress-fill ${isUsed ? 'fill-gray' : ''}" style="width: ${isUsed ? '0%' : '80%'};"></div>
+              </div>
+            </div>
+
+            <!-- Chân vé: Nút hành động -->
+            <div class="svt-actions">
+              <button type="button" class="btn-copy-code" data-code="${escapeHtml(v.code)}" title="Sao chép mã">
+                <i class="fa-regular fa-copy"></i> Sao chép
+              </button>
+              ${isUsed ? `
+                <button type="button" class="btn-used-state" disabled>Đã dùng</button>
+              ` : `
+                <button type="button" class="btn-use-voucher-now" data-code="${escapeHtml(v.code)}">
+                  Dùng ngay <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Bind Copy buttons
+    container.querySelectorAll('.btn-copy-code').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const code = btn.dataset.code;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(() => {
+            showToast(`Đã sao chép mã ${code} vào bộ nhớ tạm!`, 'success', 'Kho Voucher');
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> Đã chép`;
+            setTimeout(() => {
+              btn.innerHTML = `<i class="fa-regular fa-copy"></i> Sao chép`;
+            }, 2000);
+          });
+        }
+      };
+    });
+
+    // Bind Dùng ngay buttons
+    container.querySelectorAll('.btn-use-voucher-now').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const code = btn.dataset.code;
+        sessionStorage.setItem('selected_voucher_code', code);
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code);
+        }
+
+        const cart = Storage.getCart();
+        if (cart && cart.length > 0) {
+          showToast(`Đã áp dụng mã ${code}! Đang chuyển tới trang thanh toán...`, 'success', 'Áp dụng ưu đãi');
+          setTimeout(() => {
+            window.location.href = 'checkout.html';
+          }, 600);
+        } else {
+          showToast(`Đã sao chép mã ${code}! Mời bạn chọn sản phẩm công nghệ yêu thích.`, 'success', 'Kho Voucher');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 600);
+        }
+      };
+    });
+  }
+
+  // Bind Tab Click
+  const tabButtons = document.querySelectorAll('.v-tab-btn');
+  tabButtons.forEach(btn => {
+    btn.onclick = () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab || (btn.id === 'tabAll' ? 'all' : btn.id === 'tabDiscount' ? 'discount' : btn.id === 'tabFreeship' ? 'freeship' : btn.id === 'tabVip' ? 'vip' : 'expired');
+      renderVouchers();
+    };
+  });
+
+  // Bind Manual Voucher Form
+  const addForm = document.getElementById('form-add-voucher');
+  const addInput = document.getElementById('manual-voucher-input');
+  if (addForm && addInput) {
+    addForm.onsubmit = (e) => {
+      e.preventDefault();
+      const code = addInput.value.trim().toUpperCase();
+      if (!code) {
+        showToast('Vui lòng nhập mã voucher hợp lệ!', 'warning', 'Nhập mã');
+        return;
+      }
+
+      let newVoucher = null;
+      if (code === 'TECHZONE100') {
+        newVoucher = { code: 'TECHZONE100', title: 'Mã Giảm Giá TechZone: Giảm 100.000đ cho đơn từ 500k', category: 'discount', discountType: 'fixed', discountValue: 100000, minOrder: 500000, expiryDate: '31/12/2026', isUsed: false, badgeColor: '#ef4444', badgeText: 'GIẢM 100K' };
+      } else if (code === 'FREESHIP30') {
+        newVoucher = { code: 'FREESHIP30', title: 'Miễn phí vận chuyển hỏa tốc 30.000đ', category: 'freeship', discountType: 'fixed', discountValue: 30000, minOrder: 200000, expiryDate: '31/12/2026', isUsed: false, badgeColor: '#10b981', badgeText: 'FREESHIP 30K' };
+      } else if (code === 'SMEMBERVIP') {
+        newVoucher = { code: 'SMEMBERVIP', title: 'Đặc quyền VIP Smember: Giảm 200.000đ', category: 'vip', discountType: 'fixed', discountValue: 200000, minOrder: 2000000, expiryDate: '31/12/2026', isUsed: false, badgeColor: '#8b5cf6', badgeText: 'VIP ONLY' };
+      } else if (code === 'FLASHSALE50') {
+        newVoucher = { code: 'FLASHSALE50', title: 'Flash Sale công nghệ: Giảm 50.000đ', category: 'discount', discountType: 'fixed', discountValue: 50000, minOrder: 300000, expiryDate: '31/12/2026', isUsed: false, badgeColor: '#f59e0b', badgeText: 'FLASH SALE' };
+      } else {
+        newVoucher = {
+          code: code,
+          title: `Ưu đãi đặc biệt: Giảm 50.000đ khi nhập mã ${code}`,
+          category: 'discount',
+          discountType: 'fixed',
+          discountValue: 50000,
+          minOrder: 300000,
+          expiryDate: '31/12/2026',
+          isUsed: false,
+          badgeColor: '#0284c7',
+          badgeText: 'ƯU ĐÃI'
+        };
+      }
+
+      const res = VoucherService.addVoucherToUser(newVoucher, currentUser);
+      if (res.success) {
+        showToast(res.message, 'success', 'Kho Voucher');
+        addInput.value = '';
+        renderVouchers();
+        updateGlobalVoucherBadges();
+      } else {
+        showToast(res.message, 'warning', 'Kho Voucher');
+      }
+    };
+  }
+
+  renderVouchers();
+}
+
 // --- 9. PAGE LOGIC: ORDER HISTORY (history.html) - CHUẨN GIAO DIỆN SHOPEE ---
 function initHistoryPage() {
   const container = document.getElementById('history-cards-container');
   const tabs = document.querySelectorAll('.shopee-tab-item');
   const searchInput = document.getElementById('shopee-search-input');
+  const orderSearchBox = document.querySelector('.shopee-history-search');
+  const quickVoucherBtn = document.getElementById('btn-quick-voucher-tab');
 
   if (!container) return;
 
@@ -2456,14 +3994,48 @@ function initHistoryPage() {
     return;
   }
 
-  let currentFilter = 'all';
+  // Cập nhật số lượng voucher trên nút Kho Voucher
+  function updateVoucherCountBadge() {
+    const userVouchers = VoucherService.getUserVouchers(currentUser);
+    const unusedCount = userVouchers.filter(v => !v.isUsed).length;
+
+    const voucherCountEl = document.getElementById('header-voucher-count');
+    if (voucherCountEl) voucherCountEl.textContent = unusedCount;
+
+    const counterLink = document.querySelector('.btn-voucher-counter');
+    if (counterLink) counterLink.innerHTML = `🎟️ Kho Voucher ( ${unusedCount} )`;
+  }
+  updateVoucherCountBadge();
+
+  // Đọc tab từ URL nếu có (?tab=warranty)
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  let currentFilter = (tabParam === 'warranty') ? 'warranty' : 'all';
   let searchQuery = '';
 
+  // Đồng bộ active tab ban đầu
+  tabs.forEach(t => {
+    if (t.dataset.status === currentFilter) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+
   function renderHistory() {
+    // Ẩn thanh tìm kiếm đơn mua khi ở tab Tra cứu bảo hành (tránh 2 ô tìm kiếm trùng lặp)
+    if (orderSearchBox) {
+      orderSearchBox.style.display = (currentFilter === 'warranty') ? 'none' : 'flex';
+    }
+
+    // A. NẾU CHỌN TAB "TRA CỨU BẢO HÀNH"
+    if (currentFilter === 'warranty') {
+      renderWarrantyView();
+      return;
+    }
+
+    // B. TAB ĐƠN HÀNG THÔNG THƯỜNG (All, Chờ xác nhận, Đang giao, Đã giao, Đã hủy)
     const allOrders = Storage.getOrders();
     const cEmail = (currentUser.email || '').toLowerCase().trim();
 
-    // 2. CHỈ lọc những đơn hàng thuộc về chính tài khoản này (order.userEmail === currentUser.email)
+    // Lọc những đơn hàng thuộc về chính tài khoản này
     let userOrders = allOrders.filter(o => {
       const oEmail = (o.userEmail || o.customer?.email || '').toLowerCase().trim();
       if (cEmail && oEmail && cEmail === oEmail) return true;
@@ -2473,7 +4045,6 @@ function initHistoryPage() {
       return false;
     });
 
-    // 3. Nếu tài khoản chưa có đơn hàng nào (tài khoản mới): Hiển thị trạng thái rỗng chuẩn Shopee
     if (userOrders.length === 0) {
       container.innerHTML = `
         <div class="shopee-empty-state" style="text-align: center; padding: 4.5rem 1rem; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
@@ -2492,7 +4063,6 @@ function initHistoryPage() {
 
     let filtered = userOrders;
 
-    // Filter by Tab Status
     if (currentFilter !== 'all') {
       if (currentFilter === 'Chờ xác nhận') {
         filtered = userOrders.filter(o => o.status === 'Chờ xác nhận' || o.status === 'Đang đóng gói' || o.status === 'Đã xác nhận' || o.status === 'Đã đặt');
@@ -2507,7 +4077,6 @@ function initHistoryPage() {
       }
     }
 
-    // Filter by Search Query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(o => {
@@ -2571,63 +4140,45 @@ function initHistoryPage() {
         </div>
       `).join('');
 
-      // Kiểm tra trạng thái Đã hủy để render khung tóm tắt & nút riêng biệt
       const isCancelled = o.status === 'Đã hủy';
+      const isDelivered = o.status === 'Đã giao' || o.status === 'Giao thành công';
       const latestCheckpoint = (o.checkpoints && o.checkpoints.length > 0) ? o.checkpoints[0] : null;
 
       let notificationText = o.shippingNotification;
-      if (!notificationText || o.status === 'Đã giao' || o.status === 'Giao thành công') {
+      if (!notificationText || isDelivered) {
         if (o.status === 'Đang giao' || o.status === 'Đang vận chuyển') {
           notificationText = '🚚 Đang giao hàng đến bạn';
-        } else if (o.status === 'Đã giao' || o.status === 'Giao thành công') {
-          const dateStr = o.deliveredDate || (latestCheckpoint ? latestCheckpoint.time : o.createdAt);
-          notificationText = `Giao thành công • ${dateStr}`;
-        } else {
-          notificationText = '📦 Đang chuẩn bị tại kho';
+        } else if (isDelivered) {
+          notificationText = 'Đơn hàng đã được giao thành công';
+        } else if (o.status === 'Chờ xác nhận') {
+          notificationText = '📦 Người gửi đang chuẩn bị đơn hàng và in phiếu gửi SPX';
         }
       }
 
       return `
         <div class="shopee-order-card" data-order-id="${o.id}">
-          <!-- Header: Shop & Code & Status -->
           <div class="shopee-card-header">
             <div class="shopee-shop-info">
-              <span class="shopee-badge-mall">Shopee Mall</span>
-              <span class="shopee-shop-name"><i class="fa-solid fa-store" style="color: #ee4d2d; margin-right: 4px;"></i> TechZone Official Store</span>
-              <button type="button" class="shopee-btn-chat" onclick="event.stopPropagation(); showToast('Đang kết nối trung tâm Chat Shopee với người bán TechZone...', 'info')">
-                <i class="fa-regular fa-comment-dots"></i> Chat
-              </button>
-              <a href="products.html" class="shopee-btn-viewshop" onclick="event.stopPropagation()">
-                <i class="fa-solid fa-shop"></i> Xem Shop
-              </a>
-              <span class="shopee-order-meta">
-                Mã ĐH: <strong>#${o.id}</strong> <span style="font-size: 0.78rem; color: #94a3b8;">(${o.createdAt})</span>
-              </span>
+              <span class="shopee-mall-badge"><i class="fa-solid fa-store"></i> TechZone Official Mall</span>
+              <span class="shopee-order-id">Mã đơn: <strong>${o.id}</strong></span>
+              ${o.voucherCode ? `<span class="badge-voucher-applied-pill" title="Đã giảm ${formatVND(o.discountAmount || 0)}"><i class="fa-solid fa-ticket"></i> ${o.voucherCode}</span>` : ''}
             </div>
-            <div class="shopee-order-status-badge ${statusClass}">
-              <i class="${statusIcon}"></i> ${statusLabel}
+            <div class="shopee-status-badge ${statusClass}">
+              <i class="${statusIcon}"></i>
+              <span>${statusLabel}</span>
             </div>
           </div>
 
-          <!-- Body: Items List (CLICK ĐỂ XEM TIẾN TRÌNH) -->
-          <div class="shopee-order-body" data-order-id="${o.id}" title="Nhấp vào để xem ngay chi tiết lộ trình vận chuyển">
+          <div class="shopee-order-body">
             ${itemsHtml}
-          </div>
-
-          <!-- Dòng tóm tắt tiến trình vận chuyển (Phân nhánh cho Đơn đã hủy vs Đơn thường) -->
-          <div class="shopee-shipping-wrap">
             ${isCancelled ? `
-              <div class="shopee-shipping-strip cancelled" data-order-id="${o.id}" title="Đơn hàng đã được hủy bỏ">
-                <i class="fa-solid fa-ban"></i>
+              <div class="shopee-shipping-strip cancelled" style="cursor: default;" title="Đơn hàng này đã bị hủy">
+                <i class="fa-solid fa-ban" style="color: #dc2626;"></i>
                 <div class="strip-text-box">
-                  <div class="strip-main-text">
-                    🚫 ${o.cancelReason ? `Đơn hàng đã được hủy bởi người mua (Lý do: ${o.cancelReason})` : 'Đơn hàng đã hủy thành công'}
+                  <div class="strip-main-text" style="color: #dc2626; font-weight: 700;">
+                    🚫 Đơn hàng đã hủy ${o.cancelReason ? `(Lý do: ${o.cancelReason})` : 'thành công'}
                   </div>
-                  ${o.cancelDate ? `<div class="strip-sub-text"><i class="fa-regular fa-clock"></i> Thời gian hủy: ${o.cancelDate}</div>` : ''}
-                </div>
-                <div class="strip-view-link">
-                  <span>Chi tiết đơn</span>
-                  <i class="fa-solid fa-chevron-right"></i>
+                  <div class="strip-sub-text">Yêu cầu hoàn tất lúc: ${o.cancelledAt || o.createdAt}</div>
                 </div>
               </div>
             ` : `
@@ -2645,7 +4196,6 @@ function initHistoryPage() {
             `}
           </div>
 
-          <!-- Footer: Total & Action Buttons -->
           <div class="shopee-card-footer">
             <div class="shopee-footer-action-row">
               <div class="shopee-total-wrap">
@@ -2654,7 +4204,7 @@ function initHistoryPage() {
                 <span class="shopee-total-price">${formatVND(o.total)}</span>
               </div>
 
-              <div class="shopee-btn-group ${isCancelled ? 'has-2-btns' : 'has-3-btns'}">
+              <div class="shopee-btn-group ${isCancelled ? 'has-2-btns' : isDelivered ? 'has-4-btns' : 'has-3-btns'}">
                 ${isCancelled ? `
                   <a href="tracking-detail.html?id=${encodeURIComponent(o.id)}" class="btn-shopee-secondary" title="Xem chi tiết đơn hàng đã hủy">
                     <i class="fa-solid fa-circle-info"></i> <span>Chi tiết đơn</span>
@@ -2667,14 +4217,18 @@ function initHistoryPage() {
                     <button type="button" class="btn-shopee-cancel btn-open-cancel-order" data-id="${o.id}">
                       <i class="fa-solid fa-ban"></i> <span>Hủy đơn</span>
                     </button>
-                  ` : (o.status === 'Đang giao' || o.status === 'Đang vận chuyển' || o.status === 'Đã giao' || o.status === 'Giao thành công') ? `
-                    <button type="button" class="btn-shopee-cancel disabled" data-disabled-cancel="true" data-id="${o.id}" title="Đơn hàng đã được bàn giao cho tài xế, không thể hủy. Vui lòng liên hệ Hotline 1800.6868 nếu cần hỗ trợ.">
-                      <i class="fa-solid fa-lock"></i> <span>Không thể hủy</span>
+                  ` : ''}
+                  
+                  ${isDelivered ? `
+                    <button type="button" class="btn-shopee-secondary btn-order-claim-warranty" data-order-id="${o.id}" title="Yêu cầu bảo hành / sửa chữa thiết bị">
+                      <i class="fa-solid fa-screwdriver-wrench" style="color: #0284c7;"></i> <span>Bảo hành</span>
                     </button>
                   ` : ''}
+                  
                   <button type="button" class="btn-shopee-secondary btn-quick-timeline" data-id="${o.id}" title="Xem popup tiến trình ngay tại trang này">
                     <i class="fa-solid fa-eye"></i> <span>Xem nhanh</span>
                   </button>
+                  
                   <a href="tracking-detail.html?id=${encodeURIComponent(o.id)}" class="btn-shopee-primary btn-track-prominent" title="Mở trang chi tiết lộ trình vận chuyển">
                     <i class="fa-solid fa-route"></i> <span>Lộ trình</span>
                   </a>
@@ -2686,17 +4240,17 @@ function initHistoryPage() {
       `;
     }).join('');
 
-    // Bind Click-to-view events (BẤM VÀO BẤT KỲ ĐÂU TRÊN THẺ SẢN PHẨM HOẶC DẢI VẬN CHUYỂN ĐỂ XEM)
+    // Bind Click-to-view events
     container.querySelectorAll('.shopee-order-body, .shopee-shipping-strip').forEach(el => {
       el.addEventListener('click', (e) => {
         const orderId = el.dataset.orderId || el.closest('.shopee-order-card')?.dataset.orderId;
-        if (orderId) {
+        if (orderId && !el.classList.contains('cancelled')) {
           window.location.href = `tracking-detail.html?id=${encodeURIComponent(orderId)}`;
         }
       });
     });
 
-    // Bind Reorder buttons (Mua lại trên đơn đã hủy)
+    // Bind Reorder buttons
     container.querySelectorAll('.btn-reorder-order').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2733,13 +4287,25 @@ function initHistoryPage() {
       });
     });
 
+    // Bind Order Warranty Claim button
+    container.querySelectorAll('.btn-order-claim-warranty').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const orderId = btn.dataset.orderId;
+        const targetOrder = Storage.findOrderById(orderId);
+        if (targetOrder && targetOrder.items && targetOrder.items.length > 0) {
+          const wInfo = WarrantyService.getWarrantyInfo(targetOrder, targetOrder.items[0]);
+          openWarrantyClaimModal(wInfo);
+        }
+      });
+    });
+
     // Bind Cancel Order buttons in History Cards
     container.querySelectorAll('.btn-open-cancel-order').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const orderId = btn.dataset.id;
         openCancelOrderModal(orderId, () => {
-          // Chuyển tab sang 'Đã hủy' và re-render
           currentFilter = 'Đã hủy';
           tabs.forEach(t => {
             if (t.dataset.status === 'Đã hủy') t.classList.add('active');
@@ -2749,12 +4315,145 @@ function initHistoryPage() {
         });
       });
     });
+  }
 
-    container.querySelectorAll('.btn-shopee-cancel.disabled').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showToast('Đơn hàng đã được bàn giao cho tài xế, không thể hủy. Vui lòng liên hệ Hotline 1800.6868 nếu cần hỗ trợ.', 'warning');
-      });
+  // --- HÀM RENDER GIAO DIỆN TRA CỨU BẢO HÀNH ĐIỆN TỬ (CHỈ SẢN PHẨM ĐÃ GIAO) ---
+  function renderWarrantyView() {
+    let warranties = searchQuery.trim() 
+      ? WarrantyService.lookup(searchQuery, currentUser) 
+      : WarrantyService.getUserDeliveredWarranties(currentUser);
+
+    container.innerHTML = `
+      <div class="warranty-view-container">
+        <!-- Thanh tìm kiếm nhanh: Số điện thoại hoặc Số IMEI/Mã đơn hàng -->
+        <div class="warranty-search-card">
+          <div class="wsc-header">
+            <div class="wsc-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+              <h3>Tra Cứu Bảo Hành Điện Tử TechZone</h3>
+              <p>Nhập Số điện thoại nhận hàng, Số IMEI (VD: TZ-VN/A-992812) hoặc Mã đơn hàng SPX</p>
+            </div>
+          </div>
+          <div class="wsc-input-row">
+            <div class="wsc-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="warranty-search-field" placeholder="Nhập Số điện thoại hoặc Số IMEI/Mã đơn hàng..." value="${escapeHtml(searchQuery)}">
+            </div>
+            <button type="button" id="btn-submit-warranty-search" class="btn-shopee-primary">
+              <i class="fa-solid fa-search"></i> Tra cứu
+            </button>
+            ${searchQuery ? `<button type="button" id="btn-clear-warranty-search" class="btn-shopee-secondary">Tất cả sản phẩm đã giao</button>` : ''}
+          </div>
+          <div class="wsc-badges-row">
+            <span><i class="fa-solid fa-circle-check text-success"></i> Tự động kích hoạt theo đơn đã giao</span>
+            <span><i class="fa-solid fa-rotate-left text-primary"></i> 1-đổi-1 trong 30 ngày</span>
+            <span><i class="fa-solid fa-screwdriver-wrench text-warning"></i> Tiếp nhận tại nhà qua bưu tá SPX</span>
+          </div>
+        </div>
+
+        <!-- Danh sách các sản phẩm ĐÃ GIAO THÀNH CÔNG của tài khoản -->
+        <div class="warranty-list-grid">
+          ${warranties.length === 0 ? `
+            <div style="text-align: center; padding: 4rem 1rem; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <i class="fa-solid fa-shield-cat" style="font-size: 3.5rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+              <h4 style="font-weight: 800; color: #1e293b; margin: 0 0 0.4rem;">Không có sản phẩm nào đã giao để bảo hành</h4>
+              <p style="color: #64748b; font-size: 0.88rem; max-width: 520px; margin: 0 auto 1.5rem;">
+                Chỉ những đơn hàng đã giao thành công mới được kích hoạt bảo hành điện tử chính hãng từ 12 - 24 tháng theo số IMEI.
+              </p>
+              <button type="button" class="btn-shopee-secondary" onclick="document.getElementById('warranty-search-field').value=''; searchQuery=''; renderWarrantyView();">
+                Xem lại danh sách
+              </button>
+            </div>
+          ` : warranties.map(w => `
+            <div class="tz-warranty-card ${w.isValid ? 'is-valid' : 'is-expired'}">
+              <div class="twc-top">
+                <img src="${w.item.image}" alt="${w.item.name}" class="twc-thumb">
+                <div class="twc-info">
+                  <h4 class="twc-name">${w.item.name}</h4>
+                  <div class="twc-order-ref">
+                    <span>Đơn hàng: <a href="tracking-detail.html?id=${encodeURIComponent(w.orderId)}">${w.orderId}</a></span>
+                    <span class="twc-dot">•</span>
+                    <span>Giao ngày: ${w.startDate}</span>
+                    <span class="twc-dot">•</span>
+                    <span>Thời hạn: <strong>${w.warrantyMonths} tháng</strong></span>
+                  </div>
+                  <div class="twc-identifiers">
+                    <span class="id-pill" title="Số IMEI thiết bị">
+                      <strong>IMEI:</strong> ${w.imei}
+                    </span>
+                    <span class="id-pill" title="Số Serial">
+                      <strong>S/N:</strong> ${w.serial}
+                    </span>
+                  </div>
+                </div>
+                <div class="twc-status-col">
+                  ${w.isValid ? `
+                    <span class="twc-status-badge valid">
+                      <i class="fa-solid fa-shield-halved"></i> Còn hạn bảo hành (còn ${w.daysRemaining} ngày)
+                    </span>
+                  ` : `
+                    <span class="twc-status-badge expired">
+                      <i class="fa-solid fa-circle-exclamation"></i> Hết hạn bảo hành
+                    </span>
+                  `}
+                </div>
+              </div>
+
+              <div class="twc-bottom">
+                <div class="twc-pkg-info">
+                  <i class="fa-solid fa-award" style="color: #f59e0b;"></i>
+                  <span>${w.warrantyType} (Hạn bảo hành: <strong>${w.expiryDate}</strong>)</span>
+                </div>
+                <div class="twc-actions">
+                  <button type="button" class="btn-shopee-primary btn-claim-warranty-now" data-order-id="${w.orderId}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Yêu cầu bảo hành / Sửa chữa
+                  </button>
+                  <a href="tel:18006868" class="btn-shopee-secondary" title="Hotline hỗ trợ bảo hành miễn phí">
+                    <i class="fa-solid fa-phone"></i> Hotline 1800.6868
+                  </a>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    // Bind tìm kiếm bảo hành
+    const searchField = document.getElementById('warranty-search-field');
+    const submitSearchBtn = document.getElementById('btn-submit-warranty-search');
+    const clearSearchBtn = document.getElementById('btn-clear-warranty-search');
+
+    if (submitSearchBtn && searchField) {
+      submitSearchBtn.onclick = () => {
+        searchQuery = searchField.value.trim();
+        renderWarrantyView();
+      };
+      searchField.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+          searchQuery = searchField.value.trim();
+          renderWarrantyView();
+        }
+      };
+    }
+
+    if (clearSearchBtn) {
+      clearSearchBtn.onclick = () => {
+        searchQuery = '';
+        renderWarrantyView();
+      };
+    }
+
+    // Bind Nút Yêu cầu bảo hành / Sửa chữa
+    container.querySelectorAll('.btn-claim-warranty-now').forEach(btn => {
+      btn.onclick = () => {
+        const orderId = btn.dataset.orderId;
+        const targetOrder = Storage.findOrderById(orderId);
+        if (targetOrder && targetOrder.items && targetOrder.items.length > 0) {
+          const wInfo = WarrantyService.getWarrantyInfo(targetOrder, targetOrder.items[0]);
+          openWarrantyClaimModal(wInfo);
+        }
+      };
     });
   }
 
@@ -2764,22 +4463,317 @@ function initHistoryPage() {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentFilter = tab.dataset.status || 'all';
+      searchQuery = '';
+      if (searchInput) searchInput.value = '';
       renderHistory();
     });
   });
 
-  // Bind Search input
+  // Bind Search input on order tabs
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
-      renderHistory();
+      if (currentFilter !== 'warranty') {
+        renderHistory();
+      }
     });
   }
 
-
-
   renderHistory();
 }
+
+// POPUP YÊU CẦU BẢO HÀNH / SỬA CHỮA THIẾT BỊ (HOTLINE 1800.6868 & GỬI CỬA HÀNG GẦN NHẤT)
+
+// ==========================================================================
+// KHO VOUCHER MODAL TOÀN CỤC (history.html & checkout.html)
+// ==========================================================================
+function openHistoryVoucherModal() {
+  const currentUser = Auth.getUser();
+  if (!currentUser) {
+    showToast('Vui lòng đăng nhập để xem kho voucher ưu đãi của bạn!', 'warning', 'Tài khoản');
+    return;
+  }
+
+  const modal = document.getElementById('voucherModal') || document.getElementById('tz-voucher-modal');
+  if (!modal) return;
+
+  const listContainer = modal.querySelector('#voucher-modal-list') || modal.querySelector('.voucher-modal-body');
+  if (!listContainer) return;
+
+  const userVouchers = VoucherService.getUserVouchers(currentUser);
+
+  // Cập nhật số lượng trên badge nút Kho Voucher
+  const headerBadge = document.getElementById('header-voucher-count');
+  if (headerBadge) {
+    const unused = userVouchers.filter(v => !v.isUsed).length;
+    headerBadge.textContent = unused;
+  }
+
+  if (userVouchers.length === 0) {
+    listContainer.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem; color: #64748b;">
+        <i class="fa-solid fa-ticket" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
+        <h4 style="font-size: 1.1rem; color: #1e293b; font-weight: 700; margin: 0 0 6px;">Ví voucher đang trống</h4>
+        <p style="margin: 0; font-size: 0.88rem;">Hiện bạn chưa có mã giảm giá nào. Hãy tham gia các sự kiện để săn thêm deal hot!</p>
+      </div>
+    `;
+  } else {
+    listContainer.innerHTML = `
+      <div class="voucher-modal-grid">
+        ${userVouchers.map(v => {
+          let discountText = '';
+          if (v.discountType === 'percent') {
+            discountText = `Giảm ${v.discountValue}%`;
+            if (v.maxDiscount) discountText += ` (tối đa ${formatPrice(v.maxDiscount)})`;
+          } else {
+            discountText = `Giảm ${formatPrice(v.discountValue)}`;
+          }
+
+          const minOrderText = v.minOrder > 0 ? `Đơn tối thiểu: ${formatPrice(v.minOrder)}` : 'Đơn tối thiểu: 0đ';
+          const isUsed = !!v.isUsed;
+
+          return `
+            <div class="tz-voucher-card-item ${isUsed ? 'is-used' : ''}">
+              <div class="tz-vc-left" style="background: ${v.badgeColor || '#0284c7'};">
+                <i class="fa-solid fa-ticket tz-vc-icon"></i>
+                <span class="tz-vc-tag">${v.badgeText || (v.discountType === 'percent' ? `GIẢM ${v.discountValue}%` : 'VOUCHER')}</span>
+              </div>
+              <div class="tz-vc-content">
+                <div class="tz-vc-header">
+                  <span class="tz-vc-code">${escapeHtml(v.code)}</span>
+                  <span class="tz-vc-type-badge">${isUsed ? 'Đã sử dụng' : 'Khả dụng'}</span>
+                </div>
+                <div class="tz-vc-title">${escapeHtml(v.title || discountText)}</div>
+                <div class="tz-vc-condition"><i class="fa-solid fa-circle-info"></i> ${minOrderText}</div>
+                <div class="tz-vc-expiry"><i class="fa-regular fa-clock"></i> HSD: ${escapeHtml(v.expiryDate || '31/12/2026')}</div>
+              </div>
+              <div class="tz-vc-action">
+                ${isUsed ? `
+                  <button type="button" class="btn-tz-vc-btn btn-used" disabled>Đã dùng</button>
+                ` : `
+                  <button type="button" class="btn-tz-vc-btn btn-copy" data-code="${escapeHtml(v.code)}" title="Sao chép mã vào bộ nhớ tạm">
+                    <i class="fa-regular fa-copy"></i> Sao chép mã
+                  </button>
+                  <a href="products.html" class="btn-tz-vc-btn btn-use" title="Dùng khi mua sắm">
+                    <i class="fa-solid fa-cart-shopping"></i> Dùng khi mua sắm
+                  </a>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    // Bind Sao chép mã
+    listContainer.querySelectorAll('.btn-copy').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const code = btn.dataset.code;
+        copyVoucherCode(code, btn);
+      });
+    });
+  }
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function copyVoucherCode(code, btn) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showToast(`Đã sao chép mã ${code} vào bộ nhớ tạm!`, 'success', 'Kho Voucher');
+      if (btn) {
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Đã sao chép`;
+        setTimeout(() => {
+          btn.innerHTML = `<i class="fa-regular fa-copy"></i> Sao chép mã`;
+        }, 2000);
+      }
+    }).catch(() => fallbackCopyCode(code, btn));
+  } else {
+    fallbackCopyCode(code, btn);
+  }
+}
+
+function fallbackCopyCode(code, btn) {
+  const tempInput = document.createElement('input');
+  tempInput.value = code;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+  showToast(`Đã sao chép mã ${code}!`, 'success', 'Kho Voucher');
+  if (btn) {
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> Đã sao chép`;
+    setTimeout(() => {
+      btn.innerHTML = `<i class="fa-regular fa-copy"></i> Sao chép mã`;
+    }, 2000);
+  }
+}
+
+function closeVoucherModal() {
+  const modal = document.getElementById('voucherModal') || document.getElementById('tz-voucher-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Global router for openVoucherModal()
+function openVoucherModal() {
+  // If on checkout page with dedicated checkout modal and items list
+  if (document.getElementById('checkout-items-list') && typeof window.openCheckoutVoucherModal === 'function') {
+    window.openCheckoutVoucherModal();
+  } else {
+    openHistoryVoucherModal();
+  }
+}
+
+window.openVoucherModal = openVoucherModal;
+window.closeVoucherModal = closeVoucherModal;
+window.openHistoryVoucherModal = openHistoryVoucherModal;
+
+// Đóng modal voucher khi click overlay bên ngoài
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('voucherModal');
+  if (modal && e.target === modal) {
+    closeVoucherModal();
+  }
+});
+
+// Đóng modal khi bấm phím Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeVoucherModal();
+  }
+});
+
+function openWarrantyClaimModal(wInfo) {
+  if (!wInfo) return;
+
+  let modal = document.getElementById('tz-warranty-claim-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'tz-modal-overlay';
+    modal.id = 'tz-warranty-claim-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.innerHTML = `
+      <div class="tz-claim-modal-card">
+        <div class="claim-modal-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="claim-header-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; color: #1e293b; font-weight: 800;">Yêu Cầu Bảo Hành & Sửa Chữa</h3>
+              <p style="margin: 0; font-size: 0.82rem; color: #64748b;">Hệ thống tiếp nhận bảo hành chính hãng TechZone Care+</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" id="btn-close-claim-modal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="claim-modal-body" id="claim-modal-content"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#btn-close-claim-modal').onclick = () => {
+      modal.classList.remove('active');
+    };
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    };
+  }
+
+  const contentBox = modal.querySelector('#claim-modal-content');
+  if (contentBox) {
+    contentBox.innerHTML = `
+      <div class="claim-cert-preview">
+        <img src="${wInfo.item.image}" alt="${wInfo.item.name}" class="claim-device-thumb">
+        <div>
+          <h4 class="claim-device-title">${wInfo.item.name}</h4>
+          <div class="claim-device-sub">
+            <span>IMEI: <strong>${wInfo.imei}</strong></span> • 
+            <span style="color: #059669; font-weight: 700;">${wInfo.statusText}</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #64748b;">Đơn hàng: ${wInfo.orderId} • Hạn bảo hành: ${wInfo.expiryDate}</div>
+        </div>
+      </div>
+
+      <div class="claim-methods-title">
+        <i class="fa-solid fa-hand-holding-hand" style="color: #0284c7;"></i> Chọn hình thức gửi máy bảo hành tiện lợi nhất:
+      </div>
+
+      <div class="claim-options-grid">
+        <div class="claim-opt-card active" id="opt-spx">
+          <div class="opt-badge">KHUYÊN DÙNG</div>
+          <div class="opt-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="opt-title">Bưu Tá Đến Lấy Máy Tận Nhà</div>
+          <div class="opt-desc">Bưu tá Shopee Express (SPX) qua địa chỉ của bạn lấy máy niêm phong và gửi đến trung tâm bảo hành miễn phí 100%.</div>
+        </div>
+
+        <div class="claim-opt-card" id="opt-store">
+          <div class="opt-icon"><i class="fa-solid fa-store"></i></div>
+          <div class="opt-title">Gửi Trực Tiếp Cửa Hàng</div>
+          <div class="opt-desc">Mang máy đến bất kỳ chi nhánh nào trong 86 trung tâm ủy quyền TechZone toàn quốc để được kỹ thuật viên hỗ trợ ngay.</div>
+        </div>
+      </div>
+
+      <div class="claim-store-box">
+        <div style="font-weight: 700; color: #1e293b; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-location-dot" style="color: #ea580c;"></i> Hệ thống trung tâm bảo hành chính:
+        </div>
+        <div style="font-size: 0.82rem; color: #475569; line-height: 1.5;">
+          • <strong>Hà Nội:</strong> 128 Thái Hà, Đống Đa • ĐT: 1800.6868 (Bấm nhánh 2)<br>
+          • <strong>TP. Hồ Chí Minh:</strong> 204 Nguyễn Thị Minh Khai, P.6, Quận 3<br>
+          • <strong>Đà Nẵng:</strong> 56 Nguyễn Văn Linh, Q. Hải Châu
+        </div>
+      </div>
+
+      <form id="claim-submit-form" style="margin-top: 14px;">
+        <label style="font-size: 0.82rem; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">
+          Mô tả lỗi hoặc triệu chứng máy gặp phải:
+        </label>
+        <textarea id="claim-desc" class="tz-input" rows="2" placeholder="Ví dụ: Máy không nhận sạc, pin báo ảo, màn hình có vệt sọc..." required style="width: 100%; box-sizing: border-box; font-size: 0.85rem; padding: 8px 10px; margin-bottom: 10px;"></textarea>
+        
+        <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between;">
+          <a href="tel:18006868" class="btn-shopee-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.84rem; text-decoration: none;">
+            <i class="fa-solid fa-phone"></i> Gọi tổng đài 1800.6868
+          </a>
+          <button type="submit" class="btn-shopee-primary" style="padding: 8px 18px; font-size: 0.84rem;">
+            <i class="fa-solid fa-paper-plane"></i> Gửi yêu cầu tiếp nhận
+          </button>
+        </div>
+      </form>
+    `;
+
+    // Bind option switch
+    const optSpx = contentBox.querySelector('#opt-spx');
+    const optStore = contentBox.querySelector('#opt-store');
+    if (optSpx && optStore) {
+      optSpx.onclick = () => {
+        optSpx.classList.add('active');
+        optStore.classList.remove('active');
+      };
+      optStore.onclick = () => {
+        optStore.classList.add('active');
+        optSpx.classList.remove('active');
+      };
+    }
+
+    // Bind submit form
+    const form = contentBox.querySelector('#claim-submit-form');
+    if (form) {
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const desc = contentBox.querySelector('#claim-desc')?.value.trim();
+        showToast('Yêu cầu bảo hành đã được tiếp nhận thành công! Chuyên viên kỹ thuật sẽ gọi lại trong 15 phút.', 'success', 'Tiếp nhận bảo hành');
+        modal.classList.remove('active');
+      };
+    }
+  }
+
+  modal.classList.add('active');
+}
+
 
 // Quick Timeline Modal logic on history.html
 function openHistoryTimelineModal(orderId) {
@@ -3582,8 +5576,16 @@ function executeLogout() {
   showToast('Đã đăng xuất tài khoản', 'info', 'Đăng xuất thành công');
 
   // 6. Nếu đang ở các trang yêu cầu đăng nhập (checkout, history, profile, complete-profile), điều hướng về login.html
+  // Đặc biệt: Nếu đang ở vouchers.html, chuyển hướng trực tiếp về index.html (theo yêu cầu)
   const pathname = window.location.pathname.toLowerCase();
-  if (pathname.includes('checkout') || pathname.includes('history') || pathname.includes('profile')) {
+  if (pathname.includes('voucher')) {
+    if (typeof showPageLoader === 'function') {
+      showPageLoader();
+    }
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 300);
+  } else if (pathname.includes('checkout') || pathname.includes('history') || pathname.includes('profile')) {
     setTimeout(() => {
       window.location.href = 'login.html';
     }, 400);
@@ -3596,9 +5598,28 @@ function executeLogout() {
 
 // Đóng toàn bộ các Popup Đăng nhập Mạng xã hội
 function closeAllSocialModals() {
-  const modals = document.querySelectorAll('#tz-google-modal, #tz-facebook-modal, #tz-zalo-modal, #tz-apple-modal');
-  modals.forEach(m => m.classList.remove('show'));
+  const modals = document.querySelectorAll('#tz-google-modal, #googleLoginModal, #tz-facebook-modal, #tz-zalo-modal, #tz-apple-modal, .google-modal-backdrop, .google-one-tap');
+  modals.forEach(m => {
+    m.classList.remove('show', 'active');
+    m.style.display = 'none';
+  });
 }
+
+// Kiểm tra và vô hiệu hóa triệt để bất kỳ popup đăng nhập tự động nào khi đã có currentUser
+function guardGoogleLoginModals() {
+  const hasUser = !!(localStorage.getItem('currentUser') || localStorage.getItem('techzone_current_user'));
+  if (hasUser) {
+    closeAllSocialModals();
+  }
+  // Vô hiệu hóa bất kỳ hàm onscroll nào cố gọi modal đăng nhập khi chạm đáy footer
+  if (window.onscroll && typeof window.onscroll === 'function') {
+    const fnStr = window.onscroll.toString().toLowerCase();
+    if (fnStr.includes('google') || fnStr.includes('modal') || fnStr.includes('login') || fnStr.includes('onetap')) {
+      window.onscroll = null;
+    }
+  }
+}
+window.guardGoogleLoginModals = guardGoogleLoginModals;
 
 // Hàm cốt lõi: Xử lý Đăng nhập qua Mạng xã hội & Đồng bộ dữ liệu
 function loginWithSocialPlatform(provider, fullname, email, extra = {}) {
@@ -3686,6 +5707,14 @@ function loginWithGoogle(fullname, email) {
 
 // --- 1. GOOGLE MODAL POPUP ---
 function openGoogleModal() {
+  // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP: Nếu đã đăng nhập (localStorage tồn tại currentUser) -> HỦY BỎ HOÀN TOÀN
+  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
+  const userInStorage = localStorage.getItem('currentUser') || localStorage.getItem('techzone_current_user');
+  if (currentUser || userInStorage) {
+    closeGoogleModal();
+    return;
+  }
+
   let modal = document.getElementById('tz-google-modal');
   if (!modal) {
     modal = document.createElement('div');
@@ -3806,11 +5835,17 @@ function openGoogleModal() {
   }
 
   closeAllSocialModals();
+  modal.style.display = 'flex';
   modal.classList.add('show');
 }
 
 function closeGoogleModal() {
   closeAllSocialModals();
+  const googleModals = document.querySelectorAll('#tz-google-modal, #googleLoginModal, .google-modal-backdrop, .google-one-tap');
+  googleModals.forEach(m => {
+    m.classList.remove('show', 'active');
+    m.style.display = 'none';
+  });
 }
 
 // --- 2. FACEBOOK MODAL POPUP ---
@@ -4183,15 +6218,15 @@ function openAppleModal() {
 
 // Cập nhật hiển thị tài khoản trên Header
 function initUserAccount() {
-  const userBtn = document.getElementById('tz-user-btn');
-  const userDropdown = document.getElementById('tz-user-dropdown');
+  const userBtn = document.getElementById('tz-user-btn') || document.getElementById('tz-header-user-btn') || document.querySelector('.tz-user-btn');
+  const userDropdown = document.getElementById('tz-user-dropdown') || document.querySelector('.tz-user-dropdown');
   const nameDisplay = document.getElementById('tz-user-name-display');
   const greetingDisplay = document.getElementById('tz-dropdown-greeting');
   const logoutBtn = document.getElementById('tz-btn-logout');
   const profileBtn = document.getElementById('tz-btn-profile-info');
 
   // Lấy currentUser từ localStorage
-  const currentUser = Auth.getUser();
+  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
 
   if (currentUser && currentUser.fullname) {
     if (nameDisplay) {
@@ -4204,7 +6239,7 @@ function initUserAccount() {
     }
 
     if (userBtn) {
-      userBtn.setAttribute('href', '#');
+      userBtn.setAttribute('href', 'javascript:void(0);');
       userBtn.setAttribute('title', `Tài khoản: ${currentUser.fullname}`);
       userBtn.onclick = (e) => {
         e.preventDefault();
@@ -4217,10 +6252,18 @@ function initUserAccount() {
 
     // Click outside closes dropdown
     document.addEventListener('click', (e) => {
-      if (userDropdown && !e.target.closest('#tz-user-wrapper')) {
+      if (userDropdown && !e.target.closest('#tz-user-wrapper') && !e.target.closest('.tz-user-wrapper') && !e.target.closest('.user-account-wrapper') && !e.target.closest('.tz-auth-nav-wrap')) {
         userDropdown.classList.remove('show');
       }
     });
+
+    // Khi di chuột hoặc click vào nút giỏ hàng, đóng ngay menu tài khoản nếu đang mở
+    const cartBtn = document.querySelector('.tz-cart-btn, .header-cart-btn');
+    if (cartBtn && userDropdown) {
+      cartBtn.addEventListener('mouseenter', () => {
+        userDropdown.classList.remove('show');
+      });
+    }
 
     if (logoutBtn) {
       logoutBtn.onclick = (e) => {
@@ -4229,7 +6272,17 @@ function initUserAccount() {
         if (userDropdown) {
           userDropdown.classList.remove('show');
         }
-        openLogoutModal();
+        const pathname = window.location.pathname.toLowerCase();
+        if (pathname.includes('voucher')) {
+          handleVoucherLogout(e);
+          return;
+        }
+        if (typeof openLogoutModal === 'function') {
+          openLogoutModal();
+        } else if (typeof Auth !== 'undefined' && Auth.logout) {
+          Auth.logout();
+          window.location.href = 'index.html';
+        }
       };
     }
 
@@ -4254,6 +6307,23 @@ function initUserAccount() {
     }
   }
 }
+
+// Bật/tắt menu dropdown tài khoản toàn cục khi click
+window.toggleUserDropdown = function(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
+  if (!currentUser || !currentUser.fullname) {
+    window.location.href = 'login.html';
+    return;
+  }
+  const userDropdown = document.getElementById('tz-user-dropdown') || document.querySelector('.tz-user-dropdown');
+  if (userDropdown) {
+    userDropdown.classList.toggle('show');
+  }
+};
 
 // --- 14. LOGIN & REGISTER PAGES CONTROLLER ---
 function initLoginPage() {
@@ -4527,6 +6597,96 @@ function initCompleteProfilePage() {
   });
 }
 
+// --- HELPER: TÍNH TOÁN VÀ ĐỒNG BỘ THỐNG KÊ CHI TIÊU & ĐIỂM SMEMBER CHUẨN XÁC ---
+function calculateAndSyncUserStats(user) {
+  const currentUser = user || Auth.getUser();
+  if (!currentUser) {
+    return { totalSpent: 0, rewardPoints: 0, completedOrdersCount: 0, rankText: 'Smember Mới', rankIconHtml: '<i class="fa-solid fa-seedling"></i>' };
+  }
+
+  const allOrders = Storage.getOrders();
+  const cEmail = (currentUser.email || '').toLowerCase().trim();
+  const cPhone = (currentUser.phone || '').replace(/\D/g, '');
+  const cName = (currentUser.fullname || '').toLowerCase().trim();
+
+  // 1. Lọc tất cả đơn hàng thuộc về tài khoản này
+  const userOrders = allOrders.filter(o => {
+    const oEmail = (o.userEmail || o.customer?.email || '').toLowerCase().trim();
+    const oPhone = (o.customer?.phone || '').replace(/\D/g, '');
+    const oName = (o.customer?.name || '').toLowerCase().trim();
+
+    if (cEmail && oEmail && cEmail === oEmail) return true;
+    if (cPhone && oPhone && cPhone === oPhone) return true;
+    if (cName && oName && cName === oName) return true;
+    // Tài khoản admin mẫu được xem các đơn mock của TechZone
+    if (currentUser.username === 'admin' && (o.customer?.name === 'Quản trị viên TechZone' || o.id === 'SPX-892341' || o.id === 'SPX-661205')) return true;
+    return false;
+  });
+
+  // 2. LỌC CHỈ CÁC ĐƠN HÀNG HOÀN THÀNH / ĐÃ GIAO (status === 'Đã giao' || status === 'Giao hàng thành công')
+  // RÀNG BUỘC TUYỆT ĐỐI: Những đơn hàng có trạng thái "Đã hủy" (cancelled) hoặc "Chờ xác nhận" KHÔNG ĐƯỢC CỘNG
+  const completedOrders = userOrders.filter(o => {
+    if (!o || !o.status) return false;
+    const st = o.status.trim().toLowerCase();
+    if (st.includes('hủy') || st.includes('cancel') || st.includes('chờ') || st.includes('xác nhận') || st.includes('đang giao')) {
+      return false;
+    }
+    return st === 'đã giao' || st === 'giao hàng thành công' || st === 'hoàn thành' || st === 'completed';
+  });
+
+  // 3. Tính Tổng chi tiêu tích lũy và Điểm Smember (1% của tổng chi tiêu, làm tròn nguyên)
+  const totalSpent = completedOrders.reduce((sum, o) => {
+    const amount = Number(o.total !== undefined && o.total !== null ? o.total : o.subtotal) || 0;
+    return sum + amount;
+  }, 0);
+
+  const rewardPoints = Math.round(totalSpent * 0.01);
+  const completedOrdersCount = completedOrders.length;
+
+  // 4. Phân hạng Smember dựa trên tổng chi tiêu tích lũy:
+  // Dưới 5 triệu là "Smember Mới", từ 5 - 20 triệu là "Smember Bạc", trên 20 triệu là "Smember VIP Vàng"
+  let rankText = 'Smember Mới';
+  let rankIconHtml = '<i class="fa-solid fa-seedling"></i>';
+  if (totalSpent >= 20000000) {
+    rankText = 'Smember VIP Vàng';
+    rankIconHtml = '<i class="fa-solid fa-crown"></i>';
+  } else if (totalSpent >= 5000000) {
+    rankText = 'Smember Bạc';
+    rankIconHtml = '<i class="fa-solid fa-medal"></i>';
+  }
+
+  // 5. Cập nhật vào đối tượng user trong localStorage
+  currentUser.points = rewardPoints;
+  currentUser.totalSpent = totalSpent;
+  currentUser.completedOrdersCount = completedOrdersCount;
+  currentUser.rank = rankText;
+  Auth.setCurrentUser(currentUser);
+
+  // Đồng bộ vào mảng registeredUsers
+  const users = Auth.getRegisteredUsers();
+  const userIdx = users.findIndex(u => (u.email && u.email.toLowerCase() === cEmail) || (u.username === currentUser.username));
+  if (userIdx !== -1) {
+    users[userIdx].points = rewardPoints;
+    users[userIdx].totalSpent = totalSpent;
+    users[userIdx].completedOrdersCount = completedOrdersCount;
+    users[userIdx].rank = rankText;
+    localStorage.setItem(Auth.STORAGE_USERS_KEY, JSON.stringify(users));
+  }
+
+  // 6. Nếu đang ở trang profile.html, cập nhật trực tiếp lên DOM
+  const pointsEl = document.getElementById('profile-reward-points');
+  const spentEl = document.getElementById('profile-total-spent');
+  const ordersCountEl = document.getElementById('profile-orders-count');
+  const userRankBadge = document.getElementById('profile-rank-badge');
+
+  if (pointsEl) pointsEl.innerHTML = `${rewardPoints.toLocaleString('vi-VN')} <span class="unit">điểm</span>`;
+  if (spentEl) spentEl.innerHTML = `${totalSpent.toLocaleString('vi-VN')} <span class="unit">đ</span>`;
+  if (ordersCountEl) ordersCountEl.innerHTML = `${completedOrdersCount} <span class="unit">đơn hàng</span>`;
+  if (userRankBadge) userRankBadge.innerHTML = `${rankIconHtml} ${rankText}`;
+
+  return { totalSpent, rewardPoints, completedOrdersCount, rankText, rankIconHtml };
+}
+
 // --- TRANG HỒ SƠ TÀI KHOẢN (profile.html) ---
 function initProfilePage() {
   // 1. Kiểm tra trạng thái đăng nhập (Auth Guard)
@@ -4553,48 +6713,8 @@ function initProfilePage() {
     sidebarAvatar.src = currentUser.avatar;
   }
 
-  // 3. Tính toán đơn hàng và điểm tích lũy THỰC TẾ của người dùng này (KHÔNG ĐƯỢC HARDCODE)
-  const allOrders = Storage.getOrders();
-  const cEmail = (currentUser.email || '').toLowerCase().trim();
-  const cPhone = (currentUser.phone || '').replace(/\D/g, '');
-  const cName = (currentUser.fullname || '').toLowerCase().trim();
-
-  const userOrders = allOrders.filter(o => {
-    const oEmail = (o.userEmail || o.customer?.email || '').toLowerCase().trim();
-    const oPhone = (o.customer?.phone || '').replace(/\D/g, '');
-    const oName = (o.customer?.name || '').toLowerCase().trim();
-
-    if (cEmail && oEmail && cEmail === oEmail) return true;
-    if (cPhone && oPhone && cPhone === oPhone) return true;
-    if (cName && oName && cName === oName) return true;
-    // Tài khoản admin mẫu được xem các đơn mock của TechZone
-    if (currentUser.username === 'admin' && (o.customer?.name === 'Quản trị viên TechZone' || o.id === 'SPX-892341')) return true;
-    return false;
-  });
-
-  const totalSpent = userOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
-  const rewardPoints = (currentUser.points !== undefined && currentUser.points !== null) ? Number(currentUser.points) : Math.floor(totalSpent / 10000);
-
-  // Phân hạng Smember dựa trên tổng chi tiêu thực tế:
-  // Dưới 5 triệu là "Smember Mới", từ 5 - 20 triệu là "Smember Bạc", trên 20 triệu là "Smember VIP Vàng"
-  let rankText = 'Smember Mới';
-  let rankIconHtml = '<i class="fa-solid fa-seedling"></i>';
-  if (totalSpent >= 20000000) {
-    rankText = 'Smember VIP Vàng';
-    rankIconHtml = '<i class="fa-solid fa-crown"></i>';
-  } else if (totalSpent >= 5000000) {
-    rankText = 'Smember Bạc';
-    rankIconHtml = '<i class="fa-solid fa-medal"></i>';
-  }
-
-  const pointsEl = document.getElementById('profile-reward-points');
-  const spentEl = document.getElementById('profile-total-spent');
-  const ordersCountEl = document.getElementById('profile-orders-count');
-
-  if (userRankBadge) userRankBadge.innerHTML = `${rankIconHtml} ${rankText}`;
-  if (pointsEl) pointsEl.innerHTML = `${rewardPoints.toLocaleString('vi-VN')} <span class="unit">điểm</span>`;
-  if (spentEl) spentEl.innerHTML = `${totalSpent.toLocaleString('vi-VN')} <span class="unit">đ</span>`;
-  if (ordersCountEl) ordersCountEl.innerHTML = `${userOrders.length} <span class="unit">đơn hàng</span>`;
+  // 3. Tính toán đơn hàng hoàn tất, tổng chi tiêu tích lũy và điểm Smember THỰC TẾ
+  calculateAndSyncUserStats(currentUser);
 
   // Form thông tin cá nhân
   const accountInput = document.getElementById('profile-account');
@@ -4959,7 +7079,10 @@ function initSocialAuthHandlers(actionType) {
 
 // --- 15. GLOBAL DISPATCHER (DOM CONTENT LOADED) ---
 document.addEventListener('DOMContentLoaded', () => {
+  guardGoogleLoginModals();
+  initPageLoader();
   Storage.updateCartBadge();
+  updateGlobalVoucherBadges();
   initStickyHeader();
   initUserAccount();
   initLocationSelector();
@@ -4992,6 +7115,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Dual-check: Detect current page via pathname or specific DOM markers
   const pathname = window.location.pathname.toLowerCase();
 
+  // Khởi tạo Nút CSKH & Gọi điện nổi góc dưới bên trái (Floating Support Widget) trên mọi page
+  initFloatingSupportWidget();
+
   if (pathname.includes('login') || document.getElementById('tz-login-form')) {
     initLoginPage();
   } else if (pathname.includes('complete-profile') || document.getElementById('tz-complete-profile-form')) {
@@ -5000,12 +7126,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initRegisterPage();
   } else if (pathname.includes('profile') || document.getElementById('tz-profile-form')) {
     initProfilePage();
+  } else if (pathname.includes('product-detail') || document.getElementById('tz-product-detail-view')) {
+    initProductDetailPage();
   } else if (pathname.includes('products') || document.getElementById('catalog-products-grid')) {
     initProductsPage();
   } else if (pathname.includes('checkout') || document.getElementById('tz-checkout-form')) {
     initCheckoutPage();
   } else if (pathname.includes('tracking') || document.querySelector('.order-timeline')) {
     initTrackingDetailPage();
+  } else if (pathname.includes('voucher') || document.getElementById('vouchers-grid-container')) {
+    initVouchersPage();
   } else if (pathname.includes('history') || document.getElementById('history-cards-container')) {
     initHistoryPage();
   } else {
@@ -5180,7 +7310,862 @@ function executeCancelOrder(orderId, reason, callback = null) {
   closeCancelOrderModal();
   showToast(`Đã hủy đơn hàng <strong>#${order.id}</strong> thành công!`, 'success');
 
+  // Tự động tính toán lại và trừ số tiền/điểm tương ứng khỏi hồ sơ cá nhân ngay lập tức
+  const currentUser = Auth.getUser();
+  if (currentUser) {
+    calculateAndSyncUserStats(currentUser);
+  }
+
   if (typeof callback === 'function') {
     callback(order);
+  }
+}
+
+
+// ==========================================================================
+// PROMPT 53: TRANG CHI TIẾT SẢN PHẨM (product-detail.html) & NÚT CSKH NỔI
+// ==========================================================================
+
+// --- 16. PAGE LOGIC: PRODUCT DETAIL (product-detail.html) ---
+function initProductDetailPage() {
+  const container = document.getElementById('tz-product-detail-view');
+  if (!container) return;
+
+  // Khắc phục triệt để lỗi bung popup Google khi cuộn trang:
+  // Nếu đã đăng nhập hoặc trang vừa tải, ẩn triệt để mọi modal Google Login
+  guardGoogleLoginModals();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id') || 'sp1';
+  const products = Storage.getProducts();
+  const product = products.find(p => p.id === productId) || products[0];
+
+  if (!product) return;
+
+  // 1. Cập nhật Title trang và Breadcrumb
+  document.title = `${product.name} | TechZone Chính Hãng`;
+  const pageTitleElem = document.getElementById('pd-page-title');
+  if (pageTitleElem) pageTitleElem.textContent = `${product.name} | TechZone Chính Hãng`;
+
+  const breadcrumbCat = document.getElementById('breadcrumb-category');
+  if (breadcrumbCat) {
+    const catNames = {
+      phone: 'Điện thoại & Tablet',
+      laptop: 'Laptop & Màn hình',
+      audio: 'Thiết bị Âm thanh',
+      watch: 'Đồng hồ thông minh',
+      accessory: 'Phụ kiện sạc cáp'
+    };
+    const catTitle = catNames[product.category] || 'Sản phẩm';
+    breadcrumbCat.textContent = catTitle;
+    breadcrumbCat.href = `products.html?category=${product.category}`;
+  }
+
+  const breadcrumbName = document.getElementById('breadcrumb-product-name');
+  if (breadcrumbName) breadcrumbName.textContent = product.name;
+
+  // 2. Cột trái: Ảnh chính & Zoom tương tác
+  const mainImg = document.getElementById('tz-pd-main-image');
+  const zoomBox = document.getElementById('tz-pd-zoom-box');
+  if (mainImg) {
+    mainImg.src = product.image;
+    mainImg.alt = product.name;
+  }
+
+  // Hiệu ứng Zoom mượt mà khi rê chuột vào ảnh chính
+  if (zoomBox && mainImg) {
+    zoomBox.addEventListener('mousemove', (e) => {
+      if (window.innerWidth <= 768) return; // Vô hiệu hóa hiệu ứng rê chuột zoom trên màn hình cảm ứng di động
+      const rect = zoomBox.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = Math.round((x / rect.width) * 100);
+      const yPct = Math.round((y / rect.height) * 100);
+      mainImg.style.transformOrigin = `${xPct}% ${yPct}%`;
+      mainImg.style.transform = 'scale(1.55)';
+    });
+
+    zoomBox.addEventListener('mouseleave', () => {
+      mainImg.style.transformOrigin = 'center center';
+      mainImg.style.transform = 'scale(1)';
+    });
+  }
+
+  // Huy hiệu sản phẩm hàng ngang: Giảm giá, Trả góp 0%, Chính hãng 100%
+  const badgesBox = document.getElementById('tz-pd-badges');
+  if (badgesBox) {
+    const discountVal = product.discountPercent || (product.originalPrice && product.price ? Math.round((product.originalPrice - product.price) / product.originalPrice * 100) : 18);
+    badgesBox.innerHTML = `
+      ${discountVal > 0 ? `<span class="tz-badge-pill tz-badge-discount"><i class="fa-solid fa-bolt"></i> Giảm ${discountVal}%</span>` : ''}
+      <span class="tz-badge-pill tz-badge-installment"><i class="fa-solid fa-credit-card"></i> Trả góp 0%</span>
+      <span class="tz-badge-pill tz-badge-official"><i class="fa-solid fa-shield-halved"></i> Chính hãng 100%</span>
+    `;
+  }
+
+  // Hàng ảnh thumbnail góc khác
+  const thumbsList = document.getElementById('tz-pd-thumbs-list');
+  if (thumbsList) {
+    const allProdImages = products.filter(p => p.id !== product.id).map(p => p.image);
+    const thumbImages = [
+      product.image,
+      allProdImages[0] || 'images/sp2.jpg',
+      allProdImages[1] || 'images/sp3.jpg',
+      allProdImages[2] || 'images/sp4.jpg',
+      allProdImages[3] || 'images/sp5.jpg'
+    ];
+
+    const thumbLabels = ['Góc chính diện', 'Góc nghiêng 45°', 'Chi tiết linh kiện', 'Khui hộp & Seal', 'Ảnh thực tế'];
+
+    thumbsList.innerHTML = thumbImages.map((imgSrc, idx) => `
+      <div class="tz-pd-thumb-item ${idx === 0 ? 'active' : ''}" data-src="${imgSrc}" title="${thumbLabels[idx]}">
+        <img src="${imgSrc}" alt="${thumbLabels[idx]}" loading="lazy">
+        <span class="thumb-label">${thumbLabels[idx]}</span>
+      </div>
+    `).join('');
+
+    const thumbItems = thumbsList.querySelectorAll('.tz-pd-thumb-item');
+    thumbItems.forEach(item => {
+      item.addEventListener('click', () => {
+        thumbItems.forEach(t => t.classList.remove('active'));
+        item.classList.add('active');
+        const newSrc = item.dataset.src;
+        if (mainImg) {
+          mainImg.style.opacity = '0.4';
+          setTimeout(() => {
+            mainImg.src = newSrc;
+            mainImg.style.opacity = '1';
+          }, 120);
+        }
+      });
+    });
+  }
+
+  // 3. Cột phải: Thông tin chi tiết sản phẩm
+  const brandElem = document.getElementById('tz-pd-brand');
+  if (brandElem) brandElem.innerHTML = `<i class="fa-solid fa-tag"></i> Thương hiệu: <strong>${product.brand || 'TechZone'}</strong>`;
+
+  const skuElem = document.getElementById('tz-pd-sku');
+  if (skuElem) skuElem.textContent = `Mã SP: ${product.id.toUpperCase()}-TZ`;
+
+  const titleElem = document.getElementById('tz-pd-title');
+  if (titleElem) titleElem.textContent = product.name;
+
+  // Rating, Review Count, Sold Count riêng biệt của sản phẩm
+  const prodRating = product.rating || 4.9;
+  const prodReviewCount = product.reviewCount || 1248;
+  const prodSoldCount = product.soldCount || '2.4k';
+
+  const starsElem = document.getElementById('tz-pd-stars');
+  if (starsElem) {
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(prodRating)) {
+        starsHtml += '<i class="fa-solid fa-star"></i>';
+      } else if (i - prodRating <= 0.5) {
+        starsHtml += '<i class="fa-solid fa-star-half-stroke"></i>';
+      } else {
+        starsHtml += '<i class="fa-regular fa-star"></i>';
+      }
+    }
+    starsElem.innerHTML = `${starsHtml} <span class="tz-pd-score">${prodRating.toFixed(1)} / 5</span>`;
+  }
+
+  const reviewCountElem = document.getElementById('tz-pd-review-count');
+  if (reviewCountElem) {
+    reviewCountElem.innerHTML = `<i class="fa-regular fa-comment-dots"></i> ${prodReviewCount.toLocaleString()} Đánh giá`;
+  }
+
+  const soldCountElem = document.getElementById('tz-pd-sold-count');
+  if (soldCountElem) {
+    soldCountElem.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Đã bán ${prodSoldCount}`;
+  }
+
+  const currentPriceVal = product.price || 0;
+  const oldPriceVal = product.originalPrice || product.oldPrice || Math.round(currentPriceVal * 1.15);
+  const discountVal = product.discountPercent || Math.max(5, Math.round(((oldPriceVal - currentPriceVal) / oldPriceVal) * 100));
+
+  const priceCurrentElem = document.getElementById('tz-pd-price-current');
+  if (priceCurrentElem) priceCurrentElem.textContent = formatVND(currentPriceVal);
+
+  const priceOldElem = document.getElementById('tz-pd-price-old');
+  if (priceOldElem) priceOldElem.textContent = formatVND(oldPriceVal);
+
+  const discountBadgeElem = document.getElementById('tz-pd-discount-badge');
+  if (discountBadgeElem) discountBadgeElem.textContent = `Giảm ${discountVal}%`;
+
+  const savingsElem = document.getElementById('tz-pd-savings');
+  if (savingsElem) {
+    const diff = Math.max(0, oldPriceVal - currentPriceVal);
+    savingsElem.innerHTML = `<i class="fa-solid fa-piggy-bank"></i> Tiết kiệm: <strong>${formatVND(diff)}</strong> khi mua hôm nay`;
+  }
+
+  // Bảng thông số kỹ thuật nổi bật
+  const specsGrid = document.getElementById('tz-pd-specs-grid');
+  if (specsGrid) {
+    const specsList = product.specs && product.specs.length ? product.specs : [
+      'Bảo hành 12 tháng chính hãng',
+      'Đổi mới trong 30 ngày nếu lỗi',
+      'Nguyên hộp kèm phụ kiện chính hãng',
+      'Miễn phí cài đặt phần mềm trọn đời'
+    ];
+    specsGrid.innerHTML = specsList.map(s => `
+      <div class="tz-spec-pill-item">
+        <i class="fa-solid fa-check"></i>
+        <span>${s}</span>
+      </div>
+    `).join('');
+  }
+
+  // Mô tả sản phẩm
+  const descElem = document.getElementById('tz-pd-desc-text');
+  if (descElem) {
+    descElem.innerHTML = `
+      ${product.description || 'Sản phẩm công nghệ cao cấp chính hãng phân phối tại hệ thống TechZone, bảo đảm đầy đủ chứng nhận CO/CQ và tiêu chuẩn chất lượng nghiêm ngặt.'}
+      <br><br>
+      • <strong>Cam kết chất lượng:</strong> 100% hàng mới nguyên seal, chưa qua kích hoạt, xuất hóa đơn VAT điện tử đầy đủ.<br>
+      • <strong>Dịch vụ hỗ trợ:</strong> Đội ngũ kỹ thuật viên giàu kinh nghiệm hỗ trợ cài đặt, sao lưu dữ liệu và tư vấn 24/7.<br>
+      • <strong>Vận chuyển hỏa tốc:</strong> Đối tác độc quyền Shopee Express (SPX) cam kết giao tận tay chỉ từ 2 giờ tại các thành phố lớn.
+    `;
+  }
+
+  // Chọn màu sắc
+  const variantBtns = document.querySelectorAll('.tz-variant-btn');
+  const variantLabel = document.getElementById('tz-pd-selected-variant');
+  variantBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      variantBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (variantLabel) variantLabel.textContent = btn.dataset.color || 'Mặc định';
+    });
+  });
+
+  // Chọn số lượng
+  const qtyInput = document.getElementById('input-pd-quantity');
+  const btnMinus = document.getElementById('btn-qty-minus');
+  const btnPlus = document.getElementById('btn-qty-plus');
+  const maxStock = product.totalStock || 100;
+
+  const stockText = document.getElementById('tz-pd-stock-text');
+  if (stockText) stockText.textContent = `Còn lại ${maxStock} sản phẩm có sẵn trong kho`;
+
+  if (btnMinus && qtyInput) {
+    btnMinus.addEventListener('click', () => {
+      let val = parseInt(qtyInput.value) || 1;
+      if (val > 1) {
+        qtyInput.value = val - 1;
+      }
+    });
+  }
+
+  if (btnPlus && qtyInput) {
+    btnPlus.addEventListener('click', () => {
+      let val = parseInt(qtyInput.value) || 1;
+      if (val < maxStock) {
+        qtyInput.value = val + 1;
+      } else {
+        showToast(`Số lượng tối đa có thể mua là ${maxStock} sản phẩm!`, 'info');
+      }
+    });
+  }
+
+  // 4. RÀNG BUỘC ĐĂNG NHẬP CHO 2 NÚT HÀNH ĐỘNG
+  const btnAddCart = document.getElementById('btn-pd-add-cart');
+  const btnBuyNow = document.getElementById('btn-pd-buy-now');
+
+  if (btnAddCart) {
+    btnAddCart.addEventListener('click', () => {
+      const currentUser = Auth.getUser();
+      if (!currentUser) {
+        showToast('Vui lòng đăng nhập tài khoản để thêm sản phẩm vào giỏ hàng!', 'warning', 'Yêu cầu đăng nhập');
+        setTimeout(() => {
+          openGoogleModal();
+        }, 300);
+        return;
+      }
+
+      const qty = parseInt(qtyInput ? qtyInput.value : 1) || 1;
+      Storage.addToCart(product, qty);
+      showToast(`Đã thêm thành công <strong>${qty}</strong> x <strong>${product.name}</strong> vào giỏ hàng!`, 'success', 'Thêm vào giỏ');
+    });
+  }
+
+  if (btnBuyNow) {
+    btnBuyNow.addEventListener('click', () => {
+      const currentUser = Auth.getUser();
+      if (!currentUser) {
+        showToast('Vui lòng đăng nhập tài khoản trước khi tiến hành mua ngay!', 'warning', 'Yêu cầu đăng nhập');
+        setTimeout(() => {
+          openGoogleModal();
+        }, 300);
+        return;
+      }
+
+      const qty = parseInt(qtyInput ? qtyInput.value : 1) || 1;
+      Storage.addToCart(product, qty);
+      showToast('Đang chuyển hướng sang trang thanh toán...', 'info');
+      setTimeout(() => {
+        window.location.href = 'checkout.html';
+      }, 500);
+    });
+  }
+
+  // 5. KHỐI ĐÁNH GIÁ & BÌNH LUẬN (REVIEWS & COMMENTS)
+  initProductReviews(product);
+
+  // 6. SẢN PHẨM TƯƠNG TỰ BẠN CÓ THỂ THÍCH
+  const relatedGrid = document.getElementById('tz-related-products-grid');
+  if (relatedGrid) {
+    const relatedList = products
+      .filter(p => p.id !== product.id && (p.category === product.category || p.brand === product.brand))
+      .slice(0, 4);
+    
+    if (relatedList.length < 4) {
+      const more = products.filter(p => p.id !== product.id && !relatedList.some(r => r.id === p.id)).slice(0, 4 - relatedList.length);
+      relatedList.push(...more);
+    }
+
+    relatedGrid.innerHTML = relatedList.map(p => renderTechZoneProductCard(p, false)).join('');
+    bindProductActions(relatedGrid);
+  }
+
+  // 7. Sắp xếp lại thứ tự khối Cam kết dịch vụ trên di động (< 768px)
+  function adjustMobileProductLayout() {
+    const trustBox = document.querySelector('.tz-pd-trust-box');
+    const actionsRow = document.querySelector('.tz-pd-actions-row');
+    const authNote = document.querySelector('.tz-pd-auth-note');
+    const leftColGallery = document.querySelector('.tz-pd-gallery');
+
+    if (window.innerWidth <= 768) {
+      if (trustBox && (authNote || actionsRow)) {
+        const anchor = authNote || actionsRow;
+        if (anchor.nextElementSibling !== trustBox) {
+          anchor.parentNode.insertBefore(trustBox, anchor.nextSibling);
+        }
+      }
+    } else {
+      if (trustBox && leftColGallery && !leftColGallery.contains(trustBox)) {
+        leftColGallery.appendChild(trustBox);
+      }
+    }
+  }
+
+  adjustMobileProductLayout();
+  window.addEventListener('resize', adjustMobileProductLayout);
+}
+
+// --- 16.1 REVIEWS & COMMENTS LOGIC ---
+function initProductReviews(product) {
+  const reviewsCard = document.getElementById('tz-add-review-card');
+  const reviewsList = document.getElementById('tz-reviews-list');
+  const reviewsBadge = document.getElementById('tz-reviews-badge');
+  const summaryReviewsText = document.getElementById('summary-total-reviews');
+  const summaryScoreVal = document.getElementById('summary-score-val');
+  const summaryScoreStars = document.getElementById('summary-score-stars');
+
+  if (!reviewsList) return;
+
+  const storageKey = `tz_reviews_${product.id}`;
+  const prodRating = product.rating || 4.9;
+  const prodReviewCount = product.reviewCount || 1248;
+
+  // Cập nhật điểm sao to và icon sao trong summary card
+  if (summaryScoreVal) {
+    summaryScoreVal.innerHTML = `${prodRating.toFixed(1)}<span class="max-score">/5</span>`;
+  }
+  if (summaryScoreStars) {
+    let sHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(prodRating)) {
+        sHtml += '<i class="fa-solid fa-star"></i>';
+      } else if (i - prodRating <= 0.5) {
+        sHtml += '<i class="fa-solid fa-star-half-stroke"></i>';
+      } else {
+        sHtml += '<i class="fa-regular fa-star"></i>';
+      }
+    }
+    summaryScoreStars.innerHTML = sHtml;
+  }
+
+  // Cập nhật các thanh tỷ lệ phần trăm sao tương ứng với số điểm
+  const ratingBarsCol = document.querySelector('.tz-rating-bars-col');
+  if (ratingBarsCol) {
+    let p5 = 88, p4 = 9, p3 = 2, p2 = 1, p1 = 0;
+    if (prodRating >= 4.9) {
+      p5 = 89; p4 = 8; p3 = 2; p2 = 1; p1 = 0;
+    } else if (prodRating >= 4.8) {
+      p5 = 82; p4 = 14; p3 = 3; p2 = 1; p1 = 0;
+    } else if (prodRating >= 4.7) {
+      p5 = 75; p4 = 18; p3 = 5; p2 = 2; p1 = 0;
+    }
+    ratingBarsCol.innerHTML = `
+      <div class="rating-bar-row">
+        <span class="star-label">5 sao</span>
+        <div class="bar-track"><div class="bar-fill" style="width: ${p5}%;"></div></div>
+        <span class="bar-pct">${p5}%</span>
+      </div>
+      <div class="rating-bar-row">
+        <span class="star-label">4 sao</span>
+        <div class="bar-track"><div class="bar-fill" style="width: ${p4}%;"></div></div>
+        <span class="bar-pct">${p4}%</span>
+      </div>
+      <div class="rating-bar-row">
+        <span class="star-label">3 sao</span>
+        <div class="bar-track"><div class="bar-fill" style="width: ${p3}%;"></div></div>
+        <span class="bar-pct">${p3}%</span>
+      </div>
+      <div class="rating-bar-row">
+        <span class="star-label">2 sao</span>
+        <div class="bar-track"><div class="bar-fill" style="width: ${p2}%;"></div></div>
+        <span class="bar-pct">${p2}%</span>
+      </div>
+      <div class="rating-bar-row">
+        <span class="star-label">1 sao</span>
+        <div class="bar-track"><div class="bar-fill" style="width: ${p1}%;"></div></div>
+        <span class="bar-pct">${p1}%</span>
+      </div>
+    `;
+  }
+
+  // Danh sách đánh giá mặc định độc lập của sản phẩm
+  const defaultReviews = (product.reviews && product.reviews.length > 0) ? product.reviews : [
+    {
+      id: `rev_${product.id}_1`,
+      author: 'Hoàng Nam',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80',
+      stars: 5,
+      date: '2 ngày trước',
+      variant: 'Chính hãng TechZone',
+      comment: `Sản phẩm ${product.name} quá đẹp, nguyên seal chính hãng 100%. Bưu tá SPX giao nhanh trong 2h tại Hà Nội. Rất hài lòng!`,
+      likes: 18,
+      verified: true
+    },
+    {
+      id: `rev_${product.id}_2`,
+      author: 'Lê Thị Bích Ngọc',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
+      stars: 5,
+      date: '5 ngày trước',
+      variant: 'Nguyên hộp VAT',
+      comment: 'Giao hàng đúng hẹn, màu sắc bên ngoài đẹp hơn cả trên ảnh. Nhân viên tư vấn nhiệt tình, đóng gói chống sốc 3 lớp cẩn thận.',
+      likes: 12,
+      verified: true
+    }
+  ];
+
+  function getSavedReviews() {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveReviewToStorage(review) {
+    const list = getSavedReviews();
+    list.unshift(review);
+    localStorage.setItem(storageKey, JSON.stringify(list));
+  }
+
+  function renderAllReviews() {
+    const userReviews = getSavedReviews();
+    const combined = [...userReviews, ...defaultReviews];
+
+    if (reviewsBadge) reviewsBadge.textContent = `(${combined.length} đánh giá)`;
+    if (summaryReviewsText) {
+      summaryReviewsText.textContent = `Dựa trên ${(prodReviewCount + userReviews.length).toLocaleString()} lượt đánh giá thực tế`;
+    }
+
+    reviewsList.innerHTML = combined.map(r => `
+      <div class="tz-review-card ${r.isNew ? 'new-review' : ''}">
+        <div class="tz-review-header">
+          <div class="tz-review-author-info">
+            <img src="${r.avatar}" alt="${r.author}" class="tz-review-avatar">
+            <div>
+              <div class="tz-review-author-name">
+                ${r.author}
+                ${r.verified ? '<span class="tz-verified-badge"><i class="fa-solid fa-circle-check"></i> Đã mua hàng tại TechZone</span>' : ''}
+              </div>
+              <div class="tz-review-meta">
+                <span class="tz-review-stars">
+                  ${Array(r.stars).fill('<i class="fa-solid fa-star"></i>').join('')}
+                  ${Array(5 - r.stars).fill('<i class="fa-regular fa-star"></i>').join('')}
+                </span>
+                <span class="sep">•</span>
+                <span class="tz-review-date">${r.date}</span>
+                ${r.variant ? `<span class="sep">•</span><span class="tz-review-variant">Phân loại: ${r.variant}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tz-review-body">
+          <p class="tz-review-text">${r.comment}</p>
+        </div>
+        <div class="tz-review-footer">
+          <button type="button" class="btn-like-review" onclick="showToast('Cảm ơn bạn đã phản hồi nhận xét hữu ích!', 'info')">
+            <i class="fa-regular fa-thumbs-up"></i> Hữu ích (${r.likes || 1})
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderAddReviewForm() {
+    if (!reviewsCard) return;
+
+    const currentUser = Auth.getUser();
+    if (!currentUser) {
+      reviewsCard.innerHTML = `
+        <div class="tz-review-login-prompt">
+          <div class="prompt-icon"><i class="fa-solid fa-lock"></i></div>
+          <div class="prompt-text">
+            <h4>Bạn đã sở hữu sản phẩm này?</h4>
+            <p>Vui lòng đăng nhập tài khoản TechZone để gửi đánh giá và nhận <strong>+50 điểm Smember</strong>!</p>
+          </div>
+          <a href="login.html?redirect=product-detail.html?id=${product.id}" class="btn-shopee-primary" style="padding: 9px 20px;">
+            <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập ngay
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    reviewsCard.innerHTML = `
+      <div class="tz-write-review-box">
+        <div class="write-header">
+          <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80'}" alt="${currentUser.fullname}" class="user-avatar-mini">
+          <div>
+            <div class="user-greeting">Đánh giá với tư cách: <strong>${currentUser.fullname || currentUser.username}</strong></div>
+            <div class="user-sub">Chia sẻ cảm nhận chân thực để cộng đồng người mua TechZone tham khảo nhé!</div>
+          </div>
+        </div>
+
+        <form id="tz-form-submit-review" class="tz-review-form">
+          <div class="star-rating-picker-row">
+            <span class="rating-label">Chọn mức độ hài lòng:</span>
+            <div class="star-picker" id="tz-star-picker">
+              <i class="fa-solid fa-star star-btn active" data-rating="1"></i>
+              <i class="fa-solid fa-star star-btn active" data-rating="2"></i>
+              <i class="fa-solid fa-star star-btn active" data-rating="3"></i>
+              <i class="fa-solid fa-star star-btn active" data-rating="4"></i>
+              <i class="fa-solid fa-star star-btn active" data-rating="5"></i>
+              <span class="rating-text" id="tz-rating-desc">Tuyệt vời (5/5 sao)</span>
+            </div>
+            <input type="hidden" id="input-review-stars" value="5">
+          </div>
+
+          <div class="tz-form-group" style="margin-top: 12px;">
+            <textarea id="input-review-comment" rows="3" placeholder="Hãy chia sẻ cảm nhận của bạn về chất lượng hoàn thiện máy, hiệu năng, đóng gói chống sốc và dịch vụ giao hàng SPX 2H..." required></textarea>
+          </div>
+
+          <div class="tz-review-submit-row">
+            <span class="review-tips"><i class="fa-solid fa-shield-halved"></i> Đánh giá sẽ được hiển thị ngay lập tức</span>
+            <button type="submit" class="btn-shopee-primary btn-submit-review">
+              <i class="fa-solid fa-paper-plane"></i> Gửi Đánh Giá Ngay
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    const starsInput = reviewsCard.querySelector('#input-review-stars');
+    const ratingDesc = reviewsCard.querySelector('#tz-rating-desc');
+    const starBtns = reviewsCard.querySelectorAll('.star-btn');
+
+    const descTexts = {
+      1: 'Rất tệ (1/5 sao)',
+      2: 'Chưa hài lòng (2/5 sao)',
+      3: 'Bình thường (3/5 sao)',
+      4: 'Hài lòng (4/5 sao)',
+      5: 'Tuyệt vời (5/5 sao)'
+    };
+
+    starBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const rating = parseInt(btn.dataset.rating) || 5;
+        if (starsInput) starsInput.value = rating;
+        if (ratingDesc) ratingDesc.textContent = descTexts[rating];
+
+        starBtns.forEach(s => {
+          const sRating = parseInt(s.dataset.rating) || 1;
+          if (sRating <= rating) {
+            s.classList.add('active');
+            s.classList.remove('fa-regular');
+            s.classList.add('fa-solid');
+          } else {
+            s.classList.remove('active');
+            s.classList.remove('fa-solid');
+            s.classList.add('fa-regular');
+          }
+        });
+      });
+    });
+
+    const form = reviewsCard.querySelector('#tz-form-submit-review');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const commentInput = form.querySelector('#input-review-comment');
+        const text = commentInput.value.trim();
+        if (text.length < 5) {
+          showToast('Nội dung nhận xét cần tối thiểu 5 ký tự!', 'warning');
+          return;
+        }
+
+        const rating = parseInt(starsInput.value) || 5;
+        const newReview = {
+          id: 'rev_user_' + Date.now(),
+          author: currentUser.fullname || currentUser.username,
+          avatar: currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80',
+          stars: rating,
+          date: 'Vừa xong',
+          variant: 'Khách hàng TechZone',
+          comment: text,
+          likes: 1,
+          verified: true,
+          isNew: true
+        };
+
+        saveReviewToStorage(newReview);
+        commentInput.value = '';
+        renderAllReviews();
+        showToast('Cảm ơn bạn! Đánh giá đã được gửi thành công.', 'success', 'Gửi đánh giá');
+      });
+    }
+  }
+
+  renderAddReviewForm();
+  renderAllReviews();
+}
+
+// --- 17. FLOATING SUPPORT WIDGET (CSKH & GỌI ĐIỆN NỔI GÓC DƯỚI BÊN TRÁI) ---
+function initFloatingSupportWidget() {
+  if (document.getElementById('tz-floating-support')) return;
+
+  const widget = document.createElement('div');
+  widget.id = 'tz-floating-support';
+  widget.className = 'tz-floating-support';
+  widget.innerHTML = `
+    <!-- Nút Bấm Chính Hình Tròn với Hiệu Ứng Sóng Nước (Wave Pulse Ring) -->
+    <button type="button" class="tz-support-trigger-btn" id="btn-toggle-support" title="Hỗ trợ trực tuyến & Hotline 24/7" aria-label="CSKH TechZone">
+      <div class="support-wave-ring ring-1"></div>
+      <div class="support-wave-ring ring-2"></div>
+      <div class="support-icon-wrap">
+        <i class="fa-solid fa-headset icon-headset"></i>
+        <i class="fa-solid fa-xmark icon-close"></i>
+      </div>
+      <span class="support-tooltip-badge">Hỗ trợ 24/7</span>
+    </button>
+
+    <!-- Khung Hộp Thoại Chat CSKH TechZone (Kích thước chuẩn 360px x 500px) -->
+    <div class="tz-support-chat-box cskh-chat-popup" id="tz-support-chat-box" aria-hidden="true">
+      
+      <!-- Chat Header -->
+      <div class="tz-chat-header cskh-chat-header chat-header">
+        <div class="tz-chat-agent-info">
+          <div class="agent-avatar-wrap">
+            <div class="brand-avatar-chip" title="TechZone CSKH">⚙️</div>
+            <span class="agent-online-dot" title="Đang online trực tuyến"></span>
+          </div>
+          <div>
+            <div class="agent-name">Hỗ trợ trực tuyến TechZone</div>
+            <div class="agent-status"><span class="status-dot"></span> Sẵn sàng phản hồi trong 1 phút</div>
+          </div>
+        </div>
+        <div class="tz-chat-header-actions">
+          <a href="tel:18006868" class="tz-chat-call-btn" title="Gọi tổng đài miễn phí 1800.6868">
+            <i class="fa-solid fa-phone"></i> 1800.6868
+          </a>
+          <button type="button" class="tz-chat-close-btn btn-cskh-close" id="btn-close-chat" title="Đóng / Thu nhỏ khung chat">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Action Question Chips -->
+      <div class="tz-chat-quick-chips">
+        <button type="button" class="chat-chip-btn" data-question="Tra cứu đơn hàng">
+          <i class="fa-solid fa-truck-fast"></i> Tra cứu đơn hàng
+        </button>
+        <button type="button" class="chat-chip-btn" data-question="Khuyến mãi hôm nay">
+          <i class="fa-solid fa-bolt"></i> Khuyến mãi hôm nay
+        </button>
+        <button type="button" class="chat-chip-btn" data-question="Chính sách đổi trả">
+          <i class="fa-solid fa-rotate-left"></i> Đổi trả 1-đổi-1
+        </button>
+        <button type="button" class="chat-chip-btn" data-question="Chi nhánh gần nhất">
+          <i class="fa-solid fa-location-dot"></i> Chi nhánh gần nhất
+        </button>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="tz-chat-messages chat-body cskh-chat-body" id="tz-chat-messages">
+        <!-- Message auto-welcome -->
+        <div class="chat-msg msg-bot">
+          <div class="brand-avatar-chip msg-avatar" title="TechZone CSKH">⚙️</div>
+          <div class="msg-bubble">
+            <div class="msg-text">
+              Xin chào! TechZone có thể hỗ trợ gì cho bạn về sản phẩm, đơn hàng hay khuyến mãi hôm nay?
+            </div>
+            <div class="msg-time" id="welcome-msg-time">Vừa xong</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator (Ẩn hoàn toàn mặc định, chỉ hiện 1s khi gửi tin) -->
+      <div class="tz-chat-typing" id="tz-chat-typing" style="display: none !important;">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-label">Chuyên viên đang soạn tin...</span>
+      </div>
+
+      <!-- Input Message Bar -->
+      <form class="tz-chat-input-bar chat-footer cskh-chat-footer" id="tz-chat-form">
+        <input type="text" id="input-chat-message" placeholder="Nhập câu hỏi cần hỗ trợ..." autocomplete="off" required>
+        <button type="submit" class="btn-chat-send" title="Gửi tin nhắn">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(widget);
+
+  const triggerBtn = widget.querySelector('#btn-toggle-support');
+  const chatBox = widget.querySelector('#tz-support-chat-box');
+  const closeBtn = widget.querySelector('#btn-close-chat');
+  const chatForm = widget.querySelector('#tz-chat-form');
+  const inputMessage = widget.querySelector('#input-chat-message');
+  const messagesBox = widget.querySelector('#tz-chat-messages');
+  const typingIndicator = widget.querySelector('#tz-chat-typing');
+  const quickChips = widget.querySelectorAll('.chat-chip-btn');
+
+  function toggleChat(forceOpen = null) {
+    const isOpen = forceOpen !== null ? forceOpen : !chatBox.classList.contains('show');
+    if (isOpen) {
+      chatBox.classList.add('show');
+      triggerBtn.classList.add('active');
+      chatBox.setAttribute('aria-hidden', 'false');
+      setTimeout(() => inputMessage?.focus(), 200);
+    } else {
+      chatBox.classList.remove('show');
+      triggerBtn.classList.remove('active');
+      chatBox.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  triggerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleChat();
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleChat(false);
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (chatBox.classList.contains('show') && !widget.contains(e.target)) {
+      toggleChat(false);
+    }
+  });
+
+  const getCurrentTimeStr = () => {
+    const d = new Date();
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  };
+
+  const welcomeTime = widget.querySelector('#welcome-msg-time');
+  if (welcomeTime) welcomeTime.textContent = getCurrentTimeStr();
+
+  function appendMessage(text, isUser = true) {
+    const timeStr = getCurrentTimeStr();
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `chat-msg ${isUser ? 'msg-user' : 'msg-bot'}`;
+    if (isUser) {
+      msgDiv.innerHTML = `
+        <div class="msg-bubble">
+          <div class="msg-text">${escapeHtml(text)}</div>
+          <div class="msg-time">${timeStr}</div>
+        </div>
+      `;
+    } else {
+      msgDiv.innerHTML = `
+        <div class="brand-avatar-chip msg-avatar" title="TechZone CSKH">⚙️</div>
+        <div class="msg-bubble">
+          <div class="msg-text">${text}</div>
+          <div class="msg-time">${timeStr}</div>
+        </div>
+      `;
+    }
+    messagesBox.appendChild(msgDiv);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+
+  function generateSmartResponse(query) {
+    const q = query.toLowerCase();
+    if (q.includes('đơn hàng') || q.includes('tra cứu') || q.includes('vận chuyển') || q.includes('spx') || q.includes('lộ trình')) {
+      return `Bạn có thể bấm vào mục <strong><a href="history.html" style="color:#0284c7;text-decoration:underline;">Đơn mua</a></strong> ở thanh Header hoặc cung cấp mã đơn dạng <strong>SPX-XXXXXX</strong> để TechZone kiểm tra tọa độ bưu tá giao hàng ngay cho bạn nhé!`;
+    }
+    if (q.includes('khuyến mãi') || q.includes('giảm giá') || q.includes('voucher') || q.includes('sale')) {
+      return `Hôm nay TechZone đang diễn ra phiên <strong>Flash Sale giảm đến 28%</strong> cho các dòng iPhone 16 Pro Max, Galaxy S24 Ultra, Asus ROG và tặng kèm voucher 50k cho thành viên Smember!`;
+    }
+    if (q.includes('đổi trả') || q.includes('bảo hành') || q.includes('lỗi')) {
+      return `TechZone áp dụng chính sách <strong>1-đổi-1 miễn phí trong 30 ngày</strong> nếu máy phát sinh lỗi phần cứng, bảo hành 12 - 24 tháng chính hãng tại hơn 86 chi nhánh toàn quốc.`;
+    }
+    if (q.includes('cửa hàng') || q.includes('chi nhánh') || q.includes('địa chỉ')) {
+      return `Hệ thống TechZone có hơn <strong>86 chi nhánh</strong> tại Hà Nội, TP.HCM, Đà Nẵng, Cần Thơ, Hải Phòng... mở cửa từ 7h30 đến 22h00 hàng ngày. Hotline miễn phí: <strong>1800.6868</strong>.`;
+    }
+    if (q.includes('iphone') || q.includes('apple') || q.includes('samsung') || q.includes('laptop')) {
+      return `Tất cả sản phẩm tại TechZone đều là hàng chính hãng <strong>nguyên seal 100%</strong> xuất xứ nhà phân phối chính thức, hỗ trợ trả góp 0% lãi suất và giao hàng hỏa tốc trong 2h!`;
+    }
+    return `Cảm ơn bạn đã nhắn tin! Chuyên viên tư vấn TechZone đang tiếp nhận thông tin và sẽ giải đáp chi tiết cho bạn ngay. Nếu cần hỗ trợ khẩn cấp, bạn có thể gọi hotline miễn cước: <strong>1800.6868</strong> nhé!`;
+  }
+
+  function handleUserSend(text) {
+    if (!text || !text.trim()) return;
+    appendMessage(text, true);
+
+    if (typingIndicator) {
+      typingIndicator.classList.add('show');
+      typingIndicator.style.setProperty('display', 'flex', 'important');
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    setTimeout(() => {
+      if (typingIndicator) {
+        typingIndicator.classList.remove('show');
+        typingIndicator.style.setProperty('display', 'none', 'important');
+      }
+      const reply = generateSmartResponse(text);
+      appendMessage(reply, false);
+    }, 1000);
+  }
+
+  if (chatForm) {
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = inputMessage.value.trim();
+      if (text) {
+        handleUserSend(text);
+        inputMessage.value = '';
+      }
+    });
+  }
+
+  quickChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.dataset.question;
+      handleUserSend(q);
+    });
+  });
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 }
