@@ -39,29 +39,30 @@
               <div class="tz-dropdown-header">
                 <i class="fa-solid fa-map-location-dot"></i>
                 <span>Chọn khu vực nhận hàng:</span>
+                <button type="button" class="tz-location-close-btn location-modal-close" aria-label="Đóng chọn khu vực" onclick="closeLocationModal()">&times;</button>
               </div>
               <ul class="tz-location-list">
-                <li class="tz-location-item" data-city="Hà Nội" role="option">
+                <li class="tz-location-item" data-city="Hà Nội" onclick="selectLocation('Hà Nội')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> Hà Nội</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
-                <li class="tz-location-item" data-city="TP. Hồ Chí Minh" role="option">
+                <li class="tz-location-item" data-city="TP. Hồ Chí Minh" onclick="selectLocation('TP. Hồ Chí Minh')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> TP. Hồ Chí Minh</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
-                <li class="tz-location-item" data-city="Đà Nẵng" role="option">
+                <li class="tz-location-item" data-city="Đà Nẵng" onclick="selectLocation('Đà Nẵng')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> Đà Nẵng</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
-                <li class="tz-location-item" data-city="Cần Thơ" role="option">
+                <li class="tz-location-item" data-city="Cần Thơ" onclick="selectLocation('Cần Thơ')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> Cần Thơ</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
-                <li class="tz-location-item" data-city="Hải Phòng" role="option">
+                <li class="tz-location-item" data-city="Hải Phòng" onclick="selectLocation('Hải Phòng')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> Hải Phòng</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
-                <li class="tz-location-item" data-city="Đồng Nai" role="option">
+                <li class="tz-location-item" data-city="Đồng Nai" onclick="selectLocation('Đồng Nai')" role="option">
                   <span class="tz-city-name"><i class="fa-solid fa-building"></i> Đồng Nai</span>
                   <i class="fa-solid fa-check tz-city-check"></i>
                 </li>
@@ -170,6 +171,7 @@
           <div class="tz-search-bar">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" id="catalog-search-field" placeholder="Tìm kiếm theo tên máy, thông số RAM, chip CPU...">
+            <button type="button" class="tz-btn-search btn-search" id="btn-catalog-search">Tìm kiếm</button>
           </div>
         </div>
 

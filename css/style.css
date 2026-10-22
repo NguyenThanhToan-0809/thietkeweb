@@ -314,13 +314,17 @@ button {
 }
 
 .location-menu.show,
+.location-menu.active,
+.location-menu.open,
 .location-dropdown.show,
+.location-dropdown.active,
+.location-dropdown.open,
 .tz-location-dropdown.show,
+.tz-location-dropdown.active,
+.tz-location-dropdown.open,
 .tz-location-menu.show,
-.tz-location-wrapper:hover .tz-location-dropdown,
-.tz-location-wrapper:hover .tz-location-menu,
-.tz-location-dropdown-wrap:hover .tz-location-dropdown,
-.tz-location-dropdown-wrap:hover .tz-location-menu {
+.tz-location-menu.active,
+.tz-location-menu.open {
   display: block !important;
   opacity: 1 !important;
   transform: translateY(0) !important;
@@ -433,20 +437,33 @@ button {
 }
 
 /* Mobile backdrop for location dropdown */
-.tz-location-backdrop {
+.tz-location-backdrop,
+.location-backdrop,
+.modal-location-overlay,
+.province-backdrop {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 99990 !important;
-  pointer-events: auto;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 99998 !important;
+  pointer-events: auto !important;
 }
-.tz-location-backdrop.active {
+.tz-location-backdrop.active,
+.tz-location-backdrop.show,
+.location-backdrop.active,
+.location-backdrop.show {
   display: block !important;
 }
 
-@media (min-width: 541px) {
-  .tz-location-backdrop {
+@media (min-width: 769px) {
+  .tz-location-backdrop,
+  .location-backdrop,
+  .modal-location-overlay,
+  .province-backdrop {
     display: none !important;
     pointer-events: none !important;
   }
@@ -14815,4 +14832,697 @@ a.btn-smart-track-main:active,
   visibility: visible !important;
   pointer-events: auto !important;
   display: flex !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 71: CHUẨN HÓA BO TRÒN NÚT TÌM KIẾM TRÊN HEADER MOBILE (STYLE.CSS)
+   ========================================================================== */
+
+/* Nút Tìm kiếm trên thanh search header chung (.tz-btn-search, .btn-search, button[type="submit"]) */
+.tz-btn-search,
+.btn-search,
+.header-search button,
+.tz-search-bar button,
+.tz-search-wrapper button,
+.search-bar-wrapper button {
+  border-radius: 20px !important;
+  margin: 3px 4px 3px 0 !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  border: none !important;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-btn-search:hover,
+.btn-search:hover,
+.header-search button:hover,
+.tz-search-bar button:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+.tz-btn-search:active,
+.btn-search:active,
+.header-search button:active,
+.tz-search-bar button:active {
+  transform: scale(0.97) !important;
+  filter: brightness(0.95) !important;
+}
+
+/* Đảm bảo bo tròn đồng bộ trên mọi kích thước màn hình điện thoại & tablet (@media max-width: 768px) */
+@media (max-width: 768px) {
+  .tz-search-bar {
+    border-radius: 25px !important;
+    padding: 2px 2px 2px 10px !important;
+  }
+
+  .tz-btn-search,
+  .btn-search,
+  .header-search button,
+  .tz-search-bar button,
+  .search-bar-wrapper button,
+  .search-bar-wrapper button[type="submit"] {
+    border-radius: 20px !important;
+    margin: 3px 4px 3px 0 !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Tinh gọn cho màn hình điện thoại nhỏ (< 480px) */
+@media (max-width: 480px) {
+  .tz-btn-search,
+  .btn-search,
+  .header-search button,
+  .tz-search-bar button,
+  .search-bar-wrapper button {
+    border-radius: 18px !important;
+    margin: 2px 3px 2px 0 !important;
+    padding: 5px 12px !important;
+    font-size: 11.5px !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 72: MASTER REFINEMENT & UNIFIED RESPONSIVE SYSTEM (TECHZONE)
+   Tối ưu hóa toàn diện: gom biến :root, chuẩn hóa Header, Ảnh 1:1, Nút Search & Mobile @media 768px
+   ========================================================================== */
+
+/* 1. GOM THUỘC TÍNH DÙNG CHUNG VÀO :root */
+:root {
+  --tz-primary: #0284c7;
+  --tz-primary-hover: #0369a1;
+  --tz-dark: #0f172a;
+  --tz-dark-surface: #1e293b;
+  --tz-border-base: #e2e8f0;
+  --tz-bg-base: #f8fafc;
+  --tz-radius-pill: 25px;
+  --tz-radius-card: 12px;
+  --tz-header-search-max: 400px;
+}
+
+/* 2. CHUẨN HÓA BỐ CỤC HEADER & CỤM TÀI KHOẢN - GIỎ HÀNG THẲNG HÀNG */
+.tz-search-wrapper,
+.search-bar-wrapper,
+.header-search {
+  max-width: var(--tz-header-search-max, 400px) !important;
+  width: 100% !important;
+  flex: 1 1 360px !important;
+  margin: 0 auto !important;
+}
+
+.header-right-actions,
+.tz-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  flex-shrink: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Lớp cầu nối vô hình ::before chống mất hover khi di chuyển chuột xuống menu tài khoản */
+.user-dropdown-menu::before,
+.tz-user-dropdown::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -16px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 20px !important;
+  background: transparent !important;
+}
+
+/* 3. KHUNG ẢNH SẢN PHẨM: TỶ LỆ CHUẨN 1/1, OBJECT-FIT CHỐNG MÉO HÌNH & TRÀN VIỀN */
+.product-card-img,
+.product-img-wrap,
+.tz-product-img-box {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  border-radius: var(--tz-radius-card, 12px) !important;
+  box-sizing: border-box !important;
+}
+
+.product-card-img img,
+.product-img-wrap img,
+.tz-product-img-box img {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 180px !important;
+  object-fit: contain !important;
+  transition: transform 0.25s ease !important;
+}
+
+.product-main-view,
+.product-gallery-main,
+.product-main-img-box,
+.tz-pd-image-box {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  max-height: 420px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--tz-radius-card, 12px) !important;
+  box-sizing: border-box !important;
+}
+
+.product-main-view img,
+.product-gallery-main img,
+.product-main-img-box img,
+.tz-pd-image-box img,
+.tz-pd-main-image {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 380px !important;
+  object-fit: contain !important;
+  margin: 0 auto !important;
+}
+
+/* 4. NÚT TÌM KIẾM BO TRÒN VIÊN THUỐC MỀM MẠI */
+.tz-btn-search,
+.btn-search,
+.header-search button,
+.tz-search-bar button {
+  border-radius: 20px !important;
+  margin: 3px 4px 3px 0 !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+/* 5. GOM TOÀN BỘ RESPONSIVE MOBILE (@media max-width: 768px) VỀ MỘT KHỐI DUY NHẤT */
+@media (max-width: 768px) {
+  /* Chống tràn toàn trang */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Header mobile */
+  .tz-header-nav,
+  .header-main {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .tz-search-wrapper,
+  .search-bar-wrapper,
+  .header-search {
+    order: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 4px !important;
+  }
+
+  .tz-search-bar {
+    border-radius: 25px !important;
+    padding: 2px 2px 2px 10px !important;
+  }
+
+  .tz-btn-search,
+  .btn-search,
+  .header-search button,
+  .tz-search-bar button {
+    border-radius: 20px !important;
+    margin: 3px 4px 3px 0 !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+  }
+
+  /* Trang chi tiết sản phẩm mobile: 1 cột chuẩn */
+  .tz-pd-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  .tz-pd-left-col,
+  .tz-pd-gallery,
+  .tz-pd-right-col,
+  .tz-pd-info-block {
+    display: contents !important;
+  }
+
+  /* Thứ tự hiển thị chuẩn trên di động */
+  .tz-pd-breadcrumb { order: 0 !important; margin-bottom: 8px !important; }
+  .product-main-view, .product-gallery-main, .product-main-img-box, .tz-pd-image-box {
+    order: 1 !important;
+    width: 100% !important;
+    max-height: 340px !important;
+    aspect-ratio: auto !important;
+    padding: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  .product-main-view img, .product-gallery-main img, .product-main-img-box img, .tz-pd-image-box img, .tz-pd-main-image {
+    max-height: 320px !important;
+    object-fit: contain !important;
+  }
+  .zoom-hint-btn, .zoom-overlay-text, .tz-pd-zoom-hint { display: none !important; }
+
+  .tz-pd-thumbs-wrap { order: 2 !important; width: 100% !important; margin-bottom: 10px !important; }
+  .tz-pd-brand-row { order: 3 !important; width: 100% !important; margin-bottom: 6px !important; }
+  .tz-pd-badges-row, .tz-pd-badge-list { order: 4 !important; width: 100% !important; margin-bottom: 6px !important; }
+  .tz-pd-title { order: 5 !important; font-size: 19px !important; line-height: 1.4 !important; word-break: break-word !important; }
+  .tz-pd-rating-row { order: 6 !important; width: 100% !important; margin-bottom: 10px !important; }
+  .tz-pd-price-card { order: 7 !important; width: 100% !important; margin-bottom: 12px !important; }
+  .tz-pd-promo-box { order: 8 !important; width: 100% !important; margin-bottom: 12px !important; }
+  .tz-pd-variant-picker { order: 9 !important; width: 100% !important; margin-bottom: 12px !important; }
+  .tz-pd-qty-row { order: 10 !important; width: 100% !important; margin-bottom: 14px !important; }
+  .tz-pd-actions-row { order: 11 !important; width: 100% !important; margin-bottom: 8px !important; }
+  .tz-pd-auth-note { order: 12 !important; width: 100% !important; margin-bottom: 12px !important; }
+  
+  /* Khối Cam kết dịch vụ đẩy xuống dưới cùng */
+  .tz-pd-trust-box, .product-trust-commitments {
+    order: 13 !important;
+    width: 100% !important;
+    margin-bottom: 14px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  @media (max-width: 480px) {
+    .tz-pd-trust-box, .product-trust-commitments { grid-template-columns: 1fr !important; }
+  }
+
+  .tz-pd-specs-section { order: 14 !important; width: 100% !important; margin-bottom: 12px !important; }
+  .tz-pd-desc-box { order: 15 !important; width: 100% !important; margin-bottom: 12px !important; }
+
+  /* Đệm đáy 70px chống che chữ & Nút CSKH mini 44px */
+  .product-detail-container,
+  #tz-product-detail-view,
+  #tz-product-detail-view .container {
+    padding-bottom: 70px !important;
+  }
+
+  .tz-floating-support {
+    bottom: 16px !important;
+    left: 16px !important;
+    z-index: 99990 !important;
+  }
+
+  .tz-support-trigger-btn,
+  .btn-cskh-trigger {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 20px !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 73: BẢNG CHỌN KHU VỰC (LOCATION / PROVINCE MODAL) TRÊN MOBILE
+   - Sửa triệt để lỗi lớp mờ tối đè lên bảng chọn tỉnh thành trên điện thoại
+   - Tinh chỉnh Stacking Context: Header & Topbar z-index 100000 khi modal mở
+   - Backdrop z-index: 99998, Sheet/Modal Content z-index: 99999 !important
+   - Các dòng tỉnh thành z-index: 100000, chữ sáng rõ nét, nhận click 100%
+   - Nút đóng (✕) ở góc trên bên phải bảng khu vực
+   - Tự động ẩn tạm thời nút tròn CSKH (.tz-floating-support) khi mở bảng khu vực
+   ========================================================================== */
+
+/* 1. LỚP PHỦ MỜ NỀN ĐEN/XÁM (BACKDROP) */
+.location-backdrop,
+.tz-location-backdrop,
+.province-backdrop,
+.modal-location-overlay,
+.location-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 99998 !important;
+  pointer-events: auto !important;
+}
+
+.location-backdrop.active,
+.location-backdrop.show,
+.tz-location-backdrop.active,
+.tz-location-backdrop.show,
+.province-backdrop.active,
+.province-backdrop.show,
+.modal-location-overlay.active,
+.modal-location-overlay.show {
+  display: block !important;
+}
+
+/* 2. NÂNG STACKING CONTEXT CỦA HEADER VÀ TOPBAR KHI BẢNG KHU VỰC ĐANG MỞ */
+body.location-modal-open,
+body.tz-location-open {
+  overflow: hidden !important;
+}
+
+body.location-modal-open .tz-header,
+body.tz-location-open .tz-header,
+body:has(.tz-location-dropdown.show) .tz-header,
+body:has(.tz-location-backdrop.active) .tz-header,
+.tz-header:has(.tz-location-dropdown.show) {
+  z-index: 100000 !important;
+}
+
+body.location-modal-open .tz-topbar,
+body.tz-location-open .tz-topbar,
+body:has(.tz-location-dropdown.show) .tz-topbar,
+body:has(.tz-location-backdrop.active) .tz-topbar,
+.tz-topbar:has(.tz-location-dropdown.show) {
+  z-index: 100000 !important;
+}
+
+body.location-modal-open .tz-location-wrapper,
+body.tz-location-open .tz-location-wrapper,
+.tz-location-wrapper:has(.tz-location-dropdown.show) {
+  z-index: 100000 !important;
+}
+
+/* 3. KHUNG CHỨA DANH SÁCH TỈNH THÀNH (BOTTOM SHEET TRÊN MOBILE <= 768px) */
+@media (max-width: 768px) {
+  .location-modal,
+  .province-modal,
+  .location-sheet,
+  .tz-location-sheet,
+  .location-bottom-sheet,
+  .location-modal-content,
+  .tz-location-dropdown,
+  .location-dropdown,
+  .location-menu {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4) !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    overflow: hidden !important;
+    display: none !important;
+    opacity: 0 !important;
+    transform: translateY(100%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .location-modal.show,
+  .location-modal.active,
+  .province-modal.show,
+  .location-sheet.show,
+  .tz-location-sheet.show,
+  .location-bottom-sheet.show,
+  .location-modal-content.show,
+  .tz-location-dropdown.show,
+  .location-dropdown.show,
+  .location-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    animation: tzSlideUpSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Header bảng chọn khu vực kèm nút đóng ✕ */
+  .tz-dropdown-header,
+  .location-modal-header,
+  .location-sheet-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 18px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+
+  .tz-dropdown-header span,
+  .location-modal-header span {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .tz-dropdown-header i.fa-map-location-dot {
+    color: #0284c7 !important;
+    font-size: 16px !important;
+  }
+
+  /* Danh sách tỉnh thành */
+  .tz-location-dropdown .tz-location-list,
+  .location-modal-content .location-list,
+  .location-sheet .location-list {
+    max-height: 55vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 6px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    background: #ffffff !important;
+    position: relative !important;
+    z-index: 99999 !important;
+  }
+
+  /* Footer bảng khu vực */
+  .tz-dropdown-footer,
+  .location-modal-footer {
+    padding: 10px 16px !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #f1f5f9 !important;
+    color: #0284c7 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+  }
+}
+
+/* 4. NÚT ĐÓNG (✕) Ở GÓC TRÊN BÊN PHẢI BẢNG CHỌN KHU VỰC */
+.tz-location-close-btn,
+.location-close-btn,
+.btn-close-location,
+.location-modal-close {
+  position: absolute !important;
+  top: 50% !important;
+  right: 14px !important;
+  transform: translateY(-50%) !important;
+  width: 32px !important;
+  height: 32px !important;
+  border: none !important;
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  z-index: 100001 !important;
+  pointer-events: auto !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.tz-location-close-btn:hover,
+.tz-location-close-btn:active,
+.location-close-btn:hover,
+.location-close-btn:active,
+.btn-close-location:hover {
+  background: #cbd5e1 !important;
+  color: #0f172a !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+@media (min-width: 769px) {
+  .tz-location-close-btn,
+  .location-close-btn,
+  .btn-close-location,
+  .location-modal-close {
+    display: none !important;
+  }
+}
+
+/* 5. CÁC DÒNG CHỌN TỈNH THÀNH: NỔI LÊN TRÊN, CHỮ SÁNG RÕ NÉT, 100% CLICK */
+.tz-location-item,
+.location-item,
+.location-option,
+.province-item {
+  position: relative !important;
+  z-index: 100000 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  padding: 12px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  transition: background-color 0.15s ease, color 0.15s ease, padding-left 0.15s ease !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.tz-location-item * {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.tz-location-item:hover,
+.tz-location-item:active,
+.location-item:hover,
+.location-item:active {
+  background-color: #f0f9ff !important;
+  color: #0284c7 !important;
+  padding-left: 22px !important;
+}
+
+.tz-location-item.active,
+.location-item.active {
+  background-color: #e0f2fe !important;
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+.tz-location-item .tz-city-name {
+  color: inherit !important;
+  font-size: 14.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.tz-location-item .tz-city-name i {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.tz-location-item.active .tz-city-name i {
+  color: #0284c7;
+}
+
+.tz-location-item .tz-city-check {
+  color: #0284c7 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+/* 6. TỰ ĐỘNG ẨN TẠM THỜI HOẶC HẠ Z-INDEX CỦA NÚT CSKH KHI MỞ BẢNG KHU VỰC */
+body.location-modal-open .tz-floating-support,
+body.location-modal-open .cskh-widget-container,
+body.location-modal-open .tz-cskh-wrapper,
+body.location-modal-open .cskh-chat-popup,
+body.location-modal-open #cskhChatPopup,
+body.tz-location-open .tz-floating-support,
+body.tz-location-open .cskh-widget-container,
+body.tz-location-open .tz-cskh-wrapper,
+body.tz-location-open .cskh-chat-popup,
+body.tz-location-open #cskhChatPopup,
+body:has(.tz-location-backdrop.active) .tz-floating-support,
+body:has(.tz-location-backdrop.active) .cskh-widget-container,
+body:has(.tz-location-backdrop.active) .cskh-chat-popup,
+body:has(.tz-location-backdrop.show) .tz-floating-support,
+body:has(.tz-location-backdrop.show) .cskh-widget-container,
+body:has(.tz-location-backdrop.show) .cskh-chat-popup,
+body:has(.location-backdrop.active) .tz-floating-support,
+body:has(.location-backdrop.active) .cskh-widget-container,
+body:has(.location-backdrop.show) .tz-floating-support,
+body:has(.location-backdrop.show) .cskh-widget-container,
+body:has(.tz-location-dropdown.show) .tz-floating-support,
+body:has(.tz-location-dropdown.show) .cskh-widget-container {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  z-index: -1 !important;
+  transform: scale(0.8) !important;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 75: KHẮC PHỤC TRIỆT ĐỂ ĐÓNG BẢNG CHỌN KHU VỰC (LOCATION MODAL)
+   - Đảm bảo trạng thái đóng có độ ưu tiên cao nhất, không bị hover ghi đè
+   - Tự động đóng ngay lập tức khi click chọn tỉnh thành hoặc click dấu nhân (✕)
+   ========================================================================== */
+
+/* Trạng thái đóng có độ ưu tiên cao nhất */
+.location-modal:not(.active):not(.show),
+.province-modal:not(.active):not(.show),
+.location-bottom-sheet:not(.active):not(.show),
+.location-sheet:not(.active):not(.show),
+.tz-location-sheet:not(.active):not(.show),
+.tz-location-dropdown:not(.active):not(.show),
+.location-dropdown:not(.active):not(.show),
+.location-menu:not(.active):not(.show),
+.province-select-popup:not(.active):not(.show),
+.location-modal.hidden,
+.tz-location-dropdown.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(100%) !important;
+}
+
+.location-backdrop:not(.active):not(.show),
+.tz-location-backdrop:not(.active):not(.show),
+.location-overlay:not(.active):not(.show),
+.modal-backdrop:not(.active):not(.show),
+.modal-location-overlay:not(.active):not(.show),
+.province-backdrop:not(.active):not(.show) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

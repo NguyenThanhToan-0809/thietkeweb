@@ -77,7 +77,7 @@ function initPageLoader() {
       showPageLoader();
       setTimeout(() => {
         window.location.href = link.href;
-      }, 300);
+      }, 200);
     } catch (err) {
       // Bỏ qua nếu parse URL thất bại
     }
@@ -129,6 +129,200 @@ window.showPageLoader = showPageLoader;
 window.hidePageLoader = hidePageLoader;
 window.initPageLoader = initPageLoader;
 window.handleVoucherLogout = handleVoucherLogout;
+
+
+// ==========================================================================
+// TECHZONE (TZ) UNIFIED CONTROLLER & SAFE STORAGE SYSTEM
+// ==========================================================================
+
+const SafeStorage = {
+  getItem(key, fallback = null) {
+    try {
+      const val = localStorage.getItem(key);
+      return val !== null ? val : fallback;
+    } catch (e) {
+      console.warn(`[TechZone SafeStorage] Lỗi khi đọc key "${key}":`, e);
+      return fallback;
+    }
+  },
+  getJSON(key, fallback = null) {
+    try {
+      const val = localStorage.getItem(key);
+      if (!val) return fallback;
+      return JSON.parse(val);
+    } catch (e) {
+      console.warn(`[TechZone SafeStorage] Lỗi khi parse JSON key "${key}":`, e);
+      return fallback;
+    }
+  },
+  setItem(key, value) {
+    try {
+      const str = typeof value === 'string' ? value : JSON.stringify(value);
+      localStorage.setItem(key, str);
+      return true;
+    } catch (e) {
+      console.warn(`[TechZone SafeStorage] Lỗi khi ghi key "${key}":`, e);
+      return false;
+    }
+  },
+  removeItem(key) {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      console.warn(`[TechZone SafeStorage] Lỗi khi xóa key "${key}":`, e);
+      return false;
+    }
+  }
+};
+window.SafeStorage = SafeStorage;
+
+const TechZone = {
+  version: '2.5.0',
+  SafeStorage: SafeStorage,
+
+  // 1. Quản lý User: Lấy currentUser an toàn, đồng bộ tên hiển thị trên header mọi trang
+  User: {
+    get() {
+      try {
+        if (typeof Auth !== 'undefined' && typeof Auth.getUser === 'function') {
+          return Auth.getUser();
+        }
+        const raw = SafeStorage.getJSON('currentUser') || SafeStorage.getJSON('techzone_current_user');
+        return raw || null;
+      } catch (e) {
+        return null;
+      }
+    },
+    set(user) {
+      try {
+        if (typeof Auth !== 'undefined' && typeof Auth.setCurrentUser === 'function') {
+          Auth.setCurrentUser(user);
+        } else {
+          SafeStorage.setItem('currentUser', user);
+          SafeStorage.setItem('techzone_current_user', user);
+        }
+      } catch (e) {}
+    },
+    logout() {
+      if (typeof executeLogout === 'function') {
+        executeLogout();
+      } else if (typeof Auth !== 'undefined' && typeof Auth.logout === 'function') {
+        Auth.logout();
+      } else {
+        SafeStorage.removeItem('currentUser');
+        SafeStorage.removeItem('techzone_current_user');
+        window.location.href = 'index.html';
+      }
+    },
+    syncHeader() {
+      if (typeof initUserAccount === 'function') {
+        initUserAccount();
+      }
+    }
+  },
+
+  // 2. Logic Điểm Smember & Hồ sơ: Chỉ tính đơn 'Đã giao' / 'Giao hàng thành công', 1% chi tiêu
+  Profile: {
+    syncStats(user) {
+      if (typeof calculateAndSyncUserStats === 'function') {
+        return calculateAndSyncUserStats(user);
+      }
+      return null;
+    },
+    init() {
+      if (typeof initProfilePage === 'function') {
+        initProfilePage();
+      }
+    }
+  },
+
+  // 3. Kho Voucher cá nhân hóa: Lấy voucher thật từ vouchers_${user.email}, đếm isUsed: false, không số ảo
+  Vouchers: {
+    get(user) {
+      if (typeof VoucherService !== 'undefined' && typeof VoucherService.getUserVouchers === 'function') {
+        return VoucherService.getUserVouchers(user);
+      }
+      const currentUser = user || TechZone.User.get();
+      if (!currentUser) return [];
+      const storageKey = `vouchers_${currentUser.email || currentUser.username || ''}`;
+      return SafeStorage.getJSON(storageKey, []);
+    },
+    add(voucher, user) {
+      if (typeof VoucherService !== 'undefined' && typeof VoucherService.addVoucherToUser === 'function') {
+        return VoucherService.addVoucherToUser(voucher, user);
+      }
+      return { success: false, message: 'Dịch vụ voucher chưa sẵn sàng' };
+    },
+    markUsed(code, user, orderId) {
+      if (typeof VoucherService !== 'undefined' && typeof VoucherService.markVoucherAsUsed === 'function') {
+        VoucherService.markVoucherAsUsed(code, user, orderId);
+      }
+    },
+    updateBadges() {
+      if (typeof updateGlobalVoucherBadges === 'function') {
+        updateGlobalVoucherBadges();
+      }
+    },
+    initPage() {
+      if (typeof initVouchersPage === 'function') {
+        initVouchersPage();
+      }
+    }
+  },
+
+  // 4. Khung Chat CSKH: Giữ kích thước nhỏ gọn 280px x 360px, phản hồi tự động mượt mà
+  Support: {
+    init() {
+      if (typeof initFloatingSupportWidget === 'function') {
+        initFloatingSupportWidget();
+      }
+    },
+    open() {
+      const popup = document.querySelector('.cskh-chat-popup, .tz-support-chat-box');
+      if (popup) popup.classList.add('show');
+    },
+    close() {
+      const popup = document.querySelector('.cskh-chat-popup, .tz-support-chat-box');
+      if (popup) popup.classList.remove('show');
+    }
+  },
+
+  // 5. Chặn Modal Đăng nhập thừa khi đã đăng nhập
+  AuthGuard: {
+    checkAndBlock() {
+      if (typeof guardGoogleLoginModals === 'function') {
+        guardGoogleLoginModals();
+      }
+    }
+  },
+
+  // 6. Page Loader xoay tròn
+  Loader: {
+    show() {
+      if (typeof showPageLoader === 'function') showPageLoader();
+    },
+    hide() {
+      if (typeof hidePageLoader === 'function') hidePageLoader();
+    },
+    init() {
+      if (typeof initPageLoader === 'function') initPageLoader();
+    }
+  },
+
+  // 7. Khởi tạo toàn diện toàn trang
+  init() {
+    this.Loader.init();
+    this.AuthGuard.checkAndBlock();
+    this.User.syncHeader();
+    this.Vouchers.updateBadges();
+    this.Support.init();
+  }
+};
+
+window.TechZone = TechZone;
+window.TZ = TechZone;
+
 
 
 /**
@@ -4944,127 +5138,204 @@ function openHistoryTimelineModal(orderId) {
   });
 }
 
-// --- 10. LOCATION SELECTOR (CUSTOM DROPDOWN - NO PROMPT) ---
-function initLocationSelector() {
-  const CITIES = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng', 'Đồng Nai'];
-  const STORAGE_KEY = 'selectedLocation';
+// --- 10. LOCATION SELECTOR (CUSTOM DROPDOWN & MODAL) ---
+const CITIES = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng', 'Đồng Nai'];
+const LOCATION_STORAGE_KEY = 'selectedLocation';
 
-  // Read saved location or default to 'Hà Nội'
-  let savedCity = localStorage.getItem(STORAGE_KEY);
-  if (!savedCity || !CITIES.includes(savedCity)) {
-    savedCity = 'Hà Nội';
-    localStorage.setItem(STORAGE_KEY, savedCity);
+/**
+ * Hàm đóng modal bao quát mọi thẻ bọc và backdrop liên quan
+ */
+function closeLocationModal() {
+  // Tìm tất cả các thẻ liên quan đến modal và backdrop
+  const targets = document.querySelectorAll(
+    '.location-modal, .province-modal, .location-bottom-sheet, .province-select-popup, .location-overlay, .modal-backdrop, .tz-location-dropdown, .location-dropdown, .location-menu, .tz-location-sheet, .location-sheet, .tz-location-backdrop, .location-backdrop, .modal-location-overlay, .location-modal-backdrop'
+  );
+  targets.forEach(el => {
+    el.classList.remove('active', 'show', 'open');
+    el.style.setProperty('display', 'none', 'important');
+  });
+
+  // Reset các nút trigger trên Topbar
+  document.querySelectorAll('.tz-location-badge, #btn-select-location, .tz-location-btn').forEach(btn => {
+    btn.classList.remove('open', 'active');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Gỡ bỏ class khóa/ẩn trạng thái modal trên body
+  document.body.classList.remove('location-modal-open', 'tz-location-open');
+}
+
+// Alias tương thích ngược
+const closeAllLocationDropdowns = closeLocationModal;
+
+/**
+ * Hàm xử lý chọn tỉnh thành khu vực nhận hàng (Location Picker)
+ * @param {string} provinceName Tên tỉnh/thành được chọn (ví dụ: 'Đà Nẵng')
+ * @param {boolean} showToastFlag Có hiển thị thông báo Toast hay không (mặc định: true)
+ */
+function selectLocation(provinceName, showToastFlag = true) {
+  if (!provinceName || typeof provinceName !== 'string') return;
+  const cleanName = provinceName.trim();
+  if (!cleanName) return;
+
+  // 1. Lưu tỉnh đã chọn vào localStorage
+  try {
+    localStorage.setItem(LOCATION_STORAGE_KEY, cleanName);
+  } catch (err) {
+    console.warn('LocalStorage error saving location:', err);
   }
 
-  function updateLocationDisplay(city) {
-    document.querySelectorAll('.tz-location-name').forEach(el => {
-      el.textContent = city;
-    });
+  // 2. Cập nhật nội dung hiển thị của nút vị trí trên Topbar (thay thế chữ "Hà Nội" bằng provinceName)
+  document.querySelectorAll('.tz-location-name, .location-name, #selected-location, .current-location-text').forEach(el => {
+    el.textContent = cleanName;
+  });
 
-    document.querySelectorAll('.tz-location-item').forEach(item => {
-      const itemCity = item.getAttribute('data-city') || item.dataset.city || item.textContent.trim();
-      if (itemCity === city || itemCity.includes(city) || city.includes(itemCity)) {
-        item.classList.add('active');
-        item.setAttribute('aria-selected', 'true');
-      } else {
-        item.classList.remove('active');
-        item.setAttribute('aria-selected', 'false');
+  // 3. Di chuyển icon tích xanh (✓) sang đúng dòng vừa được chọn & cập nhật class active
+  document.querySelectorAll('.tz-location-item, .location-item, .location-option').forEach(item => {
+    const itemCity = item.getAttribute('data-city') || item.dataset.city || (item.querySelector('.tz-city-name, .city-name') ? item.querySelector('.tz-city-name, .city-name').textContent.trim() : item.textContent.trim());
+    const isSelected = (itemCity === cleanName || itemCity.includes(cleanName) || cleanName.includes(itemCity));
+
+    if (isSelected) {
+      item.classList.add('active');
+      item.setAttribute('aria-selected', 'true');
+      let checkIcon = item.querySelector('.tz-city-check, .city-check, .fa-check');
+      if (!checkIcon) {
+        checkIcon = document.createElement('i');
+        checkIcon.className = 'fa-solid fa-check tz-city-check';
+        item.appendChild(checkIcon);
       }
-    });
-  }
-
-  // Khởi tạo hiển thị lần đầu theo localStorage
-  updateLocationDisplay(savedCity);
-
-  function closeAllLocationDropdowns() {
-    document.querySelectorAll('.tz-location-dropdown, .location-dropdown, .location-menu').forEach(dd => {
-      dd.classList.remove('show');
-    });
-    document.querySelectorAll('.tz-location-badge').forEach(btn => {
-      btn.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-    });
-    const backdrop = document.getElementById('tz-location-backdrop');
-    if (backdrop) {
-      backdrop.classList.remove('active');
-      backdrop.style.display = 'none';
+      checkIcon.style.display = 'inline-block';
+    } else {
+      item.classList.remove('active');
+      item.setAttribute('aria-selected', 'false');
+      let checkIcon = item.querySelector('.tz-city-check, .city-check, .fa-check');
+      if (checkIcon) {
+        checkIcon.style.display = 'none';
+      }
     }
+  });
+
+  // 4. BẮT BUỘC gọi closeLocationModal() để đóng Modal/Dropdown ngay lập tức
+  closeLocationModal();
+
+  // 5. Hiển thị thông báo Toast nếu được yêu cầu
+  if (showToastFlag && typeof showToast === 'function') {
+    showToast('Đã chuyển khu vực mua sắm sang: <strong>' + cleanName + '</strong>', 'success', 'Cập nhật khu vực');
   }
+}
+
+// Expose toàn cục để gọi từ HTML onclick và các module khác
+window.closeLocationModal = closeLocationModal;
+window.closeAllLocationDropdowns = closeLocationModal;
+window.selectLocation = selectLocation;
+if (typeof TZ !== 'undefined') {
+  TZ.closeLocationModal = closeLocationModal;
+  TZ.closeAllLocationDropdowns = closeLocationModal;
+  TZ.selectLocation = selectLocation;
+}
+
+/**
+ * Khởi tạo Location Selector & tự động đồng bộ từ localStorage khi tải trang
+ */
+function initLocationSelector() {
+  // Đọc localStorage.getItem('selectedLocation'). Nếu đã từng chọn, tự động hiển thị tên tỉnh đó lên Topbar
+  let savedCity = 'Hà Nội';
+  try {
+    const stored = localStorage.getItem(LOCATION_STORAGE_KEY);
+    if (stored && stored.trim()) {
+      savedCity = stored.trim();
+    } else {
+      localStorage.setItem(LOCATION_STORAGE_KEY, savedCity);
+    }
+  } catch (err) {
+    savedCity = 'Hà Nội';
+  }
+
+  // Tự động đồng bộ vị trí khi tải trang (không hiện Toast khi load)
+  selectLocation(savedCity, false);
+
+  // Tự động bổ sung nút đóng (✕) vào header bảng chọn khu vực nếu chưa có
+  document.querySelectorAll('.tz-location-dropdown, .location-dropdown, .location-menu, .location-modal, .location-sheet').forEach(dd => {
+    const header = dd.querySelector('.tz-dropdown-header, .location-header, .location-modal-header, .location-sheet-header');
+    if (header && !header.querySelector('.tz-location-close-btn, .location-close-btn, .btn-close-location')) {
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'tz-location-close-btn location-modal-close';
+      closeBtn.setAttribute('aria-label', 'Đóng chọn khu vực');
+      closeBtn.setAttribute('onclick', 'closeLocationModal()');
+      closeBtn.innerHTML = '&times;';
+      header.appendChild(closeBtn);
+    }
+  });
 
   function showMobileBackdrop() {
-    // Chỉ kích hoạt backdrop trên màn hình nhỏ (<= 540px) dạng bottom sheet
-    if (window.innerWidth <= 540) {
-      let backdrop = document.getElementById('tz-location-backdrop');
+    if (window.innerWidth <= 768) {
+      let backdrop = document.getElementById('tz-location-backdrop') || document.querySelector('.tz-location-backdrop, .location-backdrop, .location-overlay, .modal-backdrop');
       if (!backdrop) {
         backdrop = document.createElement('div');
         backdrop.id = 'tz-location-backdrop';
-        backdrop.className = 'tz-location-backdrop';
+        backdrop.className = 'tz-location-backdrop location-backdrop location-overlay modal-backdrop';
         document.body.appendChild(backdrop);
-        backdrop.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          closeAllLocationDropdowns();
-        });
       }
+      backdrop.setAttribute('onclick', 'closeLocationModal()');
+      backdrop.style.removeProperty('display');
+      backdrop.classList.add('active', 'show', 'open');
       backdrop.style.display = 'block';
-      backdrop.classList.add('active');
+      document.body.classList.add('location-modal-open', 'tz-location-open');
     }
   }
 
-  // Event Delegation gắn trực tiếp vào document.addEventListener('click', ...)
+  // Event Delegation gắn trên document
   document.addEventListener('click', function(e) {
-    // 1. CLICK CHỌN ITEM TỈNH/THÀNH:
-    const item = e.target.closest('.tz-location-item');
+    // 0. Click nút đóng (✕)
+    if (e.target.closest('.tz-location-close-btn, .location-close-btn, .btn-close-location, .location-modal-close')) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeLocationModal();
+      return;
+    }
+
+    // 1. Click chọn item tỉnh/thành (fallback nếu không có onclick)
+    const item = e.target.closest('.tz-location-item, .location-item, .location-option');
     if (item) {
       e.preventDefault();
       e.stopPropagation();
 
-      // + Lấy đúng tên tỉnh/thành vừa chọn
       let city = item.getAttribute('data-city') || item.dataset.city;
       if (!city) {
-        const text = (item.innerText || item.textContent || '').trim();
+        const nameEl = item.querySelector('.tz-city-name, .city-name');
+        city = (nameEl ? nameEl.textContent : item.textContent).trim();
+      }
+      if (city) {
         for (const c of CITIES) {
-          if (text.includes(c)) {
+          if (city.includes(c)) {
             city = c;
             break;
           }
         }
-      }
-
-      if (city) {
-        // + Lưu vào localStorage
-        localStorage.setItem(STORAGE_KEY, city);
-        savedCity = city;
-
-        // + Đổi text hiển thị của nút vị trí trên Topbar
-        updateLocationDisplay(city);
-
-        // + Tự động đóng menu lại ngay lập tức
-        closeAllLocationDropdowns();
-
-        // Hiển thị thông báo Toast nếu có
-        if (typeof showToast === 'function') {
-          showToast(`Đã chuyển khu vực mua sắm sang: <strong>${city}</strong>`, 'success');
-        }
+        selectLocation(city, true);
       }
       return;
     }
 
-    // 2. CLICK NÚT MỞ/ĐÓNG MENU VỊ TRÍ TRÊN TOPBAR:
-    const badgeBtn = e.target.closest('.tz-location-badge, #btn-select-location');
+    // 2. Click nút mở/đóng menu vị trí trên Topbar:
+    const badgeBtn = e.target.closest('.tz-location-badge, #btn-select-location, .tz-location-btn');
     if (badgeBtn) {
       e.preventDefault();
       e.stopPropagation();
 
       const wrapper = badgeBtn.closest('.tz-location-wrapper') || badgeBtn.parentElement;
-      const dropdown = wrapper ? wrapper.querySelector('.tz-location-dropdown, .location-dropdown, .location-menu') : document.querySelector('.tz-location-dropdown');
+      const dropdown = wrapper ? wrapper.querySelector('.tz-location-dropdown, .location-dropdown, .location-menu, .location-modal, .location-sheet, .location-bottom-sheet') : document.querySelector('.tz-location-dropdown, .location-modal');
       if (!dropdown) return;
 
-      const isOpen = dropdown.classList.contains('show');
-      closeAllLocationDropdowns();
+      const isOpen = (dropdown.classList.contains('show') || dropdown.classList.contains('active')) && dropdown.style.display !== 'none';
 
-      if (!isOpen) {
-        dropdown.classList.add('show');
+      if (isOpen) {
+        closeLocationModal();
+      } else {
+        closeLocationModal(); // Đóng các modal khác nếu có
+        dropdown.style.removeProperty('display');
+        dropdown.classList.add('show', 'active', 'open');
         badgeBtn.classList.add('open');
         badgeBtn.setAttribute('aria-expanded', 'true');
         showMobileBackdrop();
@@ -5072,17 +5343,16 @@ function initLocationSelector() {
       return;
     }
 
-    // 3. CLICK RA NGOÀI KHUNG THÌ TỰ ĐỘNG ĐÓNG MENU
-    if (!e.target.closest('.tz-location-wrapper') && !e.target.closest('.tz-location-dropdown') && !e.target.closest('.location-menu') && !e.target.closest('.location-dropdown')) {
-      closeAllLocationDropdowns();
+    // 3. Click ra ngoài khung tự động đóng menu
+    if (!e.target.closest('.tz-location-wrapper') && !e.target.closest('.tz-location-dropdown') && !e.target.closest('.location-menu') && !e.target.closest('.location-dropdown') && !e.target.closest('.location-modal-content') && !e.target.closest('.location-sheet') && !e.target.closest('.tz-location-badge') && !e.target.closest('#btn-select-location')) {
+      closeLocationModal();
     }
   });
 
   // ESC key to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeAllLocationDropdowns();
-      if (typeof closeLogoutModal === 'function') closeLogoutModal();
+      closeLocationModal();
     }
   });
 }
@@ -7079,6 +7349,7 @@ function initSocialAuthHandlers(actionType) {
 
 // --- 15. GLOBAL DISPATCHER (DOM CONTENT LOADED) ---
 document.addEventListener('DOMContentLoaded', () => {
+  if (typeof TZ !== 'undefined' && TZ.init) TZ.init();
   guardGoogleLoginModals();
   initPageLoader();
   Storage.updateCartBadge();

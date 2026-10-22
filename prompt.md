@@ -74,6 +74,11 @@
 68. [Prompt 68: Xử lý đăng xuất trên vouchers.html và tạo hiệu ứng loading xoay tròn chuyển trang (Page Transition Loader) toàn website](#prompt-68)
 69. [Prompt 69: Tối ưu Responsive trang Chi tiết sản phẩm (product-detail.html) và chống nút CSKH đè chữ (< 768px)](#prompt-69)
 70. [Prompt 70: Khắc phục lỗi tự động bung popup "Đăng nhập bằng Google" khi cuộn xuống cuối trang chi tiết sản phẩm](#prompt-70)
+71. [Prompt 71: Chuẩn hóa bo tròn nút "Tìm kiếm" trong thanh search header trên giao diện mobile (border-radius: 20px)](#prompt-71)
+72. [Prompt 72: Tối ưu hóa toàn diện TechZone: Đóng gói đối tượng điều khiển chung (TZ), SafeStorage, tinh gọn CSS Master & Responsive](#prompt-72)
+73. [Prompt 73: Sửa lỗi CSS bảng "CHỌN KHU VỰC" (Location / Province Modal) trên mobile (Z-Index, Backdrop, Nút đóng ✕ & Ẩn CSKH)](#prompt-73)
+74. [Prompt 74: Bổ sung logic JavaScript xử lý chọn tỉnh thành khu vực nhận hàng (Location Picker) & Tự động đồng bộ Topbar](#prompt-74)
+75. [Prompt 75: Sửa lại JavaScript và CSS cho bảng "CHỌN KHU VỰC NHẬN HÀNG" (Location Modal): Đóng triệt để qua closeLocationModal() & Gỡ bỏ Hover Trap](#prompt-75)
 
 
 
@@ -2505,4 +2510,185 @@ Hãy sửa lại logic trong product-detail.html và main.js để khắc phục
 - Chỉ hiển thị popup đăng nhập khi khách hàng THỰC SỰ CHƯA ĐĂNG NHẬP và chủ động bấm vào nút "Mua ngay", "Thêm vào giỏ hàng" hoặc nút "Đăng nhập" trên Header.
 
 Cung cấp đoạn mã JavaScript sửa đổi để cập nhật ngay!
+```
+
+
+---
+
+## <a id="prompt-71"></a>Prompt 71: Chuẩn hóa bo tròn nút "Tìm kiếm" trong thanh search header trên giao diện mobile (border-radius: 20px)
+
+- **Thời gian gửi:** `2026-10-22T21:01:06+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lại CSS cho nút "Tìm kiếm" trong thanh search header trên giao diện mobile (style.css):
+
+1. HIỆN TƯỢNG LỖI:
+- Trên màn hình điện thoại, nút màu xanh "Tìm kiếm" đang bị vuông vức góc cạnh, đối chọi với thanh tìm kiếm bo tròn bên ngoài nhìn rất thô.
+
+2. CÁCH SỬA CHUẨN ĐỒNG BỘ:
+- Nút "Tìm kiếm" (.btn-search / button[type="submit"]):
+  + Thêm bo tròn mềm mại: border-radius: 20px !important; (hoặc bo theo đúng góc bo bên phải: border-radius: 0 20px 20px 0 !important;).
+  + Thêm khoảng cách đệm nhỏ: margin: 3px 4px 3px 0 !important; để nút nằm lọt thỏm gọn gàng bên trong viên thuốc của ô tìm kiếm.
+  + Font chữ tinh gọn: font-size: 12px !important; padding: 6px 14px !important; font-weight: 600 !important;
+- Đảm bảo hiển thị đồng bộ, bo tròn thẩm mỹ trên mọi kích thước màn hình điện thoại.
+
+Cung cấp đoạn mã CSS cập nhật để dán vào style.css!
+```
+
+
+---
+
+## <a id="prompt-72"></a>Prompt 72: Tối ưu hóa toàn diện TechZone: Đóng gói đối tượng điều khiển chung (TZ), SafeStorage, tinh gọn CSS Master & Responsive
+
+- **Thời gian gửi:** `2026-10-22T21:11:26+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy thực hiện tối ưu hóa toàn diện và an toàn 100% cho dự án E-commerce "TechZone" (HTML/CSS/JS thuần):
+
+NGUYÊN TẮC BẮT BUỘC (TRÁNH LỖI TRANG):
+- KHÔNG thay đổi tên class hoặc id HTML đang hoạt động.
+- KHÔNG viết lại cấu trúc HTML từ đầu; chỉ chuẩn hóa các logic ngầm, gỡ xung đột CSS và làm sạch code.
+- Mọi hàm đọc dữ liệu LocalStorage đều phải có bọc kiểm tra (try/catch hoặc fallback null-safe) để tránh lỗi console.
+
+YÊU CẦU CHI TIẾT:
+
+1. TỐI ƯU MAIN.JS (Logic dữ liệu & Tính năng):
+- Đóng gói toàn bộ logic vào đối tượng điều khiển chung TechZone (TZ):
+  + Quản lý User: Lấy currentUser an toàn, đồng bộ tên hiển thị trên header mọi trang.
+  + Logic Điểm Smember & Hồ sơ:
+    * Chỉ lọc các đơn có status === 'Đã giao' hoặc 'Giao hàng thành công'.
+    * Điểm Smember = Math.round(tổng_chi_tiêu * 0.01).
+    * Khi hủy đơn hoặc đơn đang 'Chờ xác nhận', tuyệt đối không cộng vào chi tiêu, điểm và số đơn hoàn tất.
+  + Kho Voucher cá nhân hóa:
+    * Lấy danh sách voucher thật từ key `vouchers_${user.email}`.
+    * Đếm số voucher chưa sử dụng (isUsed: false) để cập nhật badge menu dropdown và các tab trong vouchers.html.
+    * Nếu tài khoản chưa có voucher nào, hiển thị đúng 0 và thông báo ví trống, tuyệt đối không dùng số giả lập.
+  + Khung Chat CSKH:
+    * Giữ kích thước nhỏ gọn (280px x 360px), hỗ trợ thu phóng không bị che Header.
+    * Phản hồi tự động mượt mà, không giật lag.
+  + Chặn Modal Đăng nhập thừa:
+    * Nếu user đã đăng nhập, chặn triệt để sự kiện cuộn đáy trang tự bật modal Google One Tap / Login.
+  + Page Loader xoay tròn:
+    * Kích hoạt khi chuyển trang qua thẻ <a> (delay 200ms), tự ẩn khi window load xong.
+
+2. TỐI ƯU STYLE.CSS (Dọn dẹp xung đột & Tránh vỡ layout):
+- Gom các thuộc tính dùng chung vào :root (màu chủ đạo #0284c7, màu tối #0f172a, bo góc, font chữ).
+- Khắc phục các xung đột hiển thị mà không cần lạm dụng !important:
+  + Header: Giữ thanh search tối đa 380px - 400px; cụm Tài khoản và Giỏ hàng luôn nằm ngang trên cùng 1 hàng; menu tài khoản có lớp cầu nối ::before chống mất hover.
+  + Khung ảnh sản phẩm (card & detail): Giữ tỉ lệ chuẩn aspect-ratio: 1/1, object-fit: contain/cover, không bị méo hình hay lòi viền.
+  + Nút tìm kiếm mobile: Bo tròn viên thuốc mềm mại ăn khớp với thanh tìm kiếm.
+  + Responsive: Gom toàn bộ @media (max-width: 768px) về một khối duy nhất ở cuối file.
+
+Hãy cung cấp file main.js hoàn chỉnh đã tối ưu và đoạn cập nhật chuẩn cho style.css!
+```
+
+
+---
+
+## <a id="prompt-73"></a>Prompt 73: Sửa lỗi CSS bảng "CHỌN KHU VỰC" (Location / Province Modal) trên mobile (Z-Index, Backdrop, Nút đóng ✕ & Ẩn CSKH)
+
+- **Thời gian gửi:** `2026-10-22T21:24:22+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lỗi CSS cho bảng "CHỌN KHU VỰC " (Location / Province Modal) trên giao diện mobile (responsive) trong style.css:
+
+1. HIỆN TƯỢNG LỖI:
+- Khi người dùng bấm đổi nơi (nút "Hà Nội" trên topbar) ở màn hình điện thoại, bảng chọn tỉnh thành bật lên nhưng bị lớp mờ tối đè lên trên bề mặt, làm chữ bị mờ xỉn và chặn hoàn toàn thao tác click/chạm chọn tỉnh thành.
+
+2. CÁCH KHẮC PHỤC CHUẨN XÁC:
+- Tinh chỉnh z-index và thứ bậc hiển thị cho Modal chọn khu vực (.location-modal, .province-modal, .location-sheet):
+  + Lớp phủ mờ nền đen/xám (.location-backdrop / .modal-overlay):
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 99998;
+  + Khung chứa danh sách tỉnh thành (.location-modal-content / .location-bottom-sheet):
+    position: fixed; z-index: 99999 !important; pointer-events: auto !important;
+  + Đảm bảo các dòng chọn tỉnh thành (Hà Nội, TP.HCM, Đà Nẵng, v.v.): luôn nổi lên trên, chữ sáng rõ nét, không bị lớp xám đè và nhận diện chạm/click 100%.
+- Bổ sung nút đóng (✕) ở góc trên bên phải của bảng chọn khu vực để người dùng dễ dàng tắt bảng khi không muốn đổi.
+- Khi mở bảng chọn khu vực, tự động ẩn tạm thời hoặc hạ z-index của nút tròn CSKH (.tz-floating-support / .cskh-widget-container) để không che lấp các tỉnh thành ở góc dưới.
+
+Cung cấp đoạn mã CSS cập nhật để dán vào style.css!
+```
+
+
+---
+
+## <a id="prompt-74"></a>Prompt 74: Bổ sung logic JavaScript xử lý chọn tỉnh thành khu vực nhận hàng (Location Picker) & Tự động đồng bộ Topbar
+
+- **Thời gian gửi:** `2026-10-22T21:38:55+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy bổ sung logic JavaScript xử lý chọn tỉnh thành khu vực nhận hàng (Location Picker) trong main.js và header:
+
+1. HIỆN TƯỢNG:
+- Bảng "CHỌN KHU VỰC NHẬN HÀNG" đã sáng rõ, nhưng khi click vào các dòng tỉnh thành (Hà Nội, TP. Hồ Chí Minh, Đà Nẵng, Cần Thơ, Hải Phòng, Đồng Nai) thì chỉ bị xanh nền mà nút hiển thị trên Topbar vẫn đứng yên, không cập nhật text và popup không chịu đóng lại.
+
+2. CÁCH XỬ LÝ CHUẨN XÁC:
+- Viết hàm xử lý chọn tỉnh thành `selectLocation(provinceName)`:
+  + Cập nhật nội dung hiển thị của nút vị trí trên Topbar (thay thế chữ "Hà Nội" bằng `provinceName`).
+  + Di chuyển icon tích xanh (✓) sang đúng dòng vừa được chọn.
+  + Lưu tỉnh đã chọn vào localStorage: `localStorage.setItem('selectedLocation', provinceName);`
+  + Đóng Modal / Dropdown khu vực ngay lập tức sau khi chọn.
+- Tự động đồng bộ vị trí khi tải trang (DOMContentLoaded):
+  + Đọc `localStorage.getItem('selectedLocation')`. Nếu đã từng chọn (ví dụ "Đồng Nai" hoặc "Đà Nẵng"), tự động hiển thị tên tỉnh đó lên Topbar trên tất cả các trang (index.html, product-detail.html, vouchers.html, history.html...).
+- Gán sự kiện click cho từng dòng tỉnh thành trong HTML:
+  `<div class="location-item" onclick="selectLocation('Đà Nẵng')">...</div>`
+  hoặc gán qua event listener trong JS.
+
+Cung cấp đoạn mã JavaScript hoàn chỉnh và đoạn HTML gắn onclick tương ứng!
+```
+
+
+---
+
+## <a id="prompt-75"></a>Prompt 75: Sửa lại JavaScript và CSS cho bảng "CHỌN KHU VỰC NHẬN HÀNG" (Location Modal): Đóng triệt để qua closeLocationModal() & Gỡ bỏ Hover Trap
+
+- **Thời gian gửi:** `2026-10-22T21:45:36+07:00`
+
+### Nội dung yêu cầu:
+
+```markdown
+Hãy sửa lại JavaScript và CSS cho bảng "CHỌN KHU VỰC NHẬN HÀNG" (Location Modal):
+
+1. HIỆN TƯỢNG LỖI:
+- Người dùng đã click chọn thành công (topbar đã cập nhật thành "Đà Nẵng"), nhưng bảng chọn không chịu đóng lại/thoát ra, và nút dấu nhân (✕) ở góc phải bảng bấm vào cũng không đóng được.
+
+2. CÁCH KHẮC PHỤC TRIỆT ĐỂ:
+- CSS (style.css):
+  + Đảm bảo trạng thái đóng có độ ưu tiên cao nhất:
+    ```css
+    .location-modal:not(.active),
+    .province-modal:not(.active),
+    .location-bottom-sheet:not(.active),
+    .location-modal.hidden {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    ```
+- JavaScript (main.js):
+  + Viết hàm đóng modal bao quát mọi thẻ bọc:
+    ```javascript
+    function closeLocationModal() {
+      // Tìm tất cả các thẻ liên quan đến modal và backdrop
+      const targets = document.querySelectorAll(
+        '.location-modal, .province-modal, .location-bottom-sheet, .province-select-popup, .location-overlay, .modal-backdrop'
+      );
+      targets.forEach(el => {
+        el.classList.remove('active', 'show', 'open');
+        el.style.setProperty('display', 'none', 'important');
+      });
+    }
+    ```
+  + Trong hàm `selectLocation(provinceName)`: Sau khi gán tên tỉnh và lưu localStorage, BẮT BUỘC gọi `closeLocationModal()`.
+  + Gán sự kiện `onclick="closeLocationModal()"` trực tiếp vào nút dấu nhân (✕) trên tiêu đề bảng và vào cả lớp nền mờ (overlay) khi click ra ngoài.
+
+Cung cấp đoạn mã JS và CSS cập nhật để dán vào dự án!
 ```
