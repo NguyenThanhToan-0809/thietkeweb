@@ -366,7 +366,7 @@ const allProducts = [
         "stars": 5,
         "date": "Hôm qua",
         "variant": "Titan Tự Nhiên, 256GB",
-        "comment": "Màu Titan Tự Nhiên bên ngoài đẹp sang trọng vượt kỳ vọng, nút Camera Control bấm chụp rất nhạy. Bưu tá SPX giao 2h đóng gói cẩn thận 3 lớp chống sốc.",
+        "comment": "Màu Titan Tự Nhiên bên ngoài đẹp sang trọng vượt kỳ vọng, nút Camera Control bấm chụp rất nhạy. Bưu tá TechZone giao 2h đóng gói cẩn thận 3 lớp chống sốc.",
         "likes": 24,
         "verified": true
       },
@@ -2088,10 +2088,9 @@ function renderTechZoneProductCard(prod, isFlashSale = false) {
   if (isFlashSale) {
     const sold = prod.soldCount || 88;
     const total = prod.totalStock || 100;
-    const pct = Math.min(100, Math.round((sold / total) * 100));
     progressHtml = `
-      <div class="tz-sold-bar">
-        <div class="fill" style="width: ${pct}%;"></div>
+      <div class="tz-sold-bar flash-sale-progress">
+        <div class="fill" style="width: 100%;"></div>
         <div class="label">
           <i class="fa-solid fa-fire"></i> Đã bán ${sold}/${total} suất
         </div>
@@ -2110,7 +2109,7 @@ function renderTechZoneProductCard(prod, isFlashSale = false) {
       </div>
 
       <a href="product-detail.html?id=${prod.id}" class="product-img tz-card-thumb product-card-img-wrap product-img-box" title="Xem chi tiết ${prod.name}">
-        <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+        <img src="${prod.image}" alt="${prod.name}" loading="lazy" onerror="this.onerror=null; this.src='images/sp1.jpg';">
       </a>
 
       <a href="product-detail.html?id=${prod.id}" class="tz-card-title-link" title="Xem chi tiết ${prod.name}">
@@ -2753,83 +2752,84 @@ function initCheckoutPage() {
 
   if (!cartListWrap) return;
 
-  // 2. Tự động điền thông tin người nhận hàng từ Sổ địa chỉ / currentUser
+  // --- 2. QUẢN LÝ SỔ ĐỊA CHỈ & THÔNG TIN NHẬN HÀNG (ADDRESS BOOK LOGIC) ---
   const custNameInput = document.getElementById('cust-name');
   const custPhoneInput = document.getElementById('cust-phone');
   const custCityInput = document.getElementById('cust-city');
   const custAddressInput = document.getElementById('cust-address');
 
-  // Lấy địa chỉ mặc định từ Sổ địa chỉ
-  const defaultAddr = Auth.getDefaultAddress(currentUser);
+  function getCheckoutAddresses() {
+    return Auth.getUserAddresses(currentUser);
+  }
 
-  function applyAddressToCheckoutForm(addr) {
-    if (!addr) return;
-    if (custNameInput) custNameInput.value = addr.recipientName || '';
-    if (custPhoneInput) custPhoneInput.value = addr.phone || '';
-    if (custCityInput && addr.city) custCityInput.value = addr.city;
-    if (custAddressInput) custAddressInput.value = addr.detailAddress || '';
+  // Khởi tạo danh sách và ID được chọn
+  let checkoutAddresses = getCheckoutAddresses();
+  let selectedAddr = Auth.getDefaultAddress(currentUser) || checkoutAddresses[0];
+  window.currentSelectedAddressId = selectedAddr ? selectedAddr.id : 'addr_default_1';
 
+  function updateAddressCountBadge() {
+    const list = getCheckoutAddresses();
+    const countBadge = document.getElementById('address-count-badge');
+    if (countBadge) countBadge.textContent = list.length;
+  }
+  updateAddressCountBadge();
+
+  // Hàm chọn địa chỉ và tự động cập nhật Form + Banner xanh (Yêu cầu đề bài)
+  function selectAddress(addressId) {
+    const list = getCheckoutAddresses();
+    const target = list.find(a => a.id === addressId) || list[0];
+    if (!target) return;
+
+    window.currentSelectedAddressId = target.id;
+
+    // 1. Cập nhật thông tin vào khung tóm tắt địa chỉ xanh ở trên (#active-address-summary)
     const activeSummary = document.getElementById('active-address-summary');
     if (activeSummary) {
-      const isDef = addr.isDefault;
+      const isDef = !!target.isDefault;
       activeSummary.innerHTML = `
-        <div class="active-addr-box">
+        <div class="active-addr-card">
           <div class="active-addr-top-row">
-            <div class="active-addr-badge-wrap">
-              <span class="active-addr-name">${addr.recipientName}</span>
+            <div class="active-addr-user-meta">
+              <span class="active-addr-name">${target.recipientName}</span>
               ${isDef ? '<span class="active-addr-badge-default"><i class="fa-solid fa-star"></i> Mặc định</span>' : '<span class="active-addr-badge-selected"><i class="fa-solid fa-check"></i> Đang chọn</span>'}
             </div>
-            <button type="button" class="btn-change-addr-compact" id="btn-change-addr-link">
+            <button type="button" class="btn-change-addr-compact" id="btn-change-addr-link" onclick="openAddressModal()">
               <span>Đổi địa chỉ</span> <i class="fa-solid fa-angle-right"></i>
             </button>
           </div>
           <div class="active-addr-bottom-row">
-            <span class="active-addr-phone"><i class="fa-solid fa-phone"></i> (+84) ${addr.phone}</span>
+            <span class="active-addr-phone"><i class="fa-solid fa-phone"></i> (+84) ${target.phone}</span>
             <span class="active-addr-sep">•</span>
-            <span class="active-addr-detail">${addr.detailAddress}, ${addr.city}</span>
+            <span class="active-addr-detail">${target.detailAddress}, ${target.city}</span>
           </div>
         </div>
       `;
       activeSummary.style.display = 'block';
-      const changeBtn = activeSummary.querySelector('#btn-change-addr-link');
-      if (changeBtn) changeBtn.onclick = () => openAddressBookModal();
+    }
+
+    // 2. Điền tự động vào các ô input form bên dưới (#cust-name, #cust-phone, #cust-city, #cust-address)
+    if (custNameInput) custNameInput.value = target.recipientName || '';
+    if (custPhoneInput) custPhoneInput.value = target.phone || '';
+    if (custCityInput && target.city) custCityInput.value = target.city;
+    if (custAddressInput) custAddressInput.value = target.detailAddress || '';
+
+    // 3. Đóng modal ngay lập tức
+    closeAddressModal();
+
+    if (window.showToast) {
+      window.showToast(`Đã chọn địa chỉ: <strong>${target.recipientName}</strong> (${target.city})`, 'success');
     }
   }
 
-  if (defaultAddr) {
-    applyAddressToCheckoutForm(defaultAddr);
-  } else {
-    if (custNameInput && !custNameInput.value && currentUser.fullname) custNameInput.value = currentUser.fullname;
-    if (custPhoneInput && !custPhoneInput.value && currentUser.phone) custPhoneInput.value = currentUser.phone;
-    if (custCityInput && currentUser.city) custCityInput.value = currentUser.city;
-    if (custAddressInput && !custAddressInput.value && currentUser.addressDetail) custAddressInput.value = currentUser.addressDetail;
-  }
+  // Render danh sách trong Modal Sổ Địa Chỉ (Shopee Style với radio)
+  function renderAddressModalList() {
+    const listContainer = document.getElementById('address-book-list');
+    if (!listContainer) return;
+    const list = getCheckoutAddresses();
+    updateAddressCountBadge();
 
-  // --- SỔ ĐỊA CHỈ NHẬN HÀNG (ADDRESS BOOK MODAL LOGIC) ---
-  const addrModal = document.getElementById('tz-address-modal');
-  const openAddrModalBtn = document.getElementById('btn-open-address-modal');
-  const closeAddrModalBtn = document.getElementById('btn-close-address-modal');
-  const countBadge = document.getElementById('address-count-badge');
-  const addrListContainer = document.getElementById('address-book-list');
-  const toggleAddFormBtn = document.getElementById('btn-toggle-add-addr-form');
-  const addFormBox = document.getElementById('add-address-form-box');
-  const cancelAddBtn = document.getElementById('btn-cancel-add-addr');
-  const saveNewAddrBtn = document.getElementById('btn-save-new-addr');
-
-  function updateAddressBadge() {
-    const addrs = Auth.getUserAddresses(Auth.getUser());
-    if (countBadge) countBadge.textContent = addrs.length;
-  }
-  updateAddressBadge();
-
-  function renderAddressBookList() {
-    const user = Auth.getUser();
-    const addrs = Auth.getUserAddresses(user);
-    updateAddressBadge();
-    if (!addrListContainer) return;
-
-    if (addrs.length === 0) {
-      addrListContainer.innerHTML = `
+    if (list.length === 0) {
+      listContainer.innerHTML = `
         <div style="text-align: center; padding: 2rem 1rem; color: #64748b;">
           <i class="fa-solid fa-map-location-dot" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 8px;"></i>
           <p>Chưa có địa chỉ nào trong sổ. Hãy thêm địa chỉ mới bên dưới!</p>
@@ -2838,125 +2838,177 @@ function initCheckoutPage() {
       return;
     }
 
-    addrListContainer.innerHTML = addrs.map(addr => `
-      <div class="address-book-card ${addr.isDefault ? 'selected' : ''}" data-id="${addr.id}">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-          <div>
-            <strong style="color: #1e293b; font-size: 0.95rem;">${addr.recipientName}</strong>
-            <span style="color: #64748b; font-size: 0.88rem; margin-left: 8px;">(+84) ${addr.phone}</span>
-            ${addr.isDefault ? '<span class="badge-addr-default" style="margin-left: 8px;"><i class="fa-solid fa-circle-check"></i> Mặc định</span>' : ''}
+    const currentId = window.currentSelectedAddressId;
+
+    listContainer.innerHTML = list.map(addr => {
+      const isSelected = (addr.id === currentId);
+      return `
+        <div class="address-card-shopee ${isSelected ? 'active-selected' : ''}" data-id="${addr.id}" onclick="selectAddressRadio('${addr.id}')">
+          <div class="addr-radio-col">
+            <input type="radio" name="address_selection" id="radio_${addr.id}" value="${addr.id}" ${isSelected ? 'checked' : ''} onchange="selectAddressRadio('${addr.id}')">
+          </div>
+          <div class="addr-info-col">
+            <div class="addr-info-header">
+              <span class="addr-name">${addr.recipientName}</span>
+              <span class="addr-sep">|</span>
+              <span class="addr-phone">(+84) ${addr.phone}</span>
+              ${addr.isDefault ? '<span class="badge-shopee-default">Mặc định</span>' : ''}
+            </div>
+            <div class="addr-info-detail">${addr.detailAddress}</div>
+            <div class="addr-info-city">${addr.city}</div>
+          </div>
+          <div class="addr-action-col">
+            ${!addr.isDefault ? `
+              <button type="button" class="btn-set-default-shopee" onclick="event.stopPropagation(); setDefaultAddressAction('${addr.id}')">
+                Thiết lập mặc định
+              </button>
+            ` : ''}
           </div>
         </div>
-        <div style="font-size: 0.86rem; color: #475569; margin-bottom: 10px; line-height: 1.45;">
-          ${addr.detailAddress}, <strong>${addr.city}</strong>
-        </div>
-        <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center; border-top: 1px dashed #f1f5f9; padding-top: 8px;">
-          ${!addr.isDefault ? `
-            <button type="button" class="btn-shopee-secondary btn-set-default-addr" data-id="${addr.id}" style="padding: 4px 10px; font-size: 0.78rem;">
-              Đặt làm mặc định
-            </button>
-          ` : ''}
-          <button type="button" class="btn-shopee-primary btn-use-addr" data-id="${addr.id}" style="padding: 4px 14px; font-size: 0.78rem;">
-            <i class="fa-solid fa-check"></i> Giao đến địa chỉ này
-          </button>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+  }
 
-    addrListContainer.querySelectorAll('.btn-use-addr').forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.dataset.id;
-        const target = addrs.find(a => a.id === id);
-        if (target) {
-          applyAddressToCheckoutForm(target);
-          showToast(`Đã chọn địa chỉ: <strong>${target.recipientName}</strong> (${target.city})`, 'success');
-          closeAddressBookModal();
-        }
-      };
-    });
-
-    addrListContainer.querySelectorAll('.btn-set-default-addr').forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.dataset.id;
-        Auth.setDefaultAddress(id);
-        const target = Auth.getUserAddresses().find(a => a.id === id);
-        if (target) applyAddressToCheckoutForm(target);
-        showToast('Đã thiết lập địa chỉ mặc định mới!', 'success');
-        renderAddressBookList();
-      };
+  function selectAddressRadio(addrId) {
+    window.currentSelectedAddressId = addrId;
+    const cards = document.querySelectorAll('.address-card-shopee');
+    cards.forEach(card => {
+      if (card.dataset.id === addrId) {
+        card.classList.add('active-selected');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+      } else {
+        card.classList.remove('active-selected');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+      }
     });
   }
 
-  function openAddressBookModal() {
-    renderAddressBookList();
-    if (addrModal) addrModal.classList.add('active');
+  function confirmSelectedAddress() {
+    const selectedRadio = document.querySelector('input[name="address_selection"]:checked');
+    const targetId = selectedRadio ? selectedRadio.value : window.currentSelectedAddressId;
+    if (targetId) {
+      selectAddress(targetId);
+    } else {
+      closeAddressModal();
+    }
   }
 
-  function closeAddressBookModal() {
-    if (addrModal) addrModal.classList.remove('active');
-    if (addFormBox) addFormBox.style.display = 'none';
+  // Mở modal khi bấm "Đổi địa chỉ >" hoặc "Chọn từ sổ địa chỉ"
+  function openAddressModal() {
+    const modal = document.getElementById('addressBookModal') || document.getElementById('tz-address-modal');
+    if (!modal) return;
+    renderAddressModalList();
+    modal.classList.add('show', 'active');
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    modal.style.visibility = 'visible';
+    modal.style.pointerEvents = 'auto';
+    document.body.style.overflow = 'hidden';
   }
 
-  if (openAddrModalBtn) openAddrModalBtn.onclick = openAddressBookModal;
-  if (closeAddrModalBtn) closeAddrModalBtn.onclick = closeAddressBookModal;
+  // Đóng modal khi bấm nút ✕, nút Hủy hoặc click ra ngoài lớp nền mờ
+  function closeAddressModal() {
+    const modal = document.getElementById('addressBookModal') || document.getElementById('tz-address-modal');
+    if (!modal) return;
+    modal.classList.remove('show', 'active');
+    modal.style.display = 'none';
+    modal.style.opacity = '0';
+    modal.style.visibility = 'hidden';
+    modal.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+    const addForm = document.getElementById('add-address-form-box');
+    if (addForm) addForm.style.display = 'none';
+  }
+
+  function toggleAddAddressForm(show) {
+    const box = document.getElementById('add-address-form-box');
+    if (!box) return;
+    const isVisible = (typeof show === 'boolean') ? show : (box.style.display === 'none' || !box.style.display);
+    box.style.display = isVisible ? 'block' : 'none';
+    if (isVisible) {
+      const nameInp = document.getElementById('new-addr-name');
+      if (nameInp) nameInp.focus();
+    }
+  }
+
+  function saveNewAddress() {
+    const name = document.getElementById('new-addr-name')?.value.trim();
+    const phone = document.getElementById('new-addr-phone')?.value.trim();
+    const city = document.getElementById('new-addr-city')?.value;
+    const detail = document.getElementById('new-addr-detail')?.value.trim();
+    const isDef = document.getElementById('new-addr-default')?.checked || false;
+
+    if (!name || !phone || !detail) {
+      if (window.showToast) window.showToast('Vui lòng điền đủ Họ tên, Số điện thoại và Địa chỉ chi tiết!', 'warning');
+      return;
+    }
+
+    const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})/;
+    if (!phoneRegex.test(phone)) {
+      if (window.showToast) window.showToast('Số điện thoại không hợp lệ!', 'error');
+      return;
+    }
+
+    const newAddr = Auth.addAddress({
+      recipientName: name,
+      phone: phone,
+      city: city,
+      detailAddress: detail,
+      isDefault: isDef
+    }, isDef);
+
+    if (window.showToast) window.showToast('Đã lưu địa chỉ nhận hàng mới!', 'success');
+
+    // Reset form
+    const inpName = document.getElementById('new-addr-name');
+    const inpPhone = document.getElementById('new-addr-phone');
+    const inpDetail = document.getElementById('new-addr-detail');
+    const inpDef = document.getElementById('new-addr-default');
+    if (inpName) inpName.value = '';
+    if (inpPhone) inpPhone.value = '';
+    if (inpDetail) inpDetail.value = '';
+    if (inpDef) inpDef.checked = false;
+    toggleAddAddressForm(false);
+
+    // Tự động áp dụng địa chỉ mới này và cập nhật giao diện
+    selectAddress(newAddr.id);
+  }
+
+  function setDefaultAddressAction(addrId) {
+    Auth.setDefaultAddress(addrId);
+    if (window.showToast) window.showToast('Đã thiết lập địa chỉ mặc định mới!', 'success');
+    renderAddressModalList();
+    if (window.currentSelectedAddressId === addrId) {
+      selectAddress(addrId);
+    }
+  }
+
+  // Khởi tạo ban đầu với địa chỉ mặc định
+  if (selectedAddr) {
+    selectAddress(selectedAddr.id);
+  }
+
+  // Gắn global cho window
+  window.openAddressModal = openAddressModal;
+  window.closeAddressModal = closeAddressModal;
+  window.selectAddress = selectAddress;
+  window.selectAddressRadio = selectAddressRadio;
+  window.confirmSelectedAddress = confirmSelectedAddress;
+  window.toggleAddAddressForm = toggleAddAddressForm;
+  window.saveNewAddress = saveNewAddress;
+  window.setDefaultAddressAction = setDefaultAddressAction;
+  window.openAddressBookModal = openAddressModal;
+  window.closeAddressBookModal = closeAddressModal;
+
+  const openAddrModalBtn = document.getElementById('btn-open-address-modal');
+  if (openAddrModalBtn) openAddrModalBtn.onclick = openAddressModal;
+
+  const addrModal = document.getElementById('addressBookModal') || document.getElementById('tz-address-modal');
   if (addrModal) {
     addrModal.onclick = (e) => {
-      if (e.target === addrModal) closeAddressBookModal();
-    };
-  }
-
-  if (toggleAddFormBtn && addFormBox) {
-    toggleAddFormBtn.onclick = () => {
-      addFormBox.style.display = addFormBox.style.display === 'none' ? 'block' : 'none';
-      if (addFormBox.style.display === 'block') {
-        document.getElementById('new-addr-name')?.focus();
-      }
-    };
-  }
-
-  if (cancelAddBtn && addFormBox) {
-    cancelAddBtn.onclick = () => {
-      addFormBox.style.display = 'none';
-    };
-  }
-
-  if (saveNewAddrBtn) {
-    saveNewAddrBtn.onclick = () => {
-      const name = document.getElementById('new-addr-name')?.value.trim();
-      const phone = document.getElementById('new-addr-phone')?.value.trim();
-      const city = document.getElementById('new-addr-city')?.value;
-      const detail = document.getElementById('new-addr-detail')?.value.trim();
-      const isDef = document.getElementById('new-addr-default')?.checked || false;
-
-      if (!name || !phone || !detail) {
-        showToast('Vui lòng điền đủ Họ tên, Số điện thoại và Địa chỉ chi tiết!', 'warning');
-        return;
-      }
-
-      const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
-      if (!phoneRegex.test(phone)) {
-        showToast('Số điện thoại không hợp lệ!', 'error');
-        return;
-      }
-
-      const newAddr = Auth.addAddress({
-        recipientName: name,
-        phone: phone,
-        city: city,
-        detailAddress: detail,
-        isDefault: isDef
-      });
-
-      showToast('Đã lưu địa chỉ nhận hàng mới!', 'success');
-      applyAddressToCheckoutForm(newAddr);
-      addFormBox.style.display = 'none';
-
-      document.getElementById('new-addr-name').value = '';
-      document.getElementById('new-addr-phone').value = '';
-      document.getElementById('new-addr-detail').value = '';
-      document.getElementById('new-addr-default').checked = false;
-
-      renderAddressBookList();
+      if (e.target === addrModal) closeAddressModal();
     };
   }
 
@@ -3233,16 +3285,47 @@ function initCheckoutPage() {
   }
 
   function closeVoucherModal() {
-    if (voucherModal) voucherModal.classList.remove('active');
+    if (voucherModal) {
+      voucherModal.classList.remove('active');
+      voucherModal.classList.remove('show');
+    }
+    const fallbackModal = document.getElementById('voucherModal');
+    if (fallbackModal) {
+      fallbackModal.classList.remove('active');
+      fallbackModal.classList.remove('show');
+    }
+    document.body.style.overflow = '';
   }
   window.openCheckoutVoucherModal = openVoucherModal;
 
-  if (openVoucherModalBtn) openVoucherModalBtn.onclick = openVoucherModal;
-  if (closeVoucherModalBtn) closeVoucherModalBtn.onclick = closeVoucherModal;
+  if (openVoucherModalBtn) {
+    openVoucherModalBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openVoucherModal();
+    };
+  }
+  if (closeVoucherModalBtn) {
+    closeVoucherModalBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeVoucherModal();
+    };
+  }
   if (voucherModal) {
     voucherModal.onclick = (e) => {
-      if (e.target === voucherModal) closeVoucherModal();
+      if (e.target === voucherModal) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeVoucherModal();
+      }
     };
+    const modalCard = voucherModal.querySelector('.tz-voucher-modal-card');
+    if (modalCard) {
+      modalCard.onclick = (e) => {
+        e.stopPropagation();
+      };
+    }
   }
 
   // Tự động áp dụng mã nếu chuyển hướng từ Kho Voucher
@@ -3477,13 +3560,13 @@ function renderTrackingView(order) {
       shipperBox.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="${shipper.avatar}" alt="${shipper.name}" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #ee4d2d;">
+            <img src="${shipper.avatar}" alt="${shipper.name}" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #991b1b;">
             <div>
               <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">
                 Tài xế giao hàng: ${shipper.name} <span style="font-size: 0.76rem; color: #f59e0b; margin-left: 6px;">${shipper.rating}</span>
               </div>
               <div style="font-size: 0.82rem; color: #64748b; margin-top: 2px;">
-                <i class="fa-solid fa-motorcycle" style="color: #ee4d2d;"></i> Biển số: <strong>${shipper.plate}</strong> | Hotline tài xế: <strong>${shipper.phone}</strong>
+                <i class="fa-solid fa-motorcycle" style="color: #991b1b;"></i> Biển số: <strong>${shipper.plate}</strong> | Hotline tài xế: <strong>${shipper.phone}</strong>
               </div>
             </div>
           </div>
@@ -3754,7 +3837,7 @@ function renderPackageDestinationBlock(order) {
   if (addressBox) {
     addressBox.innerHTML = `
       <div style="font-size: 1rem; font-weight: 800; color: #1e293b; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
-        <i class="fa-solid fa-location-dot" style="color: #ee4d2d;"></i> Địa Chỉ Nhận Hàng
+        <i class="fa-solid fa-location-dot" style="color: #991b1b;"></i> Địa Chỉ Nhận Hàng
       </div>
 
       <div style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
@@ -3794,7 +3877,7 @@ function renderPackageDestinationBlock(order) {
               <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">${it.variant ? 'Phân loại: ' + it.variant : 'Chính Hãng VN/A'}</div>
               <div style="font-size: 0.8rem; color: #334155; margin-top: 2px;">Số lượng: <strong>x${it.quantity}</strong></div>
             </div>
-            <div style="font-size: 0.95rem; font-weight: 800; color: #ee4d2d;">${formatVND(it.price * it.quantity)}</div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #991b1b;">${formatVND(it.price * it.quantity)}</div>
           </div>
         `).join('')}
       </div>
@@ -3817,7 +3900,7 @@ function renderPackageDestinationBlock(order) {
         ` : ''}
         <div class="tz-summary-row total" style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 8px; border-top: 1px dashed #cbd5e1; margin-top: 4px;">
           <span style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Tổng thanh toán:</span>
-          <span style="font-size: 1.35rem; font-weight: 900; color: #ee4d2d;">${formatVND(order.total)}</span>
+          <span style="font-size: 1.35rem; font-weight: 900; color: #991b1b;">${formatVND(order.total)}</span>
         </div>
       </div>
     `;
@@ -3845,12 +3928,13 @@ function updateGlobalVoucherBadges() {
     }
   });
 
-  const voucherCounterLink = document.querySelector('.btn-voucher-counter');
+    const voucherCounterLink = document.querySelector('.btn-voucher-counter');
   if (voucherCounterLink) {
+    const iconSvg = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>`;
     if (unusedCount > 0) {
-      voucherCounterLink.innerHTML = `🎟️ Kho Voucher (${unusedCount})`;
+      voucherCounterLink.innerHTML = `${iconSvg} <span>Kho Voucher (${unusedCount})</span>`;
     } else {
-      voucherCounterLink.innerHTML = `🎟️ Kho Voucher`;
+      voucherCounterLink.innerHTML = `${iconSvg} <span>Kho Voucher (0)</span>`;
     }
   }
 }
@@ -3955,8 +4039,8 @@ function initVouchersPage() {
           <p style="color: #64748b; font-size: 0.9rem; max-width: 460px; margin: 0 auto 1.5rem;">
             Hãy nhập mã ưu đãi thủ công ở trên hoặc ghé thăm các chương trình khuyến mãi để rinh deal công nghệ hời nhất!
           </p>
-          <a href="index.html" class="btn-shopee-primary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; background: #0284c7; color: #fff;">
-            <i class="fa-solid fa-compass"></i> Khám phá ưu đãi ngay
+          <a href="products.html" class="btn-shopee-primary btn-voucher-explore" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; padding: 0 2rem; border-radius: 8px; text-decoration: none; background: #991b1b; color: #ffffff !important; line-height: 44px; min-height: 44px;">
+            <i class="fa-solid fa-compass" style="color: #ffffff;"></i> Khám phá sản phẩm ngay
           </a>
         </div>
       `;
@@ -4197,7 +4281,7 @@ function initHistoryPage() {
     if (voucherCountEl) voucherCountEl.textContent = unusedCount;
 
     const counterLink = document.querySelector('.btn-voucher-counter');
-    if (counterLink) counterLink.innerHTML = `🎟️ Kho Voucher ( ${unusedCount} )`;
+    if (counterLink) counterLink.textContent = `Kho Voucher (${unusedCount})`;
   }
   updateVoucherCountBadge();
 
@@ -4325,7 +4409,7 @@ function initHistoryPage() {
           <img src="${it.image}" alt="${it.name}" class="shopee-thumb">
           <div class="shopee-item-details">
             <h4 class="shopee-item-title" title="${it.name}">${it.name}</h4>
-            <div class="shopee-item-variant"><i class="fa-solid fa-tags" style="color: #94a3b8; font-size: 0.72rem;"></i> Phân loại: ${it.variant || 'Chính hãng VN/A'}</div>
+            <div class="shopee-item-variant">Phân loại: ${it.variant || 'Chính hãng VN/A'}</div>
             <div class="shopee-item-qty">Số lượng: x${it.quantity || 1}</div>
           </div>
           <div class="shopee-item-price">
@@ -4338,27 +4422,31 @@ function initHistoryPage() {
       const isDelivered = o.status === 'Đã giao' || o.status === 'Giao thành công';
       const latestCheckpoint = (o.checkpoints && o.checkpoints.length > 0) ? o.checkpoints[0] : null;
 
-      let notificationText = o.shippingNotification;
-      if (!notificationText || isDelivered) {
-        if (o.status === 'Đang giao' || o.status === 'Đang vận chuyển') {
-          notificationText = '🚚 Đang giao hàng đến bạn';
-        } else if (isDelivered) {
-          notificationText = 'Đơn hàng đã được giao thành công';
-        } else if (o.status === 'Chờ xác nhận') {
-          notificationText = '📦 Người gửi đang chuẩn bị đơn hàng và in phiếu gửi SPX';
-        }
+      let carrierTitle = 'Đơn vị vận chuyển: <span style="color: #991b1b; font-weight: 700;">SPX Express</span> - Đang chuẩn bị hàng';
+      let carrierSub = 'Cập nhật lúc 23:10 | Đơn hàng đã được khởi tạo thành công';
+
+      if (o.status === 'Đang giao' || o.status === 'Đang vận chuyển') {
+        carrierTitle = 'Đơn vị vận chuyển: <span style="color: #991b1b; font-weight: 700;">SPX Express</span> - Đang giao hàng';
+        carrierSub = latestCheckpoint ? `Cập nhật lúc ${latestCheckpoint.time} | ${latestCheckpoint.text}` : 'Cập nhật lúc 08:30 | Bưu tá đang di chuyển giao hàng';
+      } else if (isDelivered) {
+        carrierTitle = 'Đơn vị vận chuyển: <span style="color: #991b1b; font-weight: 700;">SPX Express</span> - Giao hàng thành công';
+        carrierSub = latestCheckpoint ? `Cập nhật lúc ${latestCheckpoint.time} | ${latestCheckpoint.text}` : 'Cập nhật lúc 10:15 | Người nhận đã ký nhận kiện hàng';
+      } else if (isCancelled) {
+        carrierTitle = `Đơn hàng đã hủy ${o.cancelReason ? `(Lý do: ${o.cancelReason})` : 'thành công'}`;
+        carrierSub = `Cập nhật lúc ${o.cancelledAt || o.createdAt || '23:10'} | Yêu cầu hủy đơn đã hoàn tất`;
+      } else {
+        carrierTitle = 'Đơn vị vận chuyển: <span style="color: #991b1b; font-weight: 700;">SPX Express</span> - Đang chuẩn bị hàng';
+        carrierSub = latestCheckpoint ? `Cập nhật lúc ${latestCheckpoint.time} | ${latestCheckpoint.text}` : `Cập nhật lúc ${o.createdAt ? o.createdAt.slice(-5) : '23:10'} | Đơn hàng đã được khởi tạo thành công`;
       }
 
       return `
         <div class="shopee-order-card" data-order-id="${o.id}">
           <div class="shopee-card-header">
             <div class="shopee-shop-info">
-              <span class="shopee-mall-badge"><i class="fa-solid fa-store"></i> TechZone Official Mall</span>
-              <span class="shopee-order-id">Mã đơn: <strong>${o.id}</strong></span>
-              ${o.voucherCode ? `<span class="badge-voucher-applied-pill" title="Đã giảm ${formatVND(o.discountAmount || 0)}"><i class="fa-solid fa-ticket"></i> ${o.voucherCode}</span>` : ''}
+              <span class="shopee-mall-badge">TechZone Official Store | Mã đơn: ${o.id}</span>
+              ${o.voucherCode ? `<span class="badge-voucher-applied-pill" title="Đã giảm ${formatVND(o.discountAmount || 0)}">${o.voucherCode}</span>` : ''}
             </div>
             <div class="shopee-status-badge ${statusClass}">
-              <i class="${statusIcon}"></i>
               <span>${statusLabel}</span>
             </div>
           </div>
@@ -4367,24 +4455,19 @@ function initHistoryPage() {
             ${itemsHtml}
             ${isCancelled ? `
               <div class="shopee-shipping-strip cancelled" style="cursor: default;" title="Đơn hàng này đã bị hủy">
-                <i class="fa-solid fa-ban" style="color: #dc2626;"></i>
                 <div class="strip-text-box">
-                  <div class="strip-main-text" style="color: #dc2626; font-weight: 700;">
-                    🚫 Đơn hàng đã hủy ${o.cancelReason ? `(Lý do: ${o.cancelReason})` : 'thành công'}
-                  </div>
-                  <div class="strip-sub-text">Yêu cầu hoàn tất lúc: ${o.cancelledAt || o.createdAt}</div>
+                  <div class="strip-main-text">${carrierTitle}</div>
+                  <div class="strip-sub-text">${carrierSub}</div>
                 </div>
               </div>
             ` : `
-              <div class="shopee-shipping-strip ${statusClass}" data-order-id="${o.id}" title="Nhấp để xem lộ trình chi tiết">
-                <i class="fa-solid fa-truck-fast"></i>
+              <div class="shopee-shipping-strip ${statusClass}" data-order-id="${o.id}" title="Nhấp để theo dõi lộ trình">
                 <div class="strip-text-box">
-                  <div class="strip-main-text">${notificationText}</div>
-                  ${latestCheckpoint ? `<div class="strip-sub-text"><i class="fa-solid fa-clock-rotate-left"></i> ${latestCheckpoint.time}: ${latestCheckpoint.text}</div>` : ''}
+                  <div class="strip-main-text">${carrierTitle}</div>
+                  <div class="strip-sub-text">${carrierSub}</div>
                 </div>
                 <div class="strip-view-link">
-                  <span>Xem tiến trình</span>
-                  <i class="fa-solid fa-chevron-right"></i>
+                  <span>Chi tiết ></span>
                 </div>
               </div>
             `}
@@ -4393,7 +4476,6 @@ function initHistoryPage() {
           <div class="shopee-card-footer">
             <div class="shopee-footer-action-row">
               <div class="shopee-total-wrap">
-                <i class="fa-solid fa-shield-halved shopee-shield-icon" style="color: #10b981;" title="TechZone bảo hiểm người mua"></i>
                 <span class="shopee-total-label">Thành tiền (${totalItemsCount} sản phẩm):</span>
                 <span class="shopee-total-price">${formatVND(o.total)}</span>
               </div>
@@ -4401,38 +4483,37 @@ function initHistoryPage() {
               <div class="shopee-btn-group ${isCancelled ? 'has-2-btns' : isDelivered ? 'has-4-btns' : 'has-3-btns'}">
                 ${isCancelled ? `
                   <a href="tracking-detail.html?id=${encodeURIComponent(o.id)}" class="btn-shopee-secondary" title="Xem chi tiết đơn hàng đã hủy">
-                    <i class="fa-solid fa-circle-info"></i> <span>Chi tiết đơn</span>
+                    Xem chi tiết
                   </a>
                   <button type="button" class="btn-shopee-primary btn-reorder-order" data-id="${o.id}" title="Thêm lại các sản phẩm vào giỏ hàng và mua lại">
-                    <i class="fa-solid fa-rotate-right"></i> <span>Mua lại</span>
+                    Mua lại
                   </button>
                 ` : `
                   ${(o.status === 'Chờ xác nhận' || o.status === 'Đang đóng gói' || o.status === 'Đã xác nhận' || o.status === 'Đã đặt') ? `
                     <button type="button" class="btn-shopee-cancel btn-open-cancel-order" data-id="${o.id}">
-                      <i class="fa-solid fa-ban"></i> <span>Hủy đơn</span>
+                      Hủy đơn
                     </button>
                   ` : ''}
                   
                   ${isDelivered ? `
                     <button type="button" class="btn-shopee-secondary btn-order-claim-warranty" data-order-id="${o.id}" title="Yêu cầu bảo hành / sửa chữa thiết bị">
-                      <i class="fa-solid fa-screwdriver-wrench" style="color: #0284c7;"></i> <span>Bảo hành</span>
+                      Yêu cầu bảo hành
                     </button>
                   ` : ''}
                   
-                  <button type="button" class="btn-shopee-secondary btn-quick-timeline" data-id="${o.id}" title="Xem popup tiến trình ngay tại trang này">
-                    <i class="fa-solid fa-eye"></i> <span>Xem nhanh</span>
+                  <button type="button" class="btn-shopee-secondary btn-quick-timeline" data-id="${o.id}" title="Xem chi tiết tiến trình đơn hàng">
+                    Xem chi tiết
                   </button>
                   
-                  <a href="tracking-detail.html?id=${encodeURIComponent(o.id)}" class="btn-shopee-primary btn-track-prominent" title="Mở trang chi tiết lộ trình vận chuyển">
-                    <i class="fa-solid fa-route"></i> <span>Lộ trình</span>
+                  <a href="tracking-detail.html?id=${encodeURIComponent(o.id)}" class="btn-shopee-primary btn-track-prominent" title="Theo dõi lộ trình đơn hàng">
+                    Theo dõi lộ trình
                   </a>
                 `}
               </div>
             </div>
           </div>
         </div>
-      `;
-    }).join('');
+      `;    }).join('');
 
     // Bind Click-to-view events
     container.querySelectorAll('.shopee-order-body, .shopee-shipping-strip').forEach(el => {
@@ -4806,11 +4887,17 @@ function fallbackCopyCode(code, btn) {
 }
 
 function closeVoucherModal() {
-  const modal = document.getElementById('voucherModal') || document.getElementById('tz-voucher-modal');
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
+  const m1 = document.getElementById('tz-voucher-modal');
+  if (m1) {
+    m1.classList.remove('active');
+    m1.classList.remove('show');
   }
+  const m2 = document.getElementById('voucherModal');
+  if (m2) {
+    m2.classList.remove('active');
+    m2.classList.remove('show');
+  }
+  document.body.style.overflow = '';
 }
 
 // Global router for openVoucherModal()
@@ -4827,11 +4914,15 @@ window.openVoucherModal = openVoucherModal;
 window.closeVoucherModal = closeVoucherModal;
 window.openHistoryVoucherModal = openHistoryVoucherModal;
 
-// Đóng modal voucher khi click overlay bên ngoài
+// Đóng modal voucher khi click overlay bên ngoài hoặc bấm nút close
 document.addEventListener('click', (e) => {
-  const modal = document.getElementById('voucherModal');
-  if (modal && e.target === modal) {
-    closeVoucherModal();
+  const modal = document.getElementById('tz-voucher-modal') || document.getElementById('voucherModal');
+  if (modal && (modal.classList.contains('active') || modal.classList.contains('show'))) {
+    if (e.target === modal || e.target.closest('#btn-close-voucher-modal') || e.target.closest('.btn-close-modal') || (e.target.classList && e.target.classList.contains('btn-close-modal'))) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeVoucherModal();
+    }
   }
 });
 
@@ -5005,7 +5096,7 @@ function openHistoryTimelineModal(orderId) {
       <div class="tz-timeline-modal-card" onclick="event.stopPropagation()">
         <div class="tz-modal-header">
           <h3>
-            <i class="fa-solid fa-bolt" style="color: #ee4d2d;"></i>
+            <i class="fa-solid fa-bolt" style="color: #991b1b;"></i>
             Tiến Trình Đơn Hàng #${order.id}
           </h3>
           <button type="button" class="tz-modal-close-btn" id="btn-close-timeline-modal" title="Đóng popup">
@@ -5020,7 +5111,7 @@ function openHistoryTimelineModal(orderId) {
               <img src="${firstItem.image}" alt="${firstItem.name}" style="width: 52px; height: 52px; border-radius: 6px; object-fit: contain; background: white; padding: 2px;">
               <div style="flex: 1; min-width: 0;">
                 <div style="font-weight: 700; font-size: 0.9rem; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${firstItem.name}</div>
-                <div style="font-size: 0.78rem; color: #64748b;">${firstItem.variant || 'Chính hãng'} | Tổng tiền: <strong style="color: #ee4d2d;">${formatVND(order.total)}</strong></div>
+                <div style="font-size: 0.78rem; color: #64748b;">${firstItem.variant || 'Chính hãng'} | Tổng tiền: <strong style="color: #991b1b;">${formatVND(order.total)}</strong></div>
               </div>
             </div>
           ` : ''}
@@ -5046,12 +5137,13 @@ function openHistoryTimelineModal(orderId) {
           ` : `
           <div class="order-timeline modal-mode" style="--progress-width: ${progressPct}%;">
             ${steps.map((st, idx) => {
-              const isPast = activeIdx >= idx;
+              const isCompleted = activeIdx > idx;
               const isCurrent = activeIdx === idx;
+              const dotIcon = isCompleted ? 'fa-check' : (isCurrent ? 'fa-truck-fast' : 'fa-circle');
               return `
-                <div class="timeline-step ${isPast ? 'active' : ''} ${isCurrent ? 'current' : ''}">
+                <div class="timeline-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current active' : ''}">
                   <div class="timeline-dot">
-                    <i class="fa-solid ${isPast ? 'fa-check' : 'fa-circle'}"></i>
+                    <i class="fa-solid ${dotIcon}"></i>
                   </div>
                   <div class="timeline-text-content">
                     <div class="timeline-step-name">${st.name}</div>
@@ -5067,7 +5159,7 @@ function openHistoryTimelineModal(orderId) {
           ${((order.status === 'Đang giao' || order.status === 'Đang vận chuyển') && order.shipper) ? `
             <div class="tz-modal-shipper-card" style="margin-top: 1.25rem; padding: 12px 14px; background: #fffbf8; border: 1px solid #fed7aa; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="${order.shipper.avatar}" alt="${order.shipper.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #ee4d2d;">
+                <img src="${order.shipper.avatar}" alt="${order.shipper.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #991b1b;">
                 <div>
                   <div style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">Bưu tá: ${order.shipper.name} (${order.shipper.rating})</div>
                   <div style="font-size: 0.78rem; color: #64748b;">Biển số: <strong>${order.shipper.plate}</strong> | ĐT: <strong>${order.shipper.phone}</strong></div>
@@ -5079,7 +5171,7 @@ function openHistoryTimelineModal(orderId) {
             </div>
           ` : (order.status !== 'Đã hủy' && order.status !== 'Đã giao') ? `
             <div class="tz-modal-warehouse-notice" style="margin-top: 1.25rem; padding: 11px 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; gap: 10px; color: #475569; font-size: 0.82rem;">
-              <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 0.95rem; flex-shrink: 0;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #991b1b; font-size: 0.95rem; flex-shrink: 0;">
                 <i class="fa-solid fa-boxes-packing"></i>
               </div>
               <div>
@@ -5092,7 +5184,7 @@ function openHistoryTimelineModal(orderId) {
           <!-- Checkpoints log -->
           <div style="margin-top: 1.25rem;">
             <div style="font-size: 0.82rem; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase;">
-              <i class="fa-solid fa-list-check" style="color: #ee4d2d;"></i> Nhật ký di chuyển gần nhất:
+              <i class="fa-solid fa-list-check" style="color: #991b1b;"></i> Nhật ký di chuyển gần nhất:
             </div>
             <div class="spx-vertical-timeline modal-vert">
               ${(order.checkpoints || []).slice(0, 3).map((cp, idx) => `
@@ -5646,21 +5738,56 @@ const Auth = {
   // --- QUẢN LÝ SỔ ĐỊA CHỈ NHẬN HÀNG (ADDRESS BOOK HELPERS) ---
   getUserAddresses(user = null) {
     const u = user || this.getUser();
-    if (!u) return [];
+    if (!u) {
+      try {
+        const stored = localStorage.getItem('techzone_user_addresses');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      const fallbackList = [{
+        id: 'addr_default_1',
+        recipientName: 'Nguyễn Văn An',
+        phone: '0988123456',
+        city: 'Hà Nội',
+        detailAddress: 'Số 18 Phố Huế, P. Hàng Bài, Q. Hoàn Kiếm',
+        isDefault: true
+      }];
+      localStorage.setItem('techzone_user_addresses', JSON.stringify(fallbackList));
+      return fallbackList;
+    }
     if (Array.isArray(u.addresses) && u.addresses.length > 0) {
       return u.addresses;
     }
-    // Tự động tạo địa chỉ mặc định đầu tiên từ thông tin tài khoản hiện có
+    if (u.email) {
+      try {
+        const stored = localStorage.getItem(`user_addresses_${u.email}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            u.addresses = parsed;
+            this.updateUser(u);
+            return u.addresses;
+          }
+        }
+      } catch (e) {}
+    }
+    // Tự động tạo địa chỉ mặc định đầu tiên từ thông tin tài khoản hiện có hoặc mẫu chuẩn
     const defaultAddr = {
-      id: 'addr_' + Date.now(),
-      recipientName: u.fullname || u.name || 'Người dùng TechZone',
-      phone: u.phone || '0988.123.456',
+      id: 'addr_default_1',
+      recipientName: u.fullname || u.name || 'Nguyễn Văn An',
+      phone: u.phone || '0988123456',
       city: u.city || 'Hà Nội',
       detailAddress: u.addressDetail || 'Số 18 Phố Huế, P. Hàng Bài, Q. Hoàn Kiếm',
       isDefault: true
     };
     u.addresses = [defaultAddr];
     this.updateUser(u);
+    localStorage.setItem('techzone_user_addresses', JSON.stringify(u.addresses));
+    if (u.email) {
+      localStorage.setItem(`user_addresses_${u.email}`, JSON.stringify(u.addresses));
+    }
     return u.addresses;
   },
 
@@ -5673,38 +5800,51 @@ const Auth = {
 
   addAddress(addressData, setAsDefault = false) {
     const user = this.getUser();
-    if (!user) return null;
-    if (!Array.isArray(user.addresses)) {
-      user.addresses = [];
-    }
-    const isFirst = user.addresses.length === 0;
-    const shouldBeDefault = setAsDefault || isFirst;
+    let addrs = this.getUserAddresses(user);
+    if (!Array.isArray(addrs)) addrs = [];
+    const isFirst = addrs.length === 0;
+    const shouldBeDefault = setAsDefault || (addressData && addressData.isDefault) || isFirst;
 
     if (shouldBeDefault) {
-      user.addresses.forEach(a => a.isDefault = false);
+      addrs.forEach(a => a.isDefault = false);
     }
 
     const newAddr = {
-      id: addressData.id || ('addr_' + Date.now() + '_' + Math.floor(Math.random() * 1000)),
-      recipientName: addressData.recipientName.trim(),
-      phone: addressData.phone.trim(),
-      city: addressData.city || 'Hà Nội',
-      detailAddress: addressData.detailAddress.trim(),
+      id: (addressData && addressData.id) || ('addr_' + Date.now() + '_' + Math.floor(Math.random() * 1000)),
+      recipientName: ((addressData && addressData.recipientName) || '').trim(),
+      phone: ((addressData && addressData.phone) || '').trim(),
+      city: (addressData && addressData.city) || 'Hà Nội',
+      detailAddress: ((addressData && addressData.detailAddress) || '').trim(),
       isDefault: shouldBeDefault
     };
 
-    user.addresses.unshift(newAddr);
-    this.updateUser(user);
+    addrs.unshift(newAddr);
+    if (user) {
+      user.addresses = addrs;
+      this.updateUser(user);
+      if (user.email) {
+        localStorage.setItem(`user_addresses_${user.email}`, JSON.stringify(addrs));
+      }
+    }
+    localStorage.setItem('techzone_user_addresses', JSON.stringify(addrs));
     return newAddr;
   },
 
   setDefaultAddress(addrId) {
     const user = this.getUser();
-    if (!user || !Array.isArray(user.addresses)) return false;
-    user.addresses.forEach(a => {
+    let addrs = this.getUserAddresses(user);
+    if (!Array.isArray(addrs)) return false;
+    addrs.forEach(a => {
       a.isDefault = (a.id === addrId);
     });
-    this.updateUser(user);
+    if (user) {
+      user.addresses = addrs;
+      this.updateUser(user);
+      if (user.email) {
+        localStorage.setItem(`user_addresses_${user.email}`, JSON.stringify(addrs));
+      }
+    }
+    localStorage.setItem('techzone_user_addresses', JSON.stringify(addrs));
     return true;
   },
 
@@ -6486,114 +6626,223 @@ function openAppleModal() {
   modal.classList.add('show');
 }
 
-// Cập nhật hiển thị tài khoản trên Header
-function initUserAccount() {
-  const userBtn = document.getElementById('tz-user-btn') || document.getElementById('tz-header-user-btn') || document.querySelector('.tz-user-btn');
-  const userDropdown = document.getElementById('tz-user-dropdown') || document.querySelector('.tz-user-dropdown');
-  const nameDisplay = document.getElementById('tz-user-name-display');
-  const greetingDisplay = document.getElementById('tz-dropdown-greeting');
-  const logoutBtn = document.getElementById('tz-btn-logout');
-  const profileBtn = document.getElementById('tz-btn-profile-info');
-
-  // Lấy currentUser từ localStorage
-  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
-
-  if (currentUser && currentUser.fullname) {
-    if (nameDisplay) {
-      nameDisplay.textContent = currentUser.fullname;
-      nameDisplay.style.color = '#38bdf8';
-      nameDisplay.style.fontWeight = '700';
+// Cập nhật và đồng bộ hiển thị tài khoản trên Header (renderHeaderAuth / syncUI / initUserAccount)
+function renderHeaderAuth() {
+  let user = null;
+  try {
+    const raw = localStorage.getItem('currentUser');
+    if (raw && raw !== 'undefined' && raw !== 'null') {
+      user = JSON.parse(raw);
     }
-    if (greetingDisplay) {
-      greetingDisplay.textContent = `Xin chào, ${currentUser.fullname}!`;
-    }
+  } catch (e) {
+    user = null;
+  }
 
-    if (userBtn) {
-      userBtn.setAttribute('href', 'javascript:void(0);');
-      userBtn.setAttribute('title', `Tài khoản: ${currentUser.fullname}`);
-      userBtn.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (userDropdown) {
-          userDropdown.classList.toggle('show');
-        }
-      };
+  // Backup fallback kiểm tra qua Auth.getUser() nếu có
+  if (!user && typeof Auth !== 'undefined' && typeof Auth.getUser === 'function') {
+    try {
+      user = Auth.getUser();
+    } catch (e) {
+      user = null;
     }
+  }
 
-    // Click outside closes dropdown
-    document.addEventListener('click', (e) => {
-      if (userDropdown && !e.target.closest('#tz-user-wrapper') && !e.target.closest('.tz-user-wrapper') && !e.target.closest('.user-account-wrapper') && !e.target.closest('.tz-auth-nav-wrap')) {
-        userDropdown.classList.remove('show');
-      }
+  const wrappers = document.querySelectorAll('.tz-user-wrapper, .user-account-wrapper, #tz-user-wrapper');
+  const userBtns = document.querySelectorAll('.tz-user-btn, #tz-user-btn, #tz-header-user-btn');
+  const dropdowns = document.querySelectorAll('.tz-user-dropdown, .user-dropdown-menu, #tz-user-dropdown');
+  const nameDisplays = document.querySelectorAll('#tz-user-name-display, .user-name-display');
+  const greetingDisplays = document.querySelectorAll('#tz-dropdown-greeting, .dropdown-greeting');
+  const logoutBtns = document.querySelectorAll('#tz-btn-logout, .btn-logout');
+  const profileBtns = document.querySelectorAll('#tz-btn-profile-info, .btn-profile-info');
+  const voucherBadges = document.querySelectorAll('#userVoucherBadge, .tz-dropdown-voucher-badge');
+
+  // TRƯỜNG HỢP 1: CHƯA ĐĂNG NHẬP (!user hoặc user không hợp lệ)
+  if (!user || (!user.fullname && !user.name && !user.email)) {
+    // 1. Cập nhật Wrapper: gỡ class logged-in; thêm not-logged-in, is-guest
+    wrappers.forEach(w => {
+      w.classList.add('not-logged-in', 'is-guest');
+      w.classList.remove('logged-in', 'is-authenticated');
     });
 
-    // Khi di chuột hoặc click vào nút giỏ hàng, đóng ngay menu tài khoản nếu đang mở
-    const cartBtn = document.querySelector('.tz-cart-btn, .header-cart-btn');
-    if (cartBtn && userDropdown) {
-      cartBtn.addEventListener('mouseenter', () => {
-        userDropdown.classList.remove('show');
-      });
-    }
+    // 2. Nút tài khoản: hiển thị text "Tài khoản / Đăng nhập", gán href="login.html"
+    userBtns.forEach(btn => {
+      btn.setAttribute('href', 'login.html');
+      btn.setAttribute('title', 'Đăng nhập tài khoản');
+      btn.onclick = function(e) {
+        // Cho phép chuyển hướng tự nhiên sang trang login.html
+        window.location.href = 'login.html';
+      };
+    });
 
-    if (logoutBtn) {
-      logoutBtn.onclick = (e) => {
+    nameDisplays.forEach(el => {
+      el.textContent = 'Đăng nhập';
+      el.style.color = '';
+      el.style.fontWeight = '';
+    });
+
+    // 3. XÓA BỎ hoặc ẨN TRIỆT ĐỂ thẻ dropdown menu (.user-dropdown-menu)
+    dropdowns.forEach(dd => {
+      dd.classList.remove('show', 'active', 'open');
+      dd.classList.add('is-guest', 'hidden');
+      dd.style.setProperty('display', 'none', 'important');
+      dd.style.setProperty('visibility', 'hidden', 'important');
+      dd.style.setProperty('opacity', '0', 'important');
+      dd.style.setProperty('pointer-events', 'none', 'important');
+    });
+
+    // Reset lời chào mặc định và badge voucher
+    greetingDisplays.forEach(el => {
+      el.textContent = 'Xin chào!';
+    });
+    voucherBadges.forEach(b => {
+      b.style.display = 'none';
+      b.textContent = '0';
+    });
+
+    return;
+  }
+
+  // TRƯỜNG HỢP 2: ĐÃ ĐĂNG NHẬP (user tồn tại)
+  const displayName = (user.fullname || user.name || user.email.split('@')[0]).trim();
+
+  // 1. Cập nhật Wrapper: gỡ not-logged-in, is-guest; thêm logged-in, is-authenticated
+  wrappers.forEach(w => {
+    w.classList.remove('not-logged-in', 'is-guest');
+    w.classList.add('logged-in', 'is-authenticated');
+  });
+
+  // 2. Nút tài khoản: hiển thị "Tài khoản / [Tên khách]", gán href="profile.html"
+  userBtns.forEach(btn => {
+    btn.setAttribute('href', 'profile.html');
+    btn.setAttribute('title', `Tài khoản: ${displayName}`);
+    btn.onclick = (e) => {
+      // Trên mobile/màn hình nhỏ (< 768px): click toggle dropdown menu
+      if (window.innerWidth <= 768) {
         e.preventDefault();
         e.stopPropagation();
-        if (userDropdown) {
-          userDropdown.classList.remove('show');
-        }
-        const pathname = window.location.pathname.toLowerCase();
-        if (pathname.includes('voucher')) {
+        dropdowns.forEach(dd => dd.classList.toggle('show'));
+      }
+    };
+  });
+
+  nameDisplays.forEach(el => {
+    el.textContent = displayName;
+    el.style.color = '#38bdf8';
+    el.style.fontWeight = '700';
+  });
+
+  // 3. Cho phép dropdown menu hoạt động bình thường, hiển thị đúng tên người dùng hiện tại
+  dropdowns.forEach(dd => {
+    dd.classList.remove('is-guest', 'hidden');
+    dd.style.removeProperty('display');
+    dd.style.removeProperty('visibility');
+    dd.style.removeProperty('opacity');
+    dd.style.removeProperty('pointer-events');
+  });
+
+  greetingDisplays.forEach(el => {
+    el.textContent = `Xin chào, ${displayName}!`;
+  });
+
+  // Cập nhật số lượng voucher thực tế của người dùng
+  if (typeof updateGlobalVoucherBadges === 'function') {
+    updateGlobalVoucherBadges();
+  }
+
+  // Xử lý nút đăng xuất
+  logoutBtns.forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropdowns.forEach(dd => dd.classList.remove('show'));
+      const pathname = window.location.pathname.toLowerCase();
+      if (pathname.includes('voucher')) {
+        if (typeof handleVoucherLogout === 'function') {
           handleVoucherLogout(e);
           return;
         }
-        if (typeof openLogoutModal === 'function') {
-          openLogoutModal();
-        } else if (typeof Auth !== 'undefined' && Auth.logout) {
-          Auth.logout();
-          window.location.href = 'index.html';
-        }
-      };
-    }
+      }
+      if (typeof openLogoutModal === 'function') {
+        openLogoutModal();
+      } else {
+        localStorage.removeItem('currentUser');
+        renderHeaderAuth();
+        window.location.href = 'index.html';
+      }
+    };
+  });
 
-    if (profileBtn) {
-      profileBtn.setAttribute('href', 'profile.html');
-      profileBtn.onclick = null;
-    }
-  } else {
-    // Trạng thái Chưa đăng nhập
-    if (nameDisplay) {
-      nameDisplay.textContent = 'Đăng nhập';
-      nameDisplay.style.color = '';
-      nameDisplay.style.fontWeight = '';
-    }
-    if (userBtn) {
-      userBtn.setAttribute('href', 'login.html');
-      userBtn.setAttribute('title', 'Đăng nhập tài khoản');
-      userBtn.onclick = null;
-    }
-    if (userDropdown) {
-      userDropdown.classList.remove('show');
-    }
-  }
+  profileBtns.forEach(btn => {
+    btn.setAttribute('href', 'profile.html');
+    btn.onclick = null;
+  });
+}
+
+// Aliases đồng bộ toàn cục
+const initUserAccount = renderHeaderAuth;
+const syncUI = renderHeaderAuth;
+window.renderHeaderAuth = renderHeaderAuth;
+window.initUserAccount = renderHeaderAuth;
+window.syncUI = renderHeaderAuth;
+if (typeof TZ !== 'undefined') {
+  TZ.renderHeaderAuth = renderHeaderAuth;
+  TZ.initUserAccount = renderHeaderAuth;
+  TZ.syncUI = renderHeaderAuth;
 }
 
 // Bật/tắt menu dropdown tài khoản toàn cục khi click
 window.toggleUserDropdown = function(e) {
+  let user = null;
+  try {
+    const raw = localStorage.getItem('currentUser');
+    if (raw && raw !== 'undefined' && raw !== 'null') {
+      user = JSON.parse(raw);
+    }
+  } catch (err) {
+    user = null;
+  }
+
+  // Nếu chưa đăng nhập: chuyển hướng ngay sang login.html, tuyệt đối KHÔNG bung menu
+  if (!user || (!user.fullname && !user.name && !user.email)) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // Nếu đã đăng nhập: toggle menu dropdown
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
-  const currentUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
-  if (!currentUser || !currentUser.fullname) {
-    window.location.href = 'login.html';
-    return;
-  }
-  const userDropdown = document.getElementById('tz-user-dropdown') || document.querySelector('.tz-user-dropdown');
+  const userDropdown = document.getElementById('tz-user-dropdown') || document.querySelector('.tz-user-dropdown, .user-dropdown-menu');
   if (userDropdown) {
     userDropdown.classList.toggle('show');
   }
 };
+
+// Đóng dropdown tài khoản khi click ra ngoài
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#tz-user-wrapper') && !e.target.closest('.tz-user-wrapper') && !e.target.closest('.user-account-wrapper') && !e.target.closest('.tz-auth-nav-wrap')) {
+    document.querySelectorAll('.tz-user-dropdown, .user-dropdown-menu').forEach(dd => {
+      dd.classList.remove('show');
+    });
+  }
+});
+
+// Khi di chuột hoặc click vào nút giỏ hàng, đóng ngay menu tài khoản nếu đang mở
+document.addEventListener('DOMContentLoaded', () => {
+  const cartBtn = document.querySelector('.tz-cart-btn, .header-cart-btn');
+  if (cartBtn) {
+    cartBtn.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.tz-user-dropdown, .user-dropdown-menu').forEach(dd => {
+        dd.classList.remove('show');
+      });
+    });
+  }
+});
 
 // --- 14. LOGIN & REGISTER PAGES CONTROLLER ---
 function initLoginPage() {
@@ -6835,7 +7084,7 @@ function initCompleteProfilePage() {
       totalSpent: 0,
       ordersCount: 0,
       rank: 'Smember Tiêu chuẩn',
-      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(fullname)}&backgroundColor=0284c7`,
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80',
       registeredAt: new Date().toISOString()
     };
 
@@ -6871,7 +7120,7 @@ function initCompleteProfilePage() {
 function calculateAndSyncUserStats(user) {
   const currentUser = user || Auth.getUser();
   if (!currentUser) {
-    return { totalSpent: 0, rewardPoints: 0, completedOrdersCount: 0, rankText: 'Smember Mới', rankIconHtml: '<i class="fa-solid fa-seedling"></i>' };
+    return { totalSpent: 0, rewardPoints: 0, completedOrdersCount: 0, rankText: 'Hội viên Smember', rankIconHtml: '<i class="fa-solid fa-shield-halved"></i>' };
   }
 
   const allOrders = Storage.getOrders();
@@ -6915,8 +7164,8 @@ function calculateAndSyncUserStats(user) {
 
   // 4. Phân hạng Smember dựa trên tổng chi tiêu tích lũy:
   // Dưới 5 triệu là "Smember Mới", từ 5 - 20 triệu là "Smember Bạc", trên 20 triệu là "Smember VIP Vàng"
-  let rankText = 'Smember Mới';
-  let rankIconHtml = '<i class="fa-solid fa-seedling"></i>';
+  let rankText = 'Hội viên Smember';
+  let rankIconHtml = '<i class="fa-solid fa-shield-halved"></i>';
   if (totalSpent >= 20000000) {
     rankText = 'Smember VIP Vàng';
     rankIconHtml = '<i class="fa-solid fa-crown"></i>';
@@ -6979,8 +7228,12 @@ function initProfilePage() {
 
   if (sidebarName) sidebarName.textContent = currentUser.fullname || 'Thành viên TechZone';
   if (sidebarEmail) sidebarEmail.textContent = currentUser.email || (currentUser.username + '@gmail.com');
-  if (sidebarAvatar && currentUser.avatar) {
-    sidebarAvatar.src = currentUser.avatar;
+  if (sidebarAvatar) {
+    if (currentUser.avatar && !currentUser.avatar.includes('dicebear') && !currentUser.avatar.includes('initials')) {
+      sidebarAvatar.src = currentUser.avatar;
+    } else {
+      sidebarAvatar.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80';
+    }
   }
 
   // 3. Tính toán đơn hàng hoàn tất, tổng chi tiêu tích lũy và điểm Smember THỰC TẾ
@@ -7434,7 +7687,7 @@ function ensureCancelOrderModal() {
             </div>
             <div>
               <h3 id="tz-cancel-modal-title" style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin: 0;">Lý Do Hủy Đơn Hàng</h3>
-              <span style="font-size: 0.8rem; color: #64748b;">Mã đơn: <strong id="cancel-modal-order-id" style="color: #ee4d2d;"></strong></span>
+              <span style="font-size: 0.8rem; color: #64748b;">Mã đơn: <strong id="cancel-modal-order-id" style="color: #991b1b;"></strong></span>
             </div>
           </div>
           <button type="button" id="btn-close-cancel-modal" style="background: none; border: none; font-size: 1.25rem; color: #94a3b8; cursor: pointer;">
@@ -8091,7 +8344,7 @@ function initProductReviews(product) {
           <div class="prompt-icon"><i class="fa-solid fa-lock"></i></div>
           <div class="prompt-text">
             <h4>Bạn đã sở hữu sản phẩm này?</h4>
-            <p>Vui lòng đăng nhập tài khoản TechZone để gửi đánh giá và nhận <strong>+50 điểm Smember</strong>!</p>
+            <p>Vui lòng đăng nhập tài khoản TechZone để gửi đánh giá và chia sẻ trải nghiệm mua sắm thực tế!</p>
           </div>
           <a href="login.html?redirect=product-detail.html?id=${product.id}" class="btn-shopee-primary" style="padding: 9px 20px;">
             <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập ngay
@@ -8126,7 +8379,7 @@ function initProductReviews(product) {
           </div>
 
           <div class="tz-form-group" style="margin-top: 12px;">
-            <textarea id="input-review-comment" rows="3" placeholder="Hãy chia sẻ cảm nhận của bạn về chất lượng hoàn thiện máy, hiệu năng, đóng gói chống sốc và dịch vụ giao hàng SPX 2H..." required></textarea>
+            <textarea id="input-review-comment" rows="3" placeholder="Hãy chia sẻ cảm nhận của bạn về chất lượng hoàn thiện máy, hiệu năng, đóng gói chống sốc và dịch vụ giao hàng 2H..." required></textarea>
           </div>
 
           <div class="tz-review-submit-row">
@@ -8235,7 +8488,7 @@ function initFloatingSupportWidget() {
       <div class="tz-chat-header cskh-chat-header chat-header">
         <div class="tz-chat-agent-info">
           <div class="agent-avatar-wrap">
-            <div class="brand-avatar-chip" title="TechZone CSKH">⚙️</div>
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="TechZone CSKH" class="agent-avatar-photo" title="Chuyên viên CSKH TechZone">
             <span class="agent-online-dot" title="Đang online trực tuyến"></span>
           </div>
           <div>
@@ -8273,10 +8526,10 @@ function initFloatingSupportWidget() {
       <div class="tz-chat-messages chat-body cskh-chat-body" id="tz-chat-messages">
         <!-- Message auto-welcome -->
         <div class="chat-msg msg-bot">
-          <div class="brand-avatar-chip msg-avatar" title="TechZone CSKH">⚙️</div>
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="CSKH" class="msg-avatar-photo" title="Chuyên viên CSKH">
           <div class="msg-bubble">
             <div class="msg-text">
-              Xin chào! TechZone có thể hỗ trợ gì cho bạn về sản phẩm, đơn hàng hay khuyến mãi hôm nay?
+              Chào bạn! Mình có thể hỗ trợ kiểm tra đơn hàng, tư vấn máy hay lấy mã giảm giá giúp bạn nhé.
             </div>
             <div class="msg-time" id="welcome-msg-time">Vừa xong</div>
           </div>
@@ -8365,7 +8618,7 @@ function initFloatingSupportWidget() {
       `;
     } else {
       msgDiv.innerHTML = `
-        <div class="brand-avatar-chip msg-avatar" title="TechZone CSKH">⚙️</div>
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="CSKH" class="msg-avatar-photo" title="Chuyên viên CSKH">
         <div class="msg-bubble">
           <div class="msg-text">${text}</div>
           <div class="msg-time">${timeStr}</div>
@@ -8379,7 +8632,7 @@ function initFloatingSupportWidget() {
   function generateSmartResponse(query) {
     const q = query.toLowerCase();
     if (q.includes('đơn hàng') || q.includes('tra cứu') || q.includes('vận chuyển') || q.includes('spx') || q.includes('lộ trình')) {
-      return `Bạn có thể bấm vào mục <strong><a href="history.html" style="color:#0284c7;text-decoration:underline;">Đơn mua</a></strong> ở thanh Header hoặc cung cấp mã đơn dạng <strong>SPX-XXXXXX</strong> để TechZone kiểm tra tọa độ bưu tá giao hàng ngay cho bạn nhé!`;
+      return `Bạn có thể bấm vào mục <strong><a href="history.html" style="color:#0284c7;text-decoration:underline;">Đơn mua</a></strong> ở thanh Header hoặc cung cấp mã đơn dạng <strong>TZ-XXXXXX</strong> để TechZone kiểm tra tọa độ bưu tá giao hàng ngay cho bạn nhé!`;
     }
     if (q.includes('khuyến mãi') || q.includes('giảm giá') || q.includes('voucher') || q.includes('sale')) {
       return `Hôm nay TechZone đang diễn ra phiên <strong>Flash Sale giảm đến 28%</strong> cho các dòng iPhone 16 Pro Max, Galaxy S24 Ultra, Asus ROG và tặng kèm voucher 50k cho thành viên Smember!`;

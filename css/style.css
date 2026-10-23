@@ -8,21 +8,32 @@
 
 /* --- 1. CSS VARIABLES (TECHZONE PALETTE) --- */
 :root {
-  /* Brand Master Colors */
-  --tz-navy: #0f172a;           /* Deep Tech Navy */
-  --tz-navy-light: #1e293b;     /* Navy Surface / Dark Header */
-  --tz-navy-soft: #334155;
+  /* ==========================================================================
+     PROMPT 85: MASTER 3-COLOR PALETTE (ĐEN - ĐỎ ĐÔ ĐẬM - TRẮNG)
+     ========================================================================== */
+  --tz-black: #0f1115;        /* Nền Header, Topbar, Footer */
+  --tz-black-deep: #000000;
+  --tz-red-dark: #8b0000;     /* Đỏ đô đậm chủ đạo cho nút & điểm nhấn */
+  --tz-red-hover: #700000;    /* Đỏ đô trầm khi hover */
+  --tz-white: #ffffff;        /* Nền trang, thẻ sản phẩm */
+  --tz-gray-light: #f8fafc;   /* Nền phụ */
+  --tz-text-main: #0f172a;    /* Chữ chính */
+
+  /* Legacy Variable Aliases: Khử sạch triệt để toàn bộ màu xanh dương cũ */
+  --tz-navy: #0f1115;
+  --tz-navy-light: #181b20;
+  --tz-navy-soft: #27272a;
   
-  --tz-blue: #2563eb;           /* Electric Royal Blue */
-  --tz-blue-hover: #1d4ed8;
-  --tz-cyan: #0284c7;           /* Vibrant Cyan Accent */
-  --tz-cyan-light: #e0f2fe;     /* Soft Cyan Pill */
-  --tz-cyan-glow: rgba(2, 132, 199, 0.35);
+  --tz-blue: #8b0000;
+  --tz-blue-hover: #700000;
+  --tz-primary: #8b0000;
+  --tz-cyan: #8b0000;
+  --tz-cyan-light: #fef2f2;
+  --tz-cyan-glow: rgba(139, 0, 0, 0.25);
 
-  --tz-gradient: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-  --tz-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
-  --tz-gradient-flash: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-
+  --tz-gradient: linear-gradient(135deg, #8b0000 0%, #700000 100%);
+  --tz-gradient-dark: linear-gradient(135deg, #0f1115 0%, #181b20 100%);
+  --tz-gradient-flash: linear-gradient(135deg, #0f1115 0%, #8b0000 65%, #700000 100%);
   /* Neutrals & Surfaces */
   --bg-page: #f8fafc;
   --surface: #ffffff;
@@ -2620,7 +2631,7 @@ button {
 .btn-card-add,
 .btn-card-add-primary {
   width: 100%;
-  background-color: #0284c7; /* màu xanh thương hiệu nổi bật */
+  background-color: #991b1b; border: 1px solid #7f1d1d;
   color: #ffffff;
   padding: 0.58rem 0.8rem;
   border-radius: 8px; /* bo góc 8px */
@@ -2639,7 +2650,7 @@ button {
 
 .btn-card-add:hover,
 .btn-card-add-primary:hover {
-  background-color: #0369a1;
+  background-color: #7f1d1d;
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
   transform: translateY(-1px);
@@ -4918,7 +4929,7 @@ button {
     justify-content: center !important;
     gap: 6px !important;
     border-radius: 8px !important;
-    background-color: #0284c7 !important;
+    background-color: #991b1b !important; border: 1px solid #7f1d1d !important;
     color: #ffffff !important;
     border: none !important;
     box-sizing: border-box !important;
@@ -9265,7 +9276,7 @@ a.btn-smart-track-main:active,
 }
 
 .spx-v-checkpoint.latest::before {
-  background-color: #0284c7 !important;
+  background-color: #991b1b !important; border: 1px solid #7f1d1d !important;
   border: 2.5px solid #bae6fd !important;
   animation: pulseGlow 1.8s infinite ease-out !important;
   box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
@@ -9292,7 +9303,7 @@ a.btn-smart-track-main:active,
 }
 
 .spx-vert-step.current .spx-vert-dot {
-  background-color: #0284c7 !important;
+  background-color: #991b1b !important; border: 1px solid #7f1d1d !important;
   border-color: #bae6fd !important;
   animation: pulseGlow 1.8s infinite ease-out !important;
 }
@@ -9915,7 +9926,7 @@ a.btn-smart-track-main:active,
 
 /* Chấm tròn bước đang thực hiện (Active / Latest) */
 .spx-v-checkpoint.latest::before {
-  background-color: #0284c7 !important;
+  background-color: #991b1b !important; border: 1px solid #7f1d1d !important;
   border-color: #bae6fd !important;
   animation: pulseGlow 1.8s infinite ease-out !important;
   box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
@@ -10068,7 +10079,7 @@ a.btn-smart-track-main:active,
 }
 
 .spx-vert-step.current .spx-vert-dot {
-  background-color: #0284c7 !important;
+  background-color: #991b1b !important; border: 1px solid #7f1d1d !important;
   border-color: #bae6fd !important;
   animation: pulseGlow 1.8s infinite ease-out !important;
   box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5) !important;
@@ -11754,9 +11765,9 @@ a.btn-smart-track-main:active,
   justify-content: center !important;
   gap: 6px !important;
   padding: 10px 12px !important;
-  background: #0284c7 !important;
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
   color: #ffffff !important;
-  border: none !important;
   border-radius: 8px !important;
   font-size: 0.88rem !important;
   font-weight: 600 !important;
@@ -11766,8 +11777,11 @@ a.btn-smart-track-main:active,
 }
 
 #tz-related-products-grid .btn-card-add:hover,
-.tz-related-grid .btn-card-add:hover {
-  background: #0369a1 !important;
+.tz-related-grid .btn-card-add:hover,
+#tz-related-products-grid .btn-card-add-primary:hover,
+.tz-related-grid .btn-card-add-primary:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
   transform: translateY(-1px) !important;
 }
 
@@ -12957,17 +12971,13 @@ a.btn-smart-track-main:active,
 }
 
 .shopee-tabs-nav .shopee-tab-item.active {
-  color: #ee4d2d !important;
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
   font-weight: 700 !important;
 }
 .shopee-tabs-nav .shopee-tab-item.active::after {
-  content: '' !important;
-  position: absolute !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 3px !important;
-  background-color: #ee4d2d !important;
+  display: none !important;
 }
 
 .voucher-modal-grid {
@@ -13740,7 +13750,7 @@ a.btn-smart-track-main:active,
   box-shadow: 0 1px 4px rgba(234, 88, 12, 0.3);
 }
 
-.tz-auth-nav-wrap:hover .tz-user-dropdown {
+.tz-auth-nav-wrap.logged-in:hover .tz-user-dropdown {
   display: block !important;
 }
 
@@ -13847,12 +13857,13 @@ a.btn-smart-track-main:active,
 }
 
 /* Hover: CHỈ kích hoạt menu khi di chuột trực tiếp vào đúng khối tài khoản */
-.tz-user-wrapper:hover > .tz-user-dropdown,
-.tz-user-wrapper:hover > .user-dropdown-menu,
-.user-account-wrapper:hover > .tz-user-dropdown,
-.user-account-wrapper:hover > .user-dropdown-menu,
-.tz-user-dropdown.show,
-.user-dropdown-menu.show {
+/* Hover: CHỈ kích hoạt menu khi ĐÃ ĐĂNG NHẬP (.logged-in) và di chuột trực tiếp vào đúng khối tài khoản */
+.tz-user-wrapper.logged-in:hover > .tz-user-dropdown,
+.tz-user-wrapper.logged-in:hover > .user-dropdown-menu,
+.user-account-wrapper.logged-in:hover > .tz-user-dropdown,
+.user-account-wrapper.logged-in:hover > .user-dropdown-menu,
+.tz-user-dropdown.show:not(.is-guest),
+.user-dropdown-menu.show:not(.is-guest) {
   display: block !important;
 }
 
@@ -14361,9 +14372,9 @@ a.btn-smart-track-main:active,
 .loader-spinner {
   width: 44px !important;
   height: 44px !important;
-  border: 4px solid #e2e8f0 !important; /* Viền xám */
-  border-top-color: #0284c7 !important; /* Vệt xoay màu xanh công nghệ #0284c7 */
-  border-right-color: #0284c7 !important;
+  border: 3px solid #e2e8f0 !important;
+  border-top-color: #0f1115 !important;
+  border-right-color: transparent !important;
   border-radius: 50% !important;
   animation: tzSpinLoader 0.7s infinite linear !important;
 }
@@ -14390,7 +14401,7 @@ a.btn-smart-track-main:active,
 .loader-dot {
   width: 7px !important;
   height: 7px !important;
-  background: #0284c7 !important;
+  background: #0f1115 !important;
   border-radius: 50% !important;
   animation: tzPulseDot 1s infinite alternate !important;
 }
@@ -14858,7 +14869,7 @@ a.btn-smart-track-main:active,
   flex-shrink: 0 !important;
   white-space: nowrap !important;
   border: none !important;
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  background: #991b1b !important;
   color: #ffffff !important;
   box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3) !important;
   cursor: pointer !important;
@@ -15029,7 +15040,7 @@ a.btn-smart-track-main:active,
   padding: 6px 14px !important;
   font-size: 12px !important;
   font-weight: 600 !important;
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  background: #991b1b !important;
   color: #ffffff !important;
   border: none !important;
   display: inline-flex !important;
@@ -15525,4 +15536,5541 @@ body:has(.tz-location-dropdown.show) .cskh-widget-container {
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 76: SỬA LỖI MENU TÀI KHOẢN KHI CHƯA ĐĂNG NHẬP
+   - Khi chưa đăng nhập (not-logged-in / :not(.logged-in)), ẩn triệt để dropdown
+   - Tuyệt đối không cho hover hay click bung menu chào hỏi
+   - Chỉ cho phép hover bung menu khi đã đăng nhập (.logged-in)
+   ========================================================================== */
+
+/* 1. Khi chưa đăng nhập thì hover vào nút tài khoản không được hiện menu */
+.user-account-wrapper.not-logged-in .user-dropdown-menu,
+.user-account-wrapper:not(.logged-in) .user-dropdown-menu,
+.tz-user-wrapper.not-logged-in .tz-user-dropdown,
+.tz-user-wrapper:not(.logged-in) .tz-user-dropdown,
+.user-account-wrapper.is-guest .user-dropdown-menu,
+.tz-user-wrapper.is-guest .tz-user-dropdown,
+.tz-auth-nav-wrap.not-logged-in .tz-user-dropdown,
+.tz-auth-nav-wrap:not(.logged-in) .tz-user-dropdown,
+.user-dropdown-menu.is-guest,
+.tz-user-dropdown.is-guest,
+.user-dropdown-menu.hidden,
+.tz-user-dropdown.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 2. CHỈ KÍCH HOẠT HOVER KHI ĐÃ ĐĂNG NHẬP (.logged-in) */
+.user-account-wrapper.logged-in:hover > .user-dropdown-menu,
+.user-account-wrapper.logged-in:hover > .tz-user-dropdown,
+.tz-user-wrapper.logged-in:hover > .user-dropdown-menu,
+.tz-user-wrapper.logged-in:hover > .tz-user-dropdown,
+.user-account-wrapper.is-authenticated:hover > .user-dropdown-menu,
+.tz-user-wrapper.is-authenticated:hover > .tz-user-dropdown {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 77: SỔ ĐỊA CHỈ NHẬN HÀNG (SHOPEE STYLE MODAL & CONTROLS)
+   ========================================================================== */
+#addressBookModal,
+#tz-address-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity 0.25s ease, visibility 0.25s ease !important;
+}
+
+#addressBookModal:not(.show):not(.active),
+#tz-address-modal:not(.show):not(.active) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+#addressBookModal.show,
+#addressBookModal.active,
+#tz-address-modal.show,
+#tz-address-modal.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  display: flex !important;
+}
+
+.address-modal-dialog {
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
+  width: 94% !important;
+  max-width: 580px !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: tzAddrModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  z-index: 1000000 !important;
+}
+
+@keyframes tzAddrModalScaleUp {
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.address-modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+}
+
+.address-modal-title-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.address-modal-icon {
+  font-size: 1.35rem !important;
+  line-height: 1 !important;
+}
+
+.address-modal-title {
+  margin: 0 !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #1e293b !important;
+}
+
+.address-modal-sub {
+  font-size: 0.8rem !important;
+  color: #64748b !important;
+  display: block !important;
+  margin-top: 2px !important;
+}
+
+.btn-close-address-modal {
+  background: none !important;
+  border: none !important;
+  font-size: 1.3rem !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+}
+
+.btn-close-address-modal:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.address-modal-body {
+  padding: 16px 20px !important;
+  overflow-y: auto !important;
+  max-height: calc(85vh - 130px) !important;
+}
+
+.address-book-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+/* Thẻ địa chỉ Shopee style */
+.address-card-shopee {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+.address-card-shopee:hover {
+  border-color: #93c5fd !important;
+  background: #f8fafc !important;
+}
+
+.address-card-shopee.active-selected {
+  border-color: #0284c7 !important;
+  background: #f0f9ff !important;
+  box-shadow: 0 0 0 1px #0284c7 !important;
+}
+
+.addr-radio-col {
+  padding-top: 3px !important;
+  flex-shrink: 0 !important;
+}
+
+.addr-radio-col input[type="radio"] {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: #0284c7 !important;
+  cursor: pointer !important;
+}
+
+.addr-info-col {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.addr-info-header {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-bottom: 5px !important;
+}
+
+.addr-name {
+  font-weight: 800 !important;
+  font-size: 0.96rem !important;
+  color: #1e293b !important;
+}
+
+.addr-sep {
+  color: #cbd5e1 !important;
+  font-weight: bold !important;
+}
+
+.addr-phone {
+  font-size: 0.88rem !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+/* Badge Shopee Style [Mặc định] */
+.badge-shopee-default {
+  display: inline-block !important;
+  padding: 2px 7px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #ee4d2d !important;
+  border: 1px solid #ee4d2d !important;
+  background: #fff5f5 !important;
+  border-radius: 3px !important;
+  line-height: 1.2 !important;
+}
+
+.addr-info-detail {
+  font-size: 0.88rem !important;
+  color: #334155 !important;
+  margin-bottom: 3px !important;
+  line-height: 1.45 !important;
+  word-break: break-word !important;
+}
+
+.addr-info-city {
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+.addr-action-col {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-set-default-shopee {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 4px 10px !important;
+  border-radius: 5px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+.btn-set-default-shopee:hover {
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+  background: #f0f9ff !important;
+}
+
+/* Nút thêm địa chỉ mới */
+.btn-outline-add-addr {
+  width: 100% !important;
+  padding: 11px 16px !important;
+  border: 1.5px dashed #0284c7 !important;
+  border-radius: 8px !important;
+  background: #f8fafc !important;
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-outline-add-addr:hover {
+  background: #f0f9ff !important;
+  border-color: #0369a1 !important;
+  color: #0369a1 !important;
+}
+
+/* Form thêm mới */
+.add-address-form-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 16px !important;
+  margin-top: 14px !important;
+}
+
+.add-addr-form-title {
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  color: #1e293b !important;
+  margin-bottom: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.checkbox-default-addr {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.checkbox-default-addr input[type="checkbox"] {
+  accent-color: #0284c7 !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.add-addr-form-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+}
+
+/* Footer Modal */
+.address-modal-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  padding: 14px 20px !important;
+  border-top: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+}
+
+.btn-addr-action-cancel {
+  padding: 8px 20px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-addr-action-cancel:hover {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+}
+
+.btn-addr-action-confirm {
+  padding: 8px 24px !important;
+  border: none !important;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3) !important;
+}
+
+.btn-addr-action-confirm:hover {
+  background: #0369a1 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Responsive mobile */
+@media (max-width: 640px) {
+  .address-modal-dialog {
+    width: 95% !important;
+    max-height: 94vh !important;
+    border-radius: 12px !important;
+  }
+  .address-modal-header {
+    padding: 12px 14px !important;
+  }
+  .address-modal-body {
+    padding: 12px 14px !important;
+  }
+  .address-card-shopee {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+  .addr-name {
+    font-size: 0.88rem !important;
+  }
+  .addr-phone {
+    font-size: 0.82rem !important;
+  }
+  .addr-info-detail {
+    font-size: 0.82rem !important;
+  }
+  .address-modal-footer {
+    padding: 10px 14px !important;
+  }
+  .btn-addr-action-confirm,
+  .btn-addr-action-cancel {
+    padding: 7px 16px !important;
+    font-size: 0.84rem !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 78: ĐỒNG BỘ FOOTER 4 CỘT & CHÂN TRANG ĐÁY BẢN QUYỀN THANH TOÀN - BẢO VY
+   ========================================================================== */
+.tz-footer {
+  background-color: #ffffff !important;
+  border-top: 1px solid var(--border) !important;
+  padding: 3.5rem 0 1.75rem !important;
+  margin-top: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.footer-main-grid {
+  display: grid !important;
+  grid-template-columns: 1.35fr 1.05fr 1.15fr 1.15fr !important;
+  gap: 2.25rem !important;
+  margin-bottom: 2.25rem !important;
+}
+
+.tz-footer-col h4 {
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  color: var(--tz-navy) !important;
+  text-transform: uppercase !important;
+  margin-bottom: 1.15rem !important;
+  letter-spacing: -0.2px !important;
+}
+
+.tz-footer-col p {
+  font-size: 0.84rem !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.65 !important;
+  margin-bottom: 0.95rem !important;
+}
+
+.tz-hotlines {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.55rem !important;
+}
+
+.tz-hotline-row {
+  font-size: 0.83rem !important;
+  color: var(--text-secondary) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.tz-hotline-row strong {
+  color: var(--tz-blue) !important;
+  font-weight: 800 !important;
+}
+
+.tz-footer-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.55rem !important;
+}
+
+.tz-footer-links a {
+  font-size: 0.84rem !important;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-footer-links a i {
+  font-size: 0.78rem !important;
+  color: var(--tz-blue) !important;
+  width: 14px !important;
+  text-align: center !important;
+}
+
+.tz-footer-links a:hover {
+  color: var(--tz-blue) !important;
+  transform: translateX(3px) !important;
+}
+
+.tz-payment-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.45rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.tz-pay-tag {
+  background-color: #f8fafc !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.3rem 0.65rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.tz-cert-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+  background: #f8fafc !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* DÒNG CHÂN TRANG ĐÁY (FOOTER BOTTOM) */
+.footer-bottom-bar {
+  border-top: 1px solid var(--border) !important;
+  padding-top: 1.5rem !important;
+  padding-bottom: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+  font-size: 0.84rem !important;
+  color: var(--text-light) !important;
+  position: relative !important;
+}
+
+/* Căn lề trái 80px để nút tròn CSKH nổi ở góc trái (left: 20px, rộng 50-60px) không che khuất dòng chữ bản quyền */
+.footer-copyright-left {
+  padding-left: 80px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  letter-spacing: -0.1px !important;
+}
+
+.footer-meta-right {
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+  text-align: right !important;
+}
+
+/* Responsive Tablet & Mobile */
+@media (max-width: 992px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .tz-footer {
+    padding: 2.5rem 0 1.5rem !important;
+  }
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.65rem !important;
+  }
+  .footer-copyright-left {
+    padding-left: 64px !important; /* Mobile: Nút tròn CSKH rộng 44px ở left: 10px - 16px */
+    font-size: 0.82rem !important;
+  }
+  .footer-meta-right {
+    padding-left: 64px !important;
+    text-align: left !important;
+    font-size: 0.78rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 79: ĐỒNG BỘ CỘT 1 FOOTER - KHẮC PHỤC LỖI VỠ HÀNG HOTLINE & FONT INTER
+   ========================================================================== */
+/* 1. ĐỒNG BỘ FONT CHỮ HIỆN ĐẠI CHO TOÀN BỘ FOOTER (KHÔNG LỖI TIẾNG VIỆT) */
+.tz-footer,
+.tz-footer * {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* 2. CĂN CHỈNH ĐỘ RỘNG CỘT 1 (COL BRAND): TỈ LỆ 1.42FR & MIN-WIDTH 290PX */
+.footer-main-grid {
+  display: grid !important;
+  grid-template-columns: 1.42fr 1fr 1.05fr 1.15fr !important;
+  gap: 2rem !important;
+  margin-bottom: 2.25rem !important;
+}
+
+.tz-footer-col.footer-col-brand,
+.tz-footer-col:first-child {
+  min-width: 290px !important;
+}
+
+/* 3. ĐỒNG BỘ CẤU TRÚC 3 DÒNG HOTLINE THẲNG TẮP KHÔNG VỠ HÀNG */
+.tz-hotlines,
+.footer-hotlines {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-top: 6px !important;
+}
+
+.hotline-item,
+.footer-hotline-row,
+.tz-hotline-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+  margin-bottom: 8px !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  color: #475569 !important;
+}
+
+.hotline-item:last-child,
+.footer-hotline-row:last-child,
+.tz-hotline-row:last-child {
+  margin-bottom: 0 !important;
+}
+
+.hotline-item i,
+.footer-hotline-row i,
+.tz-hotline-row i {
+  color: var(--tz-blue, #0284c7) !important;
+  font-size: 13px !important;
+  width: 16px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.hotline-item strong,
+.footer-hotline-row strong,
+.tz-hotline-row strong {
+  color: var(--tz-blue, #0284c7) !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+}
+
+.hotline-item span,
+.footer-hotline-row span,
+.tz-hotline-row span {
+  font-size: 13px !important;
+}
+
+.hotline-item span:last-child,
+.footer-hotline-row span:last-child,
+.tz-hotline-row span:last-child {
+  color: #64748b !important;
+  font-size: 12.5px !important;
+}
+
+/* Responsive trên mobile & tablet */
+@media (max-width: 992px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+  }
+  .tz-footer-col.footer-col-brand,
+  .tz-footer-col:first-child {
+    min-width: unset !important;
+  }
+  .hotline-item,
+  .footer-hotline-row,
+  .tz-hotline-row {
+    flex-wrap: wrap !important;
+    white-space: normal !important;
+    font-size: 12.5px !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 80: HUMANIZE UI/UX REFACTOR - PRODUCTION ENTERPRISE E-COMMERCE
+   ========================================================================== */
+/* 1. TYPOGRAPHY CHUẨN DOANH NGHIỆP: GOOGLE FONT INTER CHO TOÀN BỘ WEBSITE */
+html, body, button, input, select, textarea,
+.tz-footer, .tz-footer *,
+.tz-main-header, .tz-main-header * {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* 2. MÀU SẮC DỊU MẮT: CHUẨN XANH ENTERPRISE #0066cc / #0071e3 THAY CHO CYAN GẮT */
+:root {
+  --tz-blue: #0066cc !important;
+  --tz-blue-hover: #0052a3 !important;
+  --tz-primary: #0066cc !important;
+  --tz-navy: #0f172a !important;
+}
+
+.btn-tz-primary,
+.btn-shopee-primary,
+.btn-addr-action-confirm,
+.btn-submit-checkout,
+.btn-search,
+.tz-btn-search,
+.btn-smart-track-main {
+  background-color: #991b1b !important;
+  border-color: #7f1d1d !important;
+}
+
+.btn-tz-primary:hover,
+.btn-shopee-primary:hover,
+.btn-addr-action-confirm:hover,
+.btn-submit-checkout:hover,
+.btn-search:hover,
+.tz-btn-search:hover,
+.btn-smart-track-main:hover {
+  background-color: #0052a3 !important;
+  border-color: #0052a3 !important;
+}
+
+/* 3. LOGO TECHZONE: CHIP VECTOR SVG SẮC NÉT, KHÔNG LỆCH FONT */
+.tz-logo-chip {
+  width: 36px !important;
+  height: 36px !important;
+  background: linear-gradient(135deg, #0066cc, #0052a3) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.25) !important;
+}
+
+.tz-logo-chip svg {
+  width: 20px !important;
+  height: 20px !important;
+  display: block !important;
+}
+
+/* 4. NÚT KHO VOUCHER TRONG HISTORY.HTML: LINK VIỀN XÁM MẢNH CHUẨN UI */
+.btn-voucher-counter {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  padding: 6px 14px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.btn-voucher-counter:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0066cc !important;
+  transform: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn-voucher-counter svg {
+  flex-shrink: 0 !important;
+}
+
+/* 5. CARD & KHUNG THÔNG SỐ: BÁN KÍNH BO GÓC 8PX - 10PX, VIỀN MỜ #e5e7eb */
+.tz-card,
+.profile-card,
+.tz-checkout-card,
+.tz-order-card,
+.order-card,
+.shopee-order-card,
+.active-address-summary,
+.address-card-shopee,
+.tz-tracking-card,
+.spx-overview-card {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 6. FOOTER LINKS VỚI ICON SVG ĐỒNG MÀU #64748b & HOVER DỊU MẮT */
+.tz-footer-links a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #64748b !important;
+  font-size: 0.84rem !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-footer-links a svg {
+  stroke: #64748b !important;
+  transition: stroke 0.2s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.tz-footer-links a:hover {
+  color: #0066cc !important;
+  transform: translateX(3px) !important;
+}
+
+.tz-footer-links a:hover svg {
+  stroke: #0066cc !important;
+}
+
+.tz-pay-tag {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.tz-cert-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+}
+
+/* 7. DÒNG CHÂN TRANG ĐÁY CHUẨN DOANH NGHIỆP */
+.footer-bottom-bar {
+  border-top: 1px solid #f1f5f9 !important;
+  padding-top: 1.25rem !important;
+  padding-bottom: 0.85rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.footer-copyright-left {
+  padding-left: 80px !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  color: #334155 !important;
+  letter-spacing: -0.1px !important;
+}
+
+.footer-meta-right {
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+  .footer-copyright-left {
+    padding-left: 64px !important;
+    font-size: 0.82rem !important;
+  }
+  .footer-meta-right {
+    padding-left: 64px !important;
+    font-size: 0.78rem !important;
+  }
+}
+
+/* 8. AVATAR HỖ TRỢ VIÊN THÂN THIỆN CHO CHATBOT CSKH */
+.agent-avatar-photo {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.25) !important;
+  display: block !important;
+}
+
+.msg-avatar-photo {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  margin-right: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  display: block !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 85: UNIFIED 3-COLOR PALETTE (ĐEN - ĐỎ ĐÔ ĐẬM #8b0000 - TRẮNG)
+   - Khử sạch 100% màu xanh dương cũ trên toàn bộ website
+   - Bảng màu :root chuẩn xác:
+     --tz-black: #0f1115; --tz-black-deep: #000000;
+     --tz-red-dark: #8b0000; --tz-red-hover: #700000;
+     --tz-white: #ffffff; --tz-gray-light: #f8fafc; --tz-text-main: #0f172a;
+   - Khắc phục triệt để lỗi font icon Font Awesome 6 [▯] do font-family đè
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. KHẮC PHỤC TRIỆT ĐỂ LỖI FONT ICON: TRIỆT TIÊU MỌI Ô VUÔNG [▯]
+   -------------------------------------------------------------------------- */
+i[class*="fa-"],
+i.fa,
+i.fas,
+i.far,
+i.fal,
+i.fad,
+i.fab,
+[class^="fa-"],
+[class*=" fa-"],
+.fa-solid,
+.fa-regular,
+.fa-brands {
+  font-family: "Font Awesome 6 Free" !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  line-height: 1 !important;
+}
+
+.fa-solid,
+.fas {
+  font-weight: 900 !important;
+}
+
+.fa-regular,
+.far {
+  font-weight: 400 !important;
+}
+
+.fa-brands,
+.fab {
+  font-family: "Font Awesome 6 Brands" !important;
+  font-weight: 400 !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   1. TOPBAR & MAIN HEADER: NỀN ĐEN SANG TRỌNG (#000000 / #0f1115)
+   -------------------------------------------------------------------------- */
+.tz-topbar,
+.header-topbar,
+.top-bar {
+  background: #000000 !important;
+  color: #a1a1aa !important;
+  border-bottom: 1px solid #27272a !important;
+  box-shadow: none !important;
+}
+
+.tz-topbar a,
+.tz-topbar span,
+.tz-topbar i,
+.header-topbar a,
+.header-topbar span,
+.header-topbar i,
+.top-bar a,
+.top-bar span,
+.top-bar i {
+  color: #a1a1aa !important;
+  text-shadow: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.tz-topbar a:hover,
+.header-topbar a:hover,
+.top-bar a:hover {
+  color: #ffffff !important;
+}
+
+.tz-topbar .topbar-divider,
+.header-topbar .topbar-divider,
+.top-bar .topbar-divider {
+  color: #3f3f46 !important;
+  opacity: 0.8 !important;
+}
+
+.tz-topbar .topbar-hotline strong,
+.header-topbar .topbar-hotline strong,
+.top-bar .topbar-hotline strong {
+  color: #ffea79 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+
+/* Location Badge trên Topbar */
+.tz-location-badge {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid #3f3f46 !important;
+  color: #a1a1aa !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-location-badge i,
+.tz-location-badge span {
+  color: #a1a1aa !important;
+  text-shadow: none !important;
+}
+
+.tz-location-badge:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: #71717a !important;
+  color: #ffffff !important;
+}
+
+.tz-location-badge:hover i,
+.tz-location-badge:hover span {
+  color: #ffffff !important;
+}
+
+/* Header chính: Đen tuyền sang trọng (#0f1115), bóng đổ tự nhiên */
+.tz-header,
+.tz-main-header,
+.header-main,
+header.tz-header,
+header {
+  background: #0f1115 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-bottom: 1px solid #1f242d !important;
+}
+
+/* Logo TechZone: Chữ "TechZone" trắng tinh (#ffffff), chip nền đỏ đô (#8b0000), icon trắng */
+.tz-logo {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.3px !important;
+}
+
+.tz-logo-chip {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: 1px solid #a00000 !important;
+  box-shadow: 0 2px 6px rgba(139, 0, 0, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+.tz-logo-chip svg {
+  stroke: #ffffff !important;
+  filter: none !important;
+}
+
+.tz-logo .accent,
+.tz-logo span.accent {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. CÁC NÚT ĐIỀU HƯỚNG HEADER & THANH TÌM KIẾM (ĐỎ ĐÔ ĐẬM #8b0000)
+   -------------------------------------------------------------------------- */
+/* Nút Danh mục, Tài khoản, Giỏ hàng */
+.btn-category-menu,
+.tz-user-btn,
+.tz-cart-btn,
+.header-cart-btn {
+  background: #8b0000 !important;
+  border: 1px solid #700000 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 7px 14px !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  box-shadow: 0 2px 6px rgba(139, 0, 0, 0.25) !important;
+  text-shadow: none !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.btn-category-menu i,
+.btn-category-menu span,
+.tz-user-btn i,
+.tz-cart-btn i {
+  color: #ffffff !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+.btn-category-menu:hover,
+.btn-category-menu[aria-expanded="true"],
+.btn-category-menu.open,
+.tz-user-btn:hover,
+.tz-cart-btn:hover,
+.header-cart-btn:hover {
+  background: #700000 !important;
+  border-color: #550000 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(112, 0, 0, 0.4) !important;
+}
+
+/* Chi tiết nút Tài khoản */
+.tz-user-btn .meta .sub {
+  color: #fca5a5 !important;
+  font-size: 0.72rem !important;
+}
+
+.tz-user-btn .meta #tz-user-name-display,
+.tz-user-btn .meta span:last-child {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Chi tiết nút Giỏ hàng */
+.tz-cart-btn .meta .sub {
+  color: #fca5a5 !important;
+  font-size: 0.72rem !important;
+}
+
+.tz-cart-btn .meta span:last-child {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Huy hiệu giỏ hàng nổi bật trên nền đỏ */
+.tz-cart-badge {
+  background: #ffea79 !important;
+  color: #700000 !important;
+  font-weight: 800 !important;
+  font-size: 0.75rem !important;
+  border: 2px solid #8b0000 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Thanh tìm kiếm: Input nền trắng tinh, nút tìm kiếm đỏ đô đậm lọt lòng */
+.tz-search-bar {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 3px 4px 3px 12px !important;
+}
+
+.tz-search-bar:focus-within {
+  border-color: #8b0000 !important;
+  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2) !important;
+}
+
+.tz-search-bar .search-icon {
+  color: #64748b !important;
+  font-size: 0.95rem !important;
+  margin-right: 6px !important;
+  filter: none !important;
+}
+
+.tz-search-bar input#header-global-search {
+  color: #0f172a !important;
+  font-size: 0.88rem !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  width: 100% !important;
+  box-shadow: none !important;
+}
+
+.tz-search-bar input#header-global-search::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* NÚT TÌM KIẾM: CHUYỂN HOÀN TOÀN TỪ XANH SANG ĐỎ ĐÔ ĐẬM #8b0000 */
+.btn-search,
+.tz-btn-search,
+button.btn-search,
+button.tz-btn-search {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  border: 1px solid #700000 !important;
+  padding: 7px 18px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: background 0.2s ease !important;
+}
+
+.btn-search:hover,
+.tz-btn-search:hover,
+button.btn-search:hover,
+button.tz-btn-search:hover {
+  background: #700000 !important;
+  border-color: #550000 !important;
+}
+
+/* Từ khóa gợi ý bên dưới thanh tìm kiếm */
+.search-hot-keywords {
+  color: #a1a1aa !important;
+}
+
+.search-hot-keywords span {
+  color: #71717a !important;
+}
+
+.search-hot-keywords a {
+  color: #d4d4d8 !important;
+  opacity: 0.9 !important;
+  font-size: 0.74rem !important;
+  text-decoration: none !important;
+}
+
+.search-hot-keywords a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. TẤT CẢ CÁC NÚT "THÊM VÀO GIỎ HÀNG", "MUA NGAY", "ÁP DỤNG"
+   - Nền: background: #8b0000 !important; color: #ffffff !important; border: none; border-radius: 8px;
+   - Hover: background: #700000 !important;
+   -------------------------------------------------------------------------- */
+/* Nút Thêm vào giỏ hàng */
+.btn-card-add,
+.btn-card-add-primary,
+.btn-pd-add-cart,
+button.btn-card-add,
+button.btn-card-add-primary,
+button.btn-pd-add-cart,
+.btn-add-to-cart,
+.add-to-cart-btn {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 10px rgba(139, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.btn-card-add:hover,
+.btn-card-add-primary:hover,
+.btn-pd-add-cart:hover,
+button.btn-card-add:hover,
+button.btn-card-add-primary:hover,
+button.btn-pd-add-cart:hover,
+.btn-add-to-cart:hover,
+.add-to-cart-btn:hover {
+  background: #700000 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(112, 0, 0, 0.35) !important;
+}
+
+.btn-card-add i,
+.btn-pd-add-cart i {
+  color: #ffffff !important;
+}
+
+/* Nút Mua ngay */
+.btn-pd-buy-now,
+.btn-buy-now,
+button.btn-pd-buy-now,
+button.btn-buy-now,
+.buy-now-btn {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 10px rgba(139, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.btn-pd-buy-now:hover,
+.btn-buy-now:hover,
+button.btn-pd-buy-now:hover,
+button.btn-buy-now:hover,
+.buy-now-btn:hover {
+  background: #700000 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(112, 0, 0, 0.35) !important;
+}
+
+.btn-pd-buy-now i,
+.btn-buy-now i {
+  color: #ffffff !important;
+}
+
+/* Nút Áp dụng, Lưu mã & các nút hành động chính */
+.btn-apply,
+.btn-apply-voucher,
+.btn-save-voucher,
+.btn-shopee-primary,
+.btn-tz-primary,
+.btn-addr-action-confirm,
+.btn-claim-warranty-now,
+.btn-submit-google-custom,
+.tz-btn-auth-submit,
+.tz-btn-save-profile,
+button.btn-apply,
+button.btn-save-voucher,
+button.btn-claim-voucher {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 10px rgba(139, 0, 0, 0.22) !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+}
+
+.btn-apply:hover,
+.btn-apply-voucher:hover,
+.btn-save-voucher:hover,
+.btn-shopee-primary:hover,
+.btn-tz-primary:hover,
+.btn-addr-action-confirm:hover,
+.btn-claim-warranty-now:hover,
+.btn-submit-google-custom:hover,
+.tz-btn-auth-submit:hover,
+.tz-btn-save-profile:hover,
+button.btn-apply:hover,
+button.btn-save-voucher:hover,
+button.btn-claim-voucher:hover {
+  background: #700000 !important;
+  border-color: transparent !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(112, 0, 0, 0.35) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. GIÁ BÁN SẢN PHẨM: MÀU ĐỎ ĐÔ ĐẬM (#8b0000), IN ĐẬM 800
+   -------------------------------------------------------------------------- */
+.price-current,
+.tz-price-current,
+.current-price,
+.product-price,
+.flash-price,
+.tz-pd-price-current,
+.tz-pd-price-main,
+.price-blue,
+.item-price,
+.order-item-price,
+.cart-item-price,
+.checkout-total-price,
+.total-amount,
+.order-total-price,
+.tz-price {
+  color: #8b0000 !important;
+  font-weight: 800 !important;
+}
+
+/* Nhãn giảm giá & chiết khấu */
+.badge-discount,
+.tz-card-badges .badge-discount,
+.tz-pd-price-savings,
+.discount-tag {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border-radius: 4px !important;
+  font-weight: 800 !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. CÁC TAB DANH MỤC & BỘ LỌC ("Tất cả", "Phụ kiện Apple", "Củ sạc"...)
+   - Tab active: background: #8b0000 !important; color: #ffffff !important;
+   - Tab thường: border: 1px solid #e2e8f0; color: #475569;
+   -------------------------------------------------------------------------- */
+/* Tab thường (Inactive) */
+.tz-tab-pill,
+.shopee-tab-item,
+.v-tab-btn,
+.pill-btn,
+.category-tab,
+.tab-btn,
+.filter-btn,
+.filter-pill,
+.section-brand-tabs button {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+/* Hover trên Tab thường */
+.tz-tab-pill:hover,
+.shopee-tab-item:hover,
+.v-tab-btn:hover,
+.pill-btn:hover,
+.category-tab:hover,
+.tab-btn:hover,
+.filter-btn:hover,
+.filter-pill:hover,
+.section-brand-tabs button:hover {
+  background: #f8fafc !important;
+  color: #8b0000 !important;
+  border-color: #8b0000 !important;
+}
+
+/* Tab Active */
+.tz-tab-pill.active,
+.shopee-tab-item.active,
+.v-tab-btn.active,
+.pill-btn.active,
+.category-tab.active,
+.tab-btn.active,
+.filter-btn.active,
+.filter-pill.active,
+.section-brand-tabs button.active,
+.catalog-filter-tag {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: 1px solid #8b0000 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.22) !important;
+}
+
+.tz-tab-pill.active i,
+.shopee-tab-item.active i,
+.v-tab-btn.active i,
+.pill-btn.active i {
+  color: #ffffff !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. NÚT CSKH WIDGET TRÒN NỔI GÓC DƯỚI BÊN TRÁI: ĐỎ ĐÔ ĐẬM (#8b0000)
+   -------------------------------------------------------------------------- */
+.tz-floating-support {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 24px !important;
+  z-index: 9990 !important;
+}
+
+/* Nút bấm tròn CSKH nổi */
+#tz-btn-support-trigger,
+.tz-support-trigger-btn {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 50% !important;
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: 2px solid #a00000 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 24px !important;
+  box-shadow: 0 8px 24px rgba(139, 0, 0, 0.45) !important;
+  position: relative !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s !important;
+  outline: none !important;
+}
+
+#tz-btn-support-trigger:hover,
+.tz-support-trigger-btn:hover {
+  background: #700000 !important;
+  border-color: #8b0000 !important;
+  transform: scale(1.08) !important;
+}
+
+/* Vòng sóng lan tỏa màu đỏ đô */
+.support-wave-ring {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(139, 0, 0, 0.45) !important;
+  pointer-events: none !important;
+  animation: supportWaveRing 2.2s infinite ease-out !important;
+}
+
+/* Header Khung Chat CSKH */
+.tz-chat-header,
+.cskh-chat-header {
+  background: linear-gradient(135deg, #0f1115 0%, #8b0000 100%) !important;
+  color: #ffffff !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-shrink: 0 !important;
+}
+
+/* Nút gửi tin nhắn CSKH */
+.btn-chat-send {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+
+.btn-chat-send:hover {
+  background: #700000 !important;
+  transform: scale(1.05) !important;
+}
+
+/* Bong bóng tin nhắn người dùng */
+.chat-msg.msg-user .msg-bubble {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border-top-right-radius: 4px !important;
+}
+
+/* Quick chips trong chat */
+.chat-chip-btn:hover {
+  background: #fef2f2 !important;
+  border-color: #8b0000 !important;
+  color: #8b0000 !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. THÂN TRANG & SIDEBAR DANH MỤC: NỀN TRẮNG TINH KHÔI (#ffffff / #f8fafc)
+   -------------------------------------------------------------------------- */
+body {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+main,
+.main-content,
+#main-content,
+.tz-main-container,
+.page-wrapper {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Khối Menu Danh mục bên trái */
+.tz-sidebar-menu,
+.hero-category-menu,
+.category-sidebar {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+}
+
+.tz-sidebar-menu .tz-menu-item {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-sidebar-menu .tz-menu-item:hover,
+.tz-sidebar-menu .tz-menu-item.active {
+  background-color: #f8fafc !important;
+  color: #8b0000 !important;
+}
+
+.tz-sidebar-menu .tz-menu-item:hover .tz-menu-item-left i,
+.tz-sidebar-menu .tz-menu-item:hover i.arrow {
+  color: #8b0000 !important;
+}
+
+/* Mega Flyout Submenu */
+.tz-flyout-menu {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0 16px 16px 0 !important;
+}
+
+.tz-flyout-menu .flyout-col-title i {
+  color: #8b0000 !important;
+}
+
+.tz-flyout-menu a:hover {
+  color: #8b0000 !important;
+}
+
+/* Khối Banner bên phải */
+.tz-main-slider,
+.tz-hero-middle-col,
+.tz-hero-banner,
+.tz-hero-right-col {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. FOOTER: NỀN ĐEN SANG TRỌNG (#0f1115 / #000000)
+   -------------------------------------------------------------------------- */
+.tz-footer {
+  background: #0f1115 !important;
+  color: #ffffff !important;
+  border-top: 1px solid #27272a !important;
+  padding: 3.5rem 0 1.75rem !important;
+  margin-top: auto !important;
+}
+
+.tz-footer-col h4 {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  margin-bottom: 1.15rem !important;
+  letter-spacing: -0.2px !important;
+}
+
+.tz-footer-col p,
+.tz-footer-col span,
+.tz-footer-col li {
+  color: #94a3b8 !important;
+  font-size: 0.84rem !important;
+  line-height: 1.65 !important;
+}
+
+.tz-footer-col a {
+  color: #cbd5e1 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.tz-footer-col a:hover {
+  color: #ffffff !important;
+}
+
+.tz-hotlines .hotline-item strong,
+.tz-footer .topbar-hotline strong {
+  color: #ffea79 !important;
+  font-weight: 800 !important;
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid #27272a !important;
+  padding-top: 1.75rem !important;
+  color: #71717a !important;
+  background: #000000 !important;
+}
+
+.footer-copyright {
+  color: #a1a1aa !important;
+  font-weight: 600 !important;
+}
+
+.footer-legal-tagline {
+  color: #71717a !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   9. KHỐI FLASH SALE GIỜ VÀNG (ĐEN - ĐỎ ĐÔ - TRẮNG)
+   -------------------------------------------------------------------------- */
+.tz-flashsale-block,
+.flash-sale-wrapper,
+.flash-sale-container,
+.tz-flashsale-section {
+  background: linear-gradient(135deg, #0f1115 0%, #8b0000 65%, #700000 100%) !important;
+  border-radius: 14px !important;
+  padding: 16px 18px 18px !important;
+  margin: 1.5rem 0 !important;
+  box-shadow: 0 8px 24px rgba(139, 0, 0, 0.3) !important;
+  border: 1px solid #700000 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.flashsale-heading {
+  color: #fef08a !important;
+  font-size: 1.35rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+.flashsale-heading i {
+  color: #fef08a !important;
+  animation: none !important;
+}
+
+.tz-timer-box {
+  background-color: #0f1115 !important;
+  color: #ffffff !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  min-width: 34px !important;
+  text-align: center !important;
+  border: 1px solid #3f3f46 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35) !important;
+}
+
+.flashsale-cards-grid .product-card,
+.flashsale-cards-grid .tz-product-card,
+.tz-flashsale-item {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.tz-flashsale-item .tz-progress-track,
+.flashsale-cards-grid .tz-progress-track {
+  background: #fee2e2 !important;
+  border-radius: 10px !important;
+}
+
+.tz-flashsale-item .tz-progress-fill,
+.flashsale-cards-grid .tz-progress-fill {
+  background: linear-gradient(90deg, #8b0000, #b91c1c) !important;
+  border-radius: 10px !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 86: HUMANIZE PROFILE PAGE UI/UX (CHUẨN BÁN LẺ CELLPHONES / SMEMBER)
+   - Avatar người dùng thanh lịch nền xám nhạt #f1f5f9, viền mảnh 1px #e2e8f0
+   - Nút camera tròn trắng viền xám tinh tế ở góc dưới avatar
+   - Badge "Hội viên Smember" nền đỏ đô nhạt (#fef2f2), chữ đỏ đô (#991b1b)
+   - 3 Thẻ thống kê (Điểm, Chi tiêu, Đơn hàng) Minimalist:
+     Nền trắng, viền mảnh 1px #e2e8f0, icon monochrome đỏ đô #991b1b trong ô vuông #f8fafc,
+     số to đậm #0f172a, nhãn nhỏ #64748b
+   - Sidebar: Mục active "Hồ sơ của tôi" nền #fef2f2, chữ #991b1b, viền trái 3px solid #991b1b
+   - Form: Input viền #cbd5e1; focus viền đỏ đô #991b1b kèm glow mờ 3px; radio accent-color: #991b1b
+   - Header Home: Nút "Trang chủ" link chữ trắng tối giản thanh thoát, không nền đỏ
+   ========================================================================== */
+
+/* 1. CHUẨN HÓA AVATAR & THÔNG TIN CÁ NHÂN */
+.avatar-wrapper {
+  position: relative !important;
+  width: 92px !important;
+  height: 92px !important;
+  margin: 0 auto 0.85rem !important;
+}
+
+.sidebar-avatar-img,
+#profile-avatar-img {
+  width: 92px !important;
+  height: 92px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  background-color: #f1f5f9 !important;
+  display: block !important;
+}
+
+/* Nút camera tròn trắng viền xám tinh tế ở góc dưới avatar */
+.btn-change-avatar {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 0.8rem !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-change-avatar:hover {
+  background: #f8fafc !important;
+  color: #991b1b !important;
+  border-color: #991b1b !important;
+  transform: scale(1.08) !important;
+}
+
+.btn-change-avatar i {
+  color: inherit !important;
+  font-size: 0.8rem !important;
+}
+
+/* Nhãn cấp bậc Hội viên Smember chuẩn nhận diện: Nền đỏ đô nhạt, chữ đỏ đô, viền mảnh */
+.tz-smember-badge,
+#profile-rank-badge {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 20px !important;
+  padding: 4px 12px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-transform: none !important;
+  letter-spacing: 0.2px !important;
+}
+
+.tz-smember-badge i,
+#profile-rank-badge i {
+  color: #991b1b !important;
+  font-size: 0.8rem !important;
+}
+
+
+/* 2. ĐỒNG BỘ 3 THẺ THỐNG KÊ (ĐIỂM, CHI TIÊU, ĐƠN HÀNG) MINIMALIST */
+.tz-benefit-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+}
+
+.benefit-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.benefit-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Khử toàn bộ 3 màu demo xanh lá / vàng chanh / xanh lơ; đồng bộ Monochrome đỏ đô trong ô vuông xám nhạt */
+.benefit-card .benefit-icon,
+.benefit-icon.points,
+.benefit-icon.spending,
+.benefit-icon.orders {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  border-radius: 8px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.15rem !important;
+  color: #991b1b !important;
+  box-shadow: none !important;
+}
+
+.benefit-card .benefit-icon i,
+.benefit-icon.points i,
+.benefit-icon.spending i,
+.benefit-icon.orders i {
+  color: #991b1b !important;
+  filter: none !important;
+}
+
+/* Con số: Font to đậm màu đen #0f172a, chữ chú thích nhỏ màu xám #64748b */
+.benefit-data .benefit-val,
+#profile-reward-points,
+#profile-total-spent,
+#profile-orders-count {
+  font-size: 1.35rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.2 !important;
+  margin-bottom: 2px !important;
+}
+
+.benefit-data .benefit-val .unit {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+}
+
+.benefit-data .benefit-label {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+}
+
+
+/* 3. ĐỒNG BỘ SIDEBAR BÊN TRÁI */
+.tz-profile-sidebar {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+}
+
+.sidebar-user-hero {
+  padding: 24px 16px 18px !important;
+  text-align: center !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.sidebar-user-name,
+#profile-sidebar-name {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.tz-profile-nav {
+  padding: 8px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.tz-profile-nav .profile-nav-item,
+.tz-profile-nav a,
+.tz-profile-nav button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 0 !important;
+  color: #475569 !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  border-left: 3px solid transparent !important;
+  background: transparent !important;
+  cursor: pointer !important;
+}
+
+.tz-profile-nav .profile-nav-item i {
+  color: #64748b !important;
+  font-size: 1rem !important;
+  width: 20px !important;
+  text-align: center !important;
+  transition: color 0.2s ease !important;
+}
+
+/* Hover đổi sang đỏ đô nhẹ */
+.tz-profile-nav .profile-nav-item:hover,
+.tz-profile-nav a:hover,
+.tz-profile-nav button:hover {
+  background: #f8fafc !important;
+  color: #991b1b !important;
+}
+
+.tz-profile-nav .profile-nav-item:hover i,
+.tz-profile-nav a:hover i,
+.tz-profile-nav button:hover i {
+  color: #991b1b !important;
+}
+
+/* Mục đang chọn ("Hồ sơ của tôi"): Nền đỏ đô rất nhạt, viền trái 3px solid #991b1b */
+.tz-profile-nav .profile-nav-item.active,
+.tz-profile-nav a.active {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  font-weight: 600 !important;
+  border-left: 3px solid #991b1b !important;
+}
+
+.tz-profile-nav .profile-nav-item.active i,
+.tz-profile-nav a.active i {
+  color: #991b1b !important;
+}
+
+
+/* 4. TINH CHỈNH FORM NHẬP LIỆU PROFILE */
+.tz-profile-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 24px !important;
+}
+
+.tz-profile-card-header h3 {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 0 4px !important;
+}
+
+.tz-profile-card-header h3 i {
+  color: #991b1b !important;
+}
+
+.tz-profile-card-header p {
+  font-size: 0.82rem !important;
+  color: #64748b !important;
+  margin: 0 0 1.25rem !important;
+}
+
+/* Input nền trắng, viền mảnh 1px #cbd5e1, bo góc 8px */
+.tz-form-control,
+#tz-profile-form input[type="text"],
+#tz-profile-form input[type="tel"],
+#tz-profile-form input[type="date"],
+#tz-change-password-form input[type="password"] {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  padding: 9px 13px !important;
+  font-size: 0.88rem !important;
+  color: #0f172a !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Khi focus: Viền đổi sang đỏ đô trầm #991b1b kèm bóng mờ nhẹ 3px */
+.tz-form-control:focus,
+#tz-profile-form input[type="text"]:focus,
+#tz-profile-form input[type="tel"]:focus,
+#tz-profile-form input[type="date"]:focus,
+#tz-change-password-form input[type="password"]:focus {
+  border-color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.12) !important;
+  outline: none !important;
+}
+
+/* Ô readonly */
+.tz-form-control.readonly,
+.tz-form-control[readonly] {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  cursor: not-allowed !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Nút radio Giới tính: accent-color: #991b1b */
+.tz-gender-group input[type="radio"],
+input[type="radio"][name="gender"] {
+  accent-color: #991b1b !important;
+  width: 16px !important;
+  height: 16px !important;
+  cursor: pointer !important;
+}
+
+.tz-gender-label {
+  font-size: 0.88rem !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  margin-right: 18px !important;
+}
+
+/* Nút Lưu thay đổi: Đỏ đô đậm */
+.tz-btn-save-profile {
+  background: #8b0000 !important;
+  color: #ffffff !important;
+  border: 1px solid #700000 !important;
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.tz-btn-save-profile:hover {
+  background: #700000 !important;
+  border-color: #550000 !important;
+  transform: translateY(-1px) !important;
+}
+
+
+/* 5. NÚT "TRANG CHỦ" TRÊN HEADER: TỐI GIẢN, LINK CHỮ TRẮNG THANH THOÁT */
+.btn-home-nav,
+a.btn-home-nav {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-home-nav i,
+.btn-home-nav span {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+.btn-home-nav:hover,
+.btn-home-nav.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fee2e2 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.btn-home-nav:hover i,
+.btn-home-nav:hover span,
+.btn-home-nav.active i,
+.btn-home-nav.active span {
+  color: #fee2e2 !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 87: STREAMLINE & HUMANIZE ORDER MANAGEMENT (history.html)
+   - Xóa bỏ toàn bộ icon/emoji thừa trên giao diện quản lý đơn hàng
+   - Tab trạng thái: 6 tab chữ thuần túy, tab active nền đỏ đô #991b1b, chữ trắng
+   - Thẻ đơn hàng (Order Card): Bỏ bóng mờ rườm rà, border 1px #e2e8f0, margin-bottom 16px
+   - Header đơn hàng: Không icon, chữ "TechZone Official Store | Mã đơn: ...", trạng thái chữ cam/đỏ
+   - Dải vận chuyển (Shipping Strip): Nền xanh dịu, không icon/emoji, 2 dòng thông tin thanh lịch
+   - Dòng tổng tiền: Xóa bỏ hoàn toàn icon khiên xanh, hiển thị rõ ràng
+   - Cụm nút bấm đáy đơn hàng: Chữ thuần túy [ Hủy đơn ] [ Xem chi tiết ] [ Theo dõi lộ trình ]
+     + Nút "Theo dõi lộ trình": Nền đỏ đô đậm #991b1b, chữ trắng
+     + Nút "Hủy đơn": Viền xám mờ #e2e8f0, chữ xám đỏ nhẹ #e11d48
+     + Nút "Xem chi tiết": Viền xám mảnh #cbd5e1, chữ xám đen #334155
+   - Nút "Kho Voucher": Viền mảnh gọn gàng không icon
+   ========================================================================== */
+
+/* 1. NÚT KHO VOUCHER & TIÊU ĐỀ */
+.history-top-shortcuts .btn-voucher-counter {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 6px 14px !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.2s ease !important;
+}
+
+.history-top-shortcuts .btn-voucher-counter:hover {
+  background: #f8fafc !important;
+  color: #991b1b !important;
+  border-color: #991b1b !important;
+}
+
+.history-top-shortcuts .btn-voucher-counter svg {
+  display: none !important;
+}
+
+
+/* 2. THANH TAB TRẠNG THÁI: 6 TAB CHỮ THUẦN TÚY, ĐỒNG BỘ */
+.shopee-tabs-nav {
+  display: flex !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  overflow-x: auto !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 4px !important;
+  gap: 4px !important;
+}
+
+.shopee-tab-item {
+  flex: 1 !important;
+  min-width: 120px !important;
+  text-align: center !important;
+  padding: 10px 14px !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+.shopee-tab-item:hover {
+  background: #f8fafc !important;
+  color: #991b1b !important;
+}
+
+/* Tab active: Nền đỏ đô #991b1b, chữ trắng */
+.shopee-tab-item.active {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 6px rgba(153, 27, 27, 0.25) !important;
+}
+
+.shopee-tab-item::after {
+  display: none !important;
+}
+
+
+/* 3. THẺ ĐƠN HÀNG (ORDER CARD): BỎ BÓNG MỜ RƯỜM RÀ, VIỀN MẢNH 1PX, KHOẢNG CÁCH 16PX */
+.shopee-order-card {
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 16px !important;
+  overflow: hidden !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.shopee-order-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+
+/* 4. HEADER ĐƠN HÀNG: KHÔNG ICON, TEXT THUẦN TÚY */
+.shopee-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 18px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+  gap: 12px !important;
+}
+
+.shopee-shop-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 0.86rem !important;
+  color: #334155 !important;
+}
+
+.shopee-mall-badge {
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 0.86rem !important;
+}
+
+.shopee-mall-badge i,
+.shopee-shop-info i.fa-store {
+  display: none !important;
+}
+
+.shopee-status-badge {
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  text-transform: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.shopee-status-badge i {
+  display: none !important;
+}
+
+.shopee-status-badge.confirmed {
+  color: #d97706 !important; /* Cam đậm cho Chờ xác nhận */
+}
+
+.shopee-status-badge.shipping {
+  color: #2563eb !important;
+}
+
+.shopee-status-badge.delivered {
+  color: #16a34a !important;
+}
+
+.shopee-status-badge.cancelled {
+  color: #dc2626 !important;
+}
+
+
+/* 5. KHUNG THÔNG TIN VẬN CHUYỂN: THANH LỊCH, KHÔNG EMOJI */
+.shopee-shipping-strip {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 14px !important;
+  background-color: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-left: 3px solid #16a34a !important;
+  border-radius: 6px !important;
+  margin: 12px 18px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.shopee-shipping-strip:hover {
+  background-color: #dcfce7 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  transform: none !important;
+}
+
+.shopee-shipping-strip > i {
+  display: none !important;
+}
+
+.strip-text-box {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.strip-main-text {
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  color: #15803d !important;
+}
+
+.strip-sub-text {
+  font-size: 0.78rem !important;
+  color: #166534 !important;
+}
+
+.strip-sub-text i {
+  display: none !important;
+}
+
+.strip-view-link {
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: #15803d !important;
+  white-space: nowrap !important;
+}
+
+.shopee-shipping-strip.cancelled {
+  background-color: #fef2f2 !important;
+  border-color: #fecaca !important;
+  border-left: 3px solid #dc2626 !important;
+}
+
+.shopee-shipping-strip.cancelled .strip-main-text {
+  color: #dc2626 !important;
+}
+
+.shopee-shipping-strip.cancelled .strip-sub-text {
+  color: #991b1b !important;
+}
+
+
+/* 6. DÒNG TỔNG TIỀN: XÓA HOÀN TOÀN ICON KHIÊN XANH BỊ LỖI */
+.shopee-shield-icon,
+i.shopee-shield-icon,
+.shopee-total-wrap i {
+  display: none !important;
+}
+
+.shopee-total-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.shopee-total-label {
+  font-size: 0.84rem !important;
+  color: #64748b !important;
+}
+
+.shopee-total-price {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #991b1b !important;
+}
+
+
+/* 7. CỤM NÚT BẤM ĐÁY ĐƠN HÀNG: CHỮ THUẦN TÚY KHÔNG ICON */
+.shopee-card-footer {
+  padding: 12px 18px !important;
+  border-top: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+}
+
+.shopee-footer-action-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.shopee-btn-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Nút "Theo dõi lộ trình": Nền đỏ đô đậm #991b1b, chữ trắng */
+.btn-shopee-primary.btn-track-prominent,
+.shopee-btn-group .btn-track-prominent,
+.shopee-btn-group a.btn-track-prominent {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border: 1px solid #700000 !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 6px rgba(153, 27, 27, 0.25) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-shopee-primary.btn-track-prominent:hover,
+.shopee-btn-group .btn-track-prominent:hover {
+  background: #700000 !important;
+  border-color: #550000 !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-shopee-primary.btn-track-prominent i,
+.shopee-btn-group .btn-track-prominent i {
+  display: none !important;
+}
+
+/* Nút "Hủy đơn": Viền xám mờ, chữ xám đỏ nhẹ */
+.btn-shopee-cancel,
+.shopee-btn-group .btn-shopee-cancel {
+  background: #ffffff !important;
+  color: #e11d48 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-shopee-cancel:hover,
+.shopee-btn-group .btn-shopee-cancel:hover {
+  background: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+  color: #be123c !important;
+}
+
+.btn-shopee-cancel i,
+.shopee-btn-group .btn-shopee-cancel i {
+  display: none !important;
+}
+
+/* Nút "Xem chi tiết": Viền xám mảnh, chữ xám đen */
+.btn-shopee-secondary,
+.shopee-btn-group .btn-shopee-secondary,
+.shopee-btn-group .btn-quick-timeline {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-shopee-secondary:hover,
+.shopee-btn-group .btn-shopee-secondary:hover,
+.shopee-btn-group .btn-quick-timeline:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+.btn-shopee-secondary i,
+.shopee-btn-group .btn-shopee-secondary i,
+.shopee-btn-group .btn-quick-timeline i {
+  display: none !important;
+}
+
+/* Nút "Mua lại" cho đơn đã hủy */
+.shopee-btn-group .btn-reorder-order {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border: 1px solid #700000 !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.shopee-btn-group .btn-reorder-order:hover {
+  background: #700000 !important;
+  transform: translateY(-1px) !important;
+}
+
+.shopee-btn-group .btn-reorder-order i,
+.shopee-btn-group .btn-order-claim-warranty i {
+  display: none !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 88: MASTER ENTERPRISE REFACTOR - 3-COLOR SYSTEM & PRODUCTION UI/UX
+   (ĐEN THAN CHÌ #11141a - ĐỎ ĐÔ ĐẬM #991b1b - TRẮNG/XÁM SÁNG #ffffff / #f8fafc)
+   ========================================================================== */
+
+/* 1. HEADER & TOPBAR: NỀN ĐEN THAN CHÌ SANG TRỌNG (#11141a & #0a0c10) */
+:root {
+  --tz-black: #11141a;
+  --tz-black-deep: #0a0c10;
+  --tz-red-dark: #991b1b;
+  --tz-red-hover: #7f1d1d;
+  --tz-red-active: #601414;
+  --tz-white: #ffffff;
+  --tz-gray-light: #f8fafc;
+  --tz-text-main: #0f172a;
+}
+
+/* Topbar đen than chì sâu */
+.tz-topbar,
+.header-topbar,
+.top-bar,
+.topbar {
+  background: #0a0c10 !important;
+  border-bottom: 1px solid #1e242d !important;
+  color: #94a3b8 !important;
+}
+
+.tz-topbar .topbar-link,
+.header-topbar a,
+.tz-topbar a {
+  color: #94a3b8 !important;
+  transition: color 0.2s ease !important;
+}
+
+.tz-topbar .topbar-link:hover,
+.tz-topbar a:hover {
+  color: #ffffff !important;
+}
+
+.tz-topbar .topbar-hotline,
+.tz-topbar .topbar-hotline strong {
+  color: #ffffff !important;
+}
+
+.tz-topbar .topbar-divider {
+  color: #334155 !important;
+}
+
+/* Badge vị trí trên topbar */
+.tz-location-badge,
+#btn-select-location {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+}
+
+.tz-location-badge:hover,
+#btn-select-location:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+
+/* Header chính: Đen than chì #11141a, bóng tự nhiên, không neon */
+.tz-header,
+.tz-main-header,
+.header-main,
+header.site-header {
+  background: #11141a !important;
+  border-bottom: 1px solid #1e242d !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Logo TechZone */
+.tz-logo {
+  text-decoration: none !important;
+  color: #ffffff !important;
+}
+
+.tz-logo div {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+.tz-logo .accent {
+  color: #ffffff !important;
+}
+
+.tz-logo-chip {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* NÚT ĐIỀU HƯỚNG TỐI GIẢN TRONG SUỐT MỜ (Trang chủ, Danh mục, Tài khoản) */
+.btn-home-nav,
+.btn-category-menu,
+#header-category-toggle,
+.tz-user-btn,
+#tz-user-btn,
+.tz-header-actions .tz-nav-btn:not(.tz-cart-btn) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(4px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-home-nav:hover,
+.btn-category-menu:hover,
+#header-category-toggle:hover,
+.tz-user-btn:hover,
+#tz-user-btn:hover,
+.tz-header-actions .tz-nav-btn:not(.tz-cart-btn):hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-home-nav span,
+.btn-home-nav i,
+.btn-category-menu span,
+.btn-category-menu i,
+.tz-user-btn span,
+.tz-user-btn i {
+  color: #ffffff !important;
+}
+
+.tz-user-btn .meta .sub {
+  color: #94a3b8 !important;
+}
+
+/* NÚT CTA NỔI BẬT ĐỎ ĐÔ ĐẬM (#991b1b): DUY NHẤT GIỎ HÀNG VÀ TÌM KIẾM */
+.tz-cart-btn,
+.header-cart-btn,
+.tz-nav-btn.tz-cart-btn {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.35) !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-cart-btn:hover,
+.header-cart-btn:hover,
+.tz-nav-btn.tz-cart-btn:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(153, 27, 27, 0.5) !important;
+}
+
+.tz-cart-btn i,
+.tz-cart-btn .meta span {
+  color: #ffffff !important;
+}
+
+.tz-cart-btn .meta .sub {
+  color: #fca5a5 !important;
+}
+
+.tz-cart-badge {
+  background: #ffffff !important;
+  color: #991b1b !important;
+  border: 2px solid #991b1b !important;
+  font-weight: 800 !important;
+}
+
+/* Nút tìm kiếm đỏ đô đậm */
+.tz-btn-search,
+.btn-search,
+.header-search button {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-btn-search:hover,
+.btn-search:hover,
+.header-search button:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+}
+
+/* Khung ô tìm kiếm */
+.tz-search-bar,
+.search-bar {
+  background: #ffffff !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+}
+
+.tz-search-bar input,
+.search-bar input {
+  color: #0f172a !important;
+}
+
+/* Hot keywords dưới thanh tìm kiếm */
+.search-hot-keywords,
+.search-hot-keywords a,
+.search-hot-keywords span {
+  color: #94a3b8 !important;
+}
+
+.search-hot-keywords a:hover {
+  color: #f87171 !important;
+}
+
+/* 2. FOOTER ĐỒNG BỘ 4 CỘT THAN CHÌ (#11141a) */
+.tz-footer,
+footer.tz-footer {
+  background: #11141a !important;
+  border-top: 1px solid #1e242d !important;
+  color: #94a3b8 !important;
+}
+
+.tz-footer-col h4,
+footer h4 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.tz-footer-links a,
+footer a {
+  color: #94a3b8 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.tz-footer-links a:hover,
+footer a:hover {
+  color: #f87171 !important;
+}
+
+/* Hotline Cột 1 */
+.tz-hotlines,
+.footer-hotlines {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-top: 1rem !important;
+}
+
+.tz-hotline-row,
+.footer-hotline-row,
+.hotline-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
+}
+
+.tz-hotline-row strong,
+.footer-hotline-row strong,
+.hotline-item strong {
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+}
+
+/* Cột 4: Badge thanh toán tối giản (#1a1e28), bỏ dải màu loè loẹt */
+.tz-payment-pills .tz-pay-tag,
+.footer-payment-badge,
+.tz-pay-tag {
+  background: #1a1e28 !important;
+  border: 1px solid #27272a !important;
+  color: #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-payment-pills .tz-pay-tag:hover,
+.tz-pay-tag:hover {
+  background: #232938 !important;
+  border-color: #3f475a !important;
+  color: #ffffff !important;
+}
+
+.tz-payment-pills .tz-pay-tag svg,
+.tz-pay-tag svg {
+  stroke: #94a3b8 !important;
+}
+
+/* Cột 4: Hộp chứng nhận Bộ Công Thương */
+.tz-cert-box {
+  background: #1a1e28 !important;
+  border: 1px solid #27272a !important;
+  color: #94a3b8 !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.tz-cert-box strong {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.tz-cert-box svg {
+  stroke: #10b981 !important;
+}
+
+/* Chân trang đáy */
+.footer-bottom-bar {
+  background: #0a0c10 !important;
+  border-top: 1px solid #1e242d !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  padding: 14px 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+
+.footer-copyright-left {
+  color: #cbd5e1 !important;
+  font-weight: 500 !important;
+}
+
+.footer-meta-right {
+  color: #94a3b8 !important;
+}
+
+/* 3. LOẠI BỎ TRIỆT ĐỂ MÀU XANH DƯƠNG CŨ TRONG NỘI DUNG MỌI TRANG */
+/* Nút hành động chính (Thêm giỏ hàng, Mua ngay, Áp dụng, Đặt hàng, Lưu thông tin, Đăng nhập, Đăng ký): Đỏ đô #991b1b */
+.btn-primary,
+.btn-buy-now,
+.btn-add-cart,
+.btn-place-order,
+.btn-apply-voucher,
+.btn-save-profile,
+.btn-login-submit,
+.btn-register-submit,
+button.tz-btn-primary,
+a.tz-btn-primary,
+.shopee-checkout-btn,
+.btn-checkout-confirm,
+.btn-confirm-checkout,
+.btn-pd-buy-now,
+.btn-pd-add-cart,
+.tz-btn-auth-submit,
+.tz-btn-save-profile,
+.btn-shopee-primary,
+.btn-tz-primary,
+.btn-addr-action-confirm,
+.btn-submit-order,
+.hero-cta {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-primary:hover,
+.btn-buy-now:hover,
+.btn-add-cart:hover,
+.btn-place-order:hover,
+.btn-apply-voucher:hover,
+.btn-save-profile:hover,
+.btn-login-submit:hover,
+.btn-register-submit:hover,
+button.tz-btn-primary:hover,
+a.tz-btn-primary:hover,
+.shopee-checkout-btn:hover,
+.btn-checkout-confirm:hover,
+.btn-confirm-checkout:hover,
+.btn-pd-buy-now:hover,
+.btn-pd-add-cart:hover,
+.tz-btn-auth-submit:hover,
+.tz-btn-save-profile:hover,
+.btn-shopee-primary:hover,
+.btn-tz-primary:hover,
+.btn-addr-action-confirm:hover,
+.btn-submit-order:hover,
+.hero-cta:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Nút thêm giỏ hàng dạng viền đỏ đô thanh lịch */
+.btn-add-cart-outline {
+  background: #ffffff !important;
+  border: 1px solid #991b1b !important;
+  color: #991b1b !important;
+  border-radius: 8px !important;
+}
+
+.btn-add-cart-outline:hover {
+  background: #fef2f2 !important;
+  color: #7f1d1d !important;
+}
+
+/* Giá tiền sản phẩm & Tổng tiền: Đỏ đô #991b1b, font-weight: 800 */
+.product-price,
+.item-price,
+.price-current,
+.final-price,
+.order-total-price,
+.tz-total-price,
+.price-display,
+.price-new,
+.shopee-order-card-price,
+.shopee-order-total-amount,
+.order-total-amount,
+.product-card-price,
+.cart-total-value,
+.total-value,
+.checkout-price-final,
+.tz-order-total strong,
+.tz-total-amount {
+  color: #991b1b !important;
+  font-weight: 800 !important;
+}
+
+/* Tab lọc sản phẩm, Tab trạng thái đơn hàng */
+.filter-tab.active,
+.order-tab.active,
+.tz-tab-item.active,
+.shopee-tab-item.active,
+.category-tab.active,
+.tz-tab-pill.active,
+.tz-filter-chip.active,
+.status-tab.active {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.filter-tab,
+.order-tab,
+.tz-tab-item,
+.shopee-tab-item,
+.category-tab,
+.tz-tab-pill,
+.tz-filter-chip,
+.status-tab {
+  color: #475569 !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.filter-tab:hover,
+.order-tab:hover,
+.tz-tab-item:hover,
+.shopee-tab-item:hover,
+.category-tab:hover:not(.active),
+.tz-tab-pill:hover:not(.active),
+.tz-filter-chip:hover:not(.active),
+.status-tab:hover:not(.active) {
+  color: #991b1b !important;
+}
+
+/* Trang cá nhân (profile.html): Tab menu đang chọn có nền hồng nhạt #fef2f2 và viền trái đỏ đô */
+.profile-menu-item.active,
+.profile-nav-item.active,
+.profile-sidebar a.active,
+.tz-profile-nav a.active,
+.profile-tab.active,
+.tz-profile-nav-item.active {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-left: 3px solid #991b1b !important;
+  font-weight: 700 !important;
+}
+
+/* Nút tròn CSKH góc dưới màn hình */
+.floating-cskh,
+.cskh-btn,
+.tz-cskh-float,
+.chat-floating-btn,
+#btn-cskh-float,
+.floating-support-btn {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(153, 27, 27, 0.4) !important;
+}
+
+.floating-cskh:hover,
+.cskh-btn:hover,
+.tz-cskh-float:hover,
+.chat-floating-btn:hover,
+#btn-cskh-float:hover,
+.floating-support-btn:hover {
+  background: #7f1d1d !important;
+  transform: scale(1.05) !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 89: 100% UNIFIED HEADER & FOOTER OVERRIDES (PIXEL-PERFECT RETAIL SPEC)
+   ========================================================================== */
+
+/* 1. TOPBAR SPECIFICATION */
+.tz-topbar,
+.header-topbar,
+.top-bar,
+.topbar {
+  background: #0a0c10 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #94a3b8 !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 13px !important;
+}
+
+.tz-topbar .container,
+.tz-topbar .topbar-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+
+.tz-topbar .topbar-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.tz-topbar .topbar-right {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.tz-location-badge,
+#btn-select-location {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 12.5px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.tz-location-badge:hover,
+#btn-select-location:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.tz-location-badge i.fa-location-dot {
+  color: #ef4444 !important;
+  font-size: 12px !important;
+}
+
+.topbar-divider {
+  color: rgba(255, 255, 255, 0.2) !important;
+  margin: 0 4px !important;
+}
+
+.topbar-link {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: color 0.2s ease !important;
+}
+
+.topbar-link:hover {
+  color: #ffffff !important;
+}
+
+.topbar-hotline {
+  color: #94a3b8 !important;
+}
+
+.topbar-hotline i {
+  color: #991b1b !important;
+}
+
+.topbar-hotline strong {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  margin-left: 3px !important;
+}
+
+/* 2. MAIN HEADER SPECIFICATION */
+.tz-header,
+.tz-main-header,
+.header-main,
+header.site-header {
+  background: #11141a !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+.tz-main-header .main-header-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+/* Logo */
+.tz-logo {
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.tz-logo div {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 20px !important;
+  letter-spacing: -0.5px !important;
+}
+
+.tz-logo-chip {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Nút Trang chủ & Danh mục: Nền kính mờ đồng bộ */
+.btn-home-nav,
+.btn-category-menu,
+#header-category-toggle {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-home-nav:hover,
+.btn-category-menu:hover,
+#header-category-toggle:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-home-nav.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Khung tìm kiếm nền trắng tinh bo tròn 8px */
+.tz-search-wrapper {
+  flex: 1 !important;
+  min-width: 260px !important;
+}
+
+.tz-search-bar,
+.search-bar {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 3px 4px 3px 14px !important;
+  height: 42px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.tz-search-bar:focus-within,
+.search-bar:focus-within {
+  border-color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.15) !important;
+}
+
+.tz-search-bar .search-icon {
+  color: #64748b !important;
+  font-size: 15px !important;
+  margin-right: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.tz-search-bar input,
+.search-bar input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #0f172a !important;
+  font-size: 13.5px !important;
+  width: 100% !important;
+}
+
+.tz-search-bar input::placeholder,
+.search-bar input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Nút Tìm kiếm đỏ đô đậm lọt lòng bên phải */
+.tz-btn-search,
+.btn-search {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  padding: 7px 18px !important;
+  font-size: 13px !important;
+  height: 34px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-btn-search:hover,
+.btn-search:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+  transform: none !important;
+}
+
+/* Dòng gợi ý từ khóa */
+.search-hot-keywords {
+  margin-top: 5px !important;
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.search-hot-keywords span {
+  color: #64748b !important;
+}
+
+.search-hot-keywords a {
+  color: #94a3b8 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.search-hot-keywords a:hover {
+  color: #f87171 !important;
+  text-decoration: underline !important;
+}
+
+/* Action group bên phải */
+.tz-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Nút Tài khoản kính mờ */
+.tz-user-btn,
+#tz-user-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  height: 42px !important;
+  white-space: nowrap !important;
+}
+
+.tz-user-btn:hover,
+#tz-user-btn:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.tz-user-btn i {
+  font-size: 18px !important;
+  color: #ffffff !important;
+}
+
+.tz-user-btn .meta {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+}
+
+.tz-user-btn .meta .sub {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  font-weight: normal !important;
+}
+
+.tz-user-btn .meta span:not(.sub) {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* Nút Giỏ hàng đỏ đô đậm (#991b1b) */
+.tz-cart-btn,
+.header-cart-btn {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 6px 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: relative !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  height: 42px !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.35) !important;
+  white-space: nowrap !important;
+}
+
+.tz-cart-btn:hover,
+.header-cart-btn:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+  box-shadow: 0 4px 12px rgba(153, 27, 27, 0.5) !important;
+  transform: translateY(-1px) !important;
+}
+
+.tz-cart-btn i {
+  font-size: 18px !important;
+  color: #ffffff !important;
+}
+
+.tz-cart-btn .meta {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+}
+
+.tz-cart-btn .meta .sub {
+  font-size: 11px !important;
+  color: #fca5a5 !important;
+  font-weight: normal !important;
+}
+
+.tz-cart-btn .meta span:not(.sub) {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* Badge số lượng tròn */
+.tz-cart-badge {
+  background: #ffffff !important;
+  color: #991b1b !important;
+  border: 2px solid #991b1b !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  top: -6px !important;
+  right: -6px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 3. FOOTER SPECIFICATION */
+.tz-footer,
+footer.tz-footer {
+  background: #11141a !important;
+  border-top: 1px solid #1e2330 !important;
+  color: #94a3b8 !important;
+  padding: 45px 0 0 0 !important;
+}
+
+.tz-footer-col h4,
+footer h4 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 16px !important;
+  text-transform: uppercase !important;
+}
+
+/* Cột 1: Hotline */
+.tz-hotlines,
+.footer-hotlines {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-top: 16px !important;
+}
+
+.tz-hotline-row,
+.footer-hotline-row,
+.hotline-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
+}
+
+.tz-hotline-row strong,
+.footer-hotline-row strong,
+.hotline-item strong {
+  color: #fbbf24 !important;
+  font-weight: 700 !important;
+}
+
+/* Cột 2 & Cột 3: Clean Typography tuyệt đối không icon/SVG rác */
+.tz-footer-col .tz-footer-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.tz-footer-col .tz-footer-links a {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  text-decoration: none !important;
+  display: block !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-footer-col .tz-footer-links a:hover {
+  color: #f87171 !important;
+  transform: translateX(4px) !important;
+}
+
+.tz-footer-col .tz-footer-links a svg,
+.tz-footer-col .tz-footer-links a i {
+  display: none !important;
+}
+
+/* Cột 4: Payment Badges tối phẳng (#1a1e28, viền #282f40) */
+.tz-payment-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.tz-payment-pills .tz-pay-tag,
+.tz-pay-tag {
+  background: #1a1e28 !important;
+  border: 1px solid #282f40 !important;
+  color: #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 7px 12px !important;
+  font-size: 12.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.tz-payment-pills .tz-pay-tag:hover,
+.tz-pay-tag:hover {
+  background: #242c3d !important;
+  border-color: #3b4660 !important;
+  color: #ffffff !important;
+}
+
+.tz-payment-pills .tz-pay-tag i,
+.tz-pay-tag i {
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+}
+
+/* Khối Bộ Công Thương */
+.tz-cert-box {
+  background: #1a1e28 !important;
+  border: 1px solid #282f40 !important;
+  color: #94a3b8 !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  font-size: 12.5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  line-height: 1.5 !important;
+}
+
+.tz-cert-box strong {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* 4. DÒNG CHÂN TRANG ĐÁY (FOOTER BOTTOM) */
+.footer-bottom-bar {
+  background: #0a0c10 !important;
+  border-top: 1px solid #161a23 !important;
+  padding: 18px 24px 18px 110px !important; /* Padding-left tối thiểu 80px chống đè nút CSKH */
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.footer-copyright-left {
+  color: #cbd5e1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.footer-meta-right {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    padding-left: 20px !important;
+    padding-bottom: 85px !important; /* Dành chỗ cho nút CSKH trên di động */
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 90: SLIM HEADER + FOOTER ICON FIX + HISTORY SHIPPING STRIP + VOUCHER CLEANUP
+   ========================================================================== */
+
+/* 1. THU GỌN CHIỀU CAO HEADER (SLIM COMPACT HEADER) */
+.tz-main-header {
+  padding: 8px 0 !important;
+}
+
+.tz-main-header .main-header-row {
+  gap: 12px !important;
+}
+
+/* Nút Trang chủ, Danh mục: cố định 40px */
+.btn-home-nav,
+.btn-category-menu,
+#header-category-toggle {
+  height: 40px !important;
+  padding: 6px 14px !important;
+  font-size: 13.5px !important;
+}
+
+/* Nút Tài khoản, Giỏ hàng: cố định 40px */
+.tz-user-btn,
+#tz-user-btn,
+.tz-cart-btn,
+.header-cart-btn {
+  height: 40px !important;
+  padding: 5px 12px !important;
+}
+
+/* Khung tìm kiếm 40px */
+.tz-search-bar,
+.search-bar {
+  height: 40px !important;
+  padding: 3px 4px 3px 12px !important;
+}
+
+.tz-btn-search,
+.btn-search {
+  height: 32px !important;
+  padding: 5px 16px !important;
+  font-size: 13px !important;
+}
+
+/* Dòng gợi ý từ khóa: Gọn 1 hàng, giảm margin */
+.search-hot-keywords {
+  margin-top: 3px !important;
+  font-size: 11.5px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  gap: 6px !important;
+  line-height: 1.3 !important;
+}
+
+/* 2. SỬA LOGO FOOTER & ICON THANH TOÁN BỊ LỖI [▯] */
+
+/* Logo Footer: Chữ Tech trắng, Zone đỏ đô */
+.tz-footer .tz-logo div {
+  color: #ffffff !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+}
+
+.tz-footer .tz-logo .accent {
+  color: #ffffff !important;
+}
+
+.tz-footer .tz-logo-chip {
+  background: #991b1b !important;
+  color: #ffffff !important;
+}
+
+/* Badge thanh toán: Chữ thuần túy KHÔNG icon (fix lỗi ô vuông [▯]) */
+.tz-payment-pills .tz-pay-tag,
+.tz-pay-tag {
+  background: #1e2330 !important;
+  border: 1px solid #2e3648 !important;
+  color: #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Ẩn triệt để mọi icon trong badge thanh toán tránh [▯] */
+.tz-payment-pills .tz-pay-tag i,
+.tz-payment-pills .tz-pay-tag svg,
+.tz-pay-tag i,
+.tz-pay-tag svg {
+  display: none !important;
+}
+
+.tz-payment-pills .tz-pay-tag:hover,
+.tz-pay-tag:hover {
+  background: #283042 !important;
+  border-color: #3d4a66 !important;
+  color: #ffffff !important;
+}
+
+/* Icon hotline Cột 1: Chuyển sang đỏ đô (#991b1b) hoặc xám bạc */
+.tz-hotline-row i,
+.footer-hotline-row i,
+.hotline-item i {
+  color: #991b1b !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Số hotline đổi sang vàng ấm */
+.tz-hotline-row strong,
+.footer-hotline-row strong,
+.hotline-item strong {
+  color: #fbbf24 !important;
+  font-weight: 700 !important;
+}
+
+/* 3. HISTORY.HTML: SHIPPING STRIP XÁM SÁNG THAY VÌ XANH LÁ CHÓI */
+.shopee-shipping-strip {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 3px solid #94a3b8 !important;
+  color: #334155 !important;
+}
+
+.shopee-shipping-strip:hover {
+  background-color: #f1f5f9 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.shopee-shipping-strip .strip-main-text {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+/* Đổi tên SPX Express sang đỏ đô */
+.shopee-shipping-strip .strip-main-text {
+  color: #991b1b !important;
+}
+
+.shopee-shipping-strip .strip-sub-text {
+  color: #64748b !important;
+}
+
+.shopee-shipping-strip .strip-view-link {
+  color: #64748b !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+}
+
+.shopee-shipping-strip .strip-view-link:hover {
+  color: #991b1b !important;
+}
+
+/* Strip đơn đã hủy */
+.shopee-shipping-strip.cancelled {
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  border-left: 3px solid #ef4444 !important;
+  cursor: default !important;
+}
+
+/* Bỏ icon nhãn dán bên cạnh "Phân loại" */
+.shopee-variant-badge i,
+.shopee-variant-icon,
+.shopee-variant-tag i,
+.order-item-variant i {
+  display: none !important;
+}
+
+/* Giá sản phẩm trong đơn hàng đổi sang đỏ đô */
+.shopee-order-body [style*="color: #ee4d2d"],
+.shopee-order-body [style*="color:#ee4d2d"] {
+  color: #991b1b !important;
+}
+
+/* 4. VOUCHERS.HTML: BỎ KHUNG NÉT ĐỨT CAM, CHUẨN HÓA E-COMMERCE */
+
+/* Hero card: Bỏ gradient cam, chuyển sang trắng tinh viền mảnh */
+.voucher-hero-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+  padding: 24px !important;
+}
+
+/* Ô nhập mã voucher: Bỏ hoàn toàn viền nét đứt cam vàng */
+.voucher-input-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+}
+
+.voucher-input-wrapper input:focus {
+  border-color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.12) !important;
+}
+
+.voucher-input-wrapper i {
+  color: #991b1b !important;
+}
+
+/* Nút "Lưu vào ví": Nền đỏ đô */
+.btn-save-voucher {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.3) !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+.btn-save-voucher:hover {
+  background: #7f1d1d !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Tabs voucher: Active đỏ đô chữ trắng, inactive trắng viền xám */
+.v-tab-btn {
+  background: #ffffff !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  flex: unset !important;
+}
+
+.v-tab-btn:hover {
+  color: #991b1b !important;
+  border-color: #991b1b !important;
+}
+
+.v-tab-btn.active {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.v-tab-btn.active::after {
+  display: none !important;
+}
+
+/* Thanh tab nav bỏ viền cũ */
+.voucher-tabs-nav {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 8px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+/* Breadcrumb links đổi sang đỏ đô */
+.vouchers-page-container a[href="index.html"],
+.breadcrumb a[href="index.html"] {
+  color: #991b1b !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 91: ĐỒNG BỘ TOÀN DIỆN 8 ĐIỂM GIAO DIỆN TECHZONE
+   1. ĐỒNG NHẤT LOGO TRẮNG TINH & CHIP ĐỎ ĐÔ HEADER + FOOTER
+   2. SỬA MÀU CHỮ TRẮNG CHO TAB ACTIVE QUẢN LÝ ĐƠN HÀNG (HISTORY.HTML)
+   3. CHUẨN HÓA TIẾN TRÌNH VẬN CHUYỂN: MỐC CŨ XÁM (#64748b), MỐC HIỆN TẠI ĐỎ ĐÔ (#991b1b)
+   4. LOADING CHUYỂN TOÀN BỘ SANG MÀU ĐEN (#0f1115)
+   5. NÚT THÊM VÀO GIỎ HÀNG KHỐI SP TƯƠNG TỰ & LINK XEM TẤT CẢ -> ĐỎ ĐÔ
+   6. ICON HOTLINE TOPBAR -> ĐỎ ĐÔ (#991b1b)
+   7. NÚT "KHÁM PHÁ SẢN PHẨM NGAY" TRANG KHO VOUCHER RÕ RÀNG, CHỮ TRẮNG NỀN ĐỎ ĐÔ
+   8. MENU DANH MỤC & MENU KHU VỰC: LOẠI BỎ TOÀN BỘ MÀU XANH DƯƠNG
+   ========================================================================== */
+
+/* --- 1. ĐỒNG NHẤT LOGO TECHZONE TRÊN TOÀN BỘ CÁC TRANG & FOOTER --- */
+.tz-logo,
+.tz-logo div,
+.tz-logo span,
+.tz-logo .accent,
+.tz-logo span.accent,
+.tz-footer .tz-logo,
+.tz-footer .tz-logo div,
+.tz-footer .tz-logo span,
+.tz-footer .tz-logo .accent,
+.tz-footer .tz-logo span.accent {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+}
+
+.tz-logo-chip,
+.tz-footer .tz-logo-chip {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.35) !important;
+}
+
+.tz-logo-chip svg,
+.tz-footer .tz-logo-chip svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* --- 2. SỬA LỖI MÀU CHỮ TAB TRANG QUẢN LÝ ĐƠN HÀNG (history.html) --- */
+.shopee-tabs-nav .shopee-tab-item.active,
+.shopee-tabs-nav button.shopee-tab-item.active,
+.shopee-tab-item.active,
+button.shopee-tab-item.active {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.shopee-tabs-nav .shopee-tab-item.active::after,
+.shopee-tab-item.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+.shopee-tabs-nav .shopee-tab-item,
+.shopee-tabs-nav button.shopee-tab-item,
+.shopee-tab-item,
+button.shopee-tab-item {
+  color: #475569 !important;
+  background: transparent !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.shopee-tabs-nav .shopee-tab-item:hover,
+.shopee-tabs-nav button.shopee-tab-item:hover,
+.shopee-tab-item:hover,
+button.shopee-tab-item:hover {
+  color: #991b1b !important;
+  background: rgba(153, 27, 27, 0.06) !important;
+}
+
+/* --- 3. CHUẨN HÓA TIẾN TRÌNH ĐƠN HÀNG (POPUP XEM NHANH & TRANG TRACKING-DETAIL.HTML) --- */
+/* Đường nối tiến trình ngang & dọc */
+.order-timeline::before,
+.spx-vertical-timeline::before,
+.spx-vertical-timeline.modal-vert::before {
+  background-color: #e2e8f0 !important;
+}
+
+.order-timeline::after {
+  background: #64748b !important;
+}
+
+/* Mốc ĐÃ HOÀN THÀNH: Icon tròn và đường nối chuyển sang màu xám trung tính */
+.timeline-step.completed .timeline-node,
+.order-timeline.modal-mode .timeline-step.completed .timeline-dot,
+.order-timeline.modal-mode .timeline-step.active:not(.current) .timeline-dot,
+.spx-vert-step:not(.current) .spx-vert-dot,
+.spx-v-checkpoint:not(.latest)::before {
+  background: #64748b !important;
+  color: #ffffff !important;
+  border-color: #64748b !important;
+  box-shadow: none !important;
+}
+
+.timeline-step.completed .timeline-step-name,
+.timeline-step.completed .timeline-step-time,
+.timeline-step.completed i,
+.order-timeline.modal-mode .timeline-step.completed .timeline-dot i,
+.spx-vert-step:not(.current) .spx-vert-desc,
+.spx-vert-step:not(.current) .spx-vert-time,
+.spx-v-checkpoint:not(.latest) .spx-v-desc,
+.spx-v-checkpoint:not(.latest) .spx-v-time {
+  color: #64748b !important;
+}
+
+/* Mốc ĐANG XỬ LÝ (Hiện tại): Sử dụng màu đỏ đô đậm */
+.timeline-step.active .timeline-node,
+.timeline-step.current .timeline-dot,
+.order-timeline.modal-mode .timeline-step.current .timeline-dot,
+.spx-v-checkpoint.latest::before,
+.spx-vert-step.current .spx-vert-dot {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.2) !important;
+  animation: pulseGlowRed 1.8s infinite ease-out !important;
+}
+
+@keyframes pulseGlowRed {
+  0% {
+    box-shadow: 0 0 0 0 rgba(153, 27, 27, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(153, 27, 27, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(153, 27, 27, 0);
+  }
+}
+
+.timeline-step.active .timeline-step-name,
+.spx-v-checkpoint.latest .spx-v-desc,
+.spx-vert-step.current .spx-vert-desc {
+  color: #991b1b !important;
+  font-weight: 800 !important;
+}
+
+.spx-v-tag {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+/* --- 4. CHUYỂN MÀU LOADING TOÀN TRANG SANG ĐEN --- */
+#pageLoader .loader-spinner,
+.page-loader-overlay .loader-spinner,
+.loader-spinner {
+  border: 3px solid #e2e8f0 !important;
+  border-top-color: #0f1115 !important;
+  border-right-color: transparent !important;
+}
+
+#pageLoader .loader-dot,
+.page-loader-overlay .loader-dot,
+.loader-dot {
+  background: #0f1115 !important;
+}
+
+#pageLoader .loader-brand,
+.page-loader-overlay .loader-brand,
+.loader-brand {
+  color: #0f1115 !important;
+}
+
+/* --- 5. TRANG CHI TIẾT SẢN PHẨM: SẢN PHẨM TƯƠNG TỰ BẠN CÓ THỂ THÍCH --- */
+#tz-related-products-grid .btn-card-add,
+.tz-related-grid .btn-card-add,
+#tz-related-products-grid .btn-card-add-primary,
+.tz-related-grid .btn-card-add-primary,
+.catalog-grid.tz-related-grid .btn-card-add {
+  background: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  color: #ffffff !important;
+}
+
+#tz-related-products-grid .btn-card-add:hover,
+.tz-related-grid .btn-card-add:hover,
+#tz-related-products-grid .btn-card-add-primary:hover,
+.tz-related-grid .btn-card-add-primary:hover,
+.catalog-grid.tz-related-grid .btn-card-add:hover {
+  background: #7f1d1d !important;
+  border-color: #601414 !important;
+}
+
+.view-all-link,
+.tz-similar-section .view-all-link,
+a.view-all-link {
+  color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.view-all-link:hover,
+.tz-similar-section .view-all-link:hover,
+a.view-all-link:hover {
+  color: #7f1d1d !important;
+  text-decoration: underline !important;
+}
+
+/* --- 6. TOPBAR HEADER: ICON HOTLINE ĐỔI SANG ĐỎ ĐÔ --- */
+.topbar-hotline i,
+.tz-topbar .topbar-hotline i,
+.header-topbar .topbar-hotline i,
+.top-bar .topbar-hotline i {
+  color: #991b1b !important;
+}
+
+/* --- 7. TRANG KHO VOUCHER: NÚT KHÁM PHÁ SẢN PHẨM KHI DANH SÁCH TRỐNG --- */
+.empty-vouchers-box a,
+.empty-vouchers-box .btn-voucher-explore,
+a.btn-voucher-explore {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 2rem !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: 0 2px 10px rgba(153, 27, 27, 0.25) !important;
+}
+
+.empty-vouchers-box a:hover,
+.empty-vouchers-box .btn-voucher-explore:hover,
+a.btn-voucher-explore:hover {
+  background: #7f1d1d !important;
+  color: #ffffff !important;
+}
+
+.empty-vouchers-box a i,
+a.btn-voucher-explore i {
+  color: #ffffff !important;
+}
+
+/* --- 8. MENU XỔ XUỐNG DANH MỤC & MENU KHU VỰC NHẬN HÀNG --- */
+/* Icon trong menu danh mục */
+.tz-cat-icon {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+.tz-cat-link:hover .tz-cat-icon {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fee2e2 !important;
+  box-shadow: none !important;
+}
+
+.tz-cat-link:hover .tz-cat-title {
+  color: #991b1b !important;
+}
+
+.tz-cat-link:hover .tz-cat-chevron {
+  color: #991b1b !important;
+}
+
+/* Dòng link dưới cùng: Xem toàn bộ 500+ sản phẩm */
+.tz-category-dropdown-footer a,
+.tz-category-dropdown-footer a i {
+  color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.tz-category-dropdown-footer a:hover {
+  color: #7f1d1d !important;
+  text-decoration: underline !important;
+}
+
+/* Menu chọn khu vực: Dấu tích chọn và item đang active */
+.tz-location-item.active,
+.location-item.active {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+.tz-location-item.active .tz-city-name,
+.location-item.active .tz-city-name {
+  color: #991b1b !important;
+}
+
+.tz-location-item.active .tz-city-name i,
+.location-item.active .tz-city-name i {
+  color: #991b1b !important;
+}
+
+.tz-city-check,
+.tz-location-item .tz-city-check,
+.tz-location-item.active .tz-city-check,
+.location-item.active .tz-city-check {
+  color: #991b1b !important;
+}
+
+
+/* ==========================================================================
+   PROMPT 92: SỬA DỨT ĐIỂM 7 LỖI GIAO DIỆN (POPUP VOUCHER, CHECKOUT, LOGIN/REGISTER,
+   FLASHSALE, FOOTER COPYRIGHT, TIMELINE ICONS & RESPONSIVE MOBILE FIRST)
+   ========================================================================== */
+
+/* --- 1. SỬA LỖI POPUP VOUCHER & HIGHLIGHT NÚT CHỌN (Hình 1) --- */
+.btn-select-voucher-link,
+button.btn-select-voucher-link,
+#btn-open-voucher-modal {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #475569 !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+.btn-select-voucher-link:hover,
+button.btn-select-voucher-link:hover,
+#btn-open-voucher-modal:hover {
+  background: transparent !important;
+  color: #1e293b !important;
+  text-decoration: underline !important;
+  box-shadow: none !important;
+}
+
+.btn-select-voucher-link i,
+#btn-open-voucher-modal i {
+  color: #64748b !important;
+  font-size: 0.88rem !important;
+}
+
+#tz-voucher-modal.tz-modal-overlay,
+#tz-voucher-modal,
+#voucherModal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  z-index: 9999999 !important;
+  pointer-events: auto !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#tz-voucher-modal.active,
+#tz-voucher-modal.show,
+#voucherModal.active,
+#voucherModal.show {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#tz-voucher-modal .tz-voucher-modal-card,
+#voucherModal .tz-voucher-modal-card,
+.tz-voucher-modal-card {
+  position: relative !important;
+  z-index: 10000000 !important;
+  pointer-events: auto !important;
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  width: 95% !important;
+  max-width: 520px !important;
+  max-height: 85vh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* --- 2. ĐỒNG BỘ THANH TOÁN (Hình 2) --- */
+.tz-radio-card:has(input:checked),
+.tz-radio-card.selected {
+  background-color: #fef2f2 !important;
+  border: 1.5px solid #991b1b !important;
+}
+
+.tz-radio-card input[type="radio"] {
+  accent-color: #991b1b !important;
+}
+
+.tz-radio-card:has(input:checked) input[type="radio"] {
+  accent-color: #991b1b !important;
+}
+
+.tz-radio-card .text-success,
+.tz-radio-card .text-primary {
+  color: #991b1b !important;
+}
+
+/* --- 3. KHỬ MÀU XANH & FIX ICON TẠI TRANG ĐĂNG NHẬP / ĐĂNG KÝ (Hình 3 & 4) --- */
+.banner-brand .logo-mini,
+.banner-brand .logo-mini span,
+.logo-mini,
+.logo-mini span,
+.tz-auth-header .logo-mini,
+.tz-auth-header .logo-mini span {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+.logo-mini .chip {
+  background: #991b1b !important;
+  color: #ffffff !important;
+}
+
+.tz-auth-header div[style*="background"],
+.tz-auth-step-badge {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #991b1b !important;
+}
+
+.tz-auth-form input:focus,
+.tz-auth-card input:focus,
+.tz-input:focus,
+.tz-input-with-icon input:focus,
+.tz-password-wrapper input:focus,
+.tz-form-control:focus {
+  border-color: #991b1b !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.15) !important;
+  outline: none !important;
+}
+
+.tz-auth-footer a,
+.tz-terms-checkbox a,
+a[onclick*="Quên mật khẩu"],
+.forgot-password-link {
+  color: #991b1b !important;
+  font-weight: 600 !important;
+}
+
+.tz-auth-footer a:hover,
+.tz-terms-checkbox a:hover {
+  text-decoration: underline !important;
+  color: #7f1d1d !important;
+}
+
+/* --- 4. CHUẨN HÓA FLASHSALE (Hình 5) --- */
+.flashsale-badge-live,
+#flashsale-status-badge {
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border: 1px solid #7f1d1d !important;
+  font-weight: 800 !important;
+}
+
+.tz-sold-bar {
+  margin-top: auto !important;
+  margin-bottom: 0.75rem !important;
+  background-color: #fee2e2 !important;
+  border-radius: 9999px !important;
+  height: 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.tz-sold-bar .fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  background: #991b1b !important;
+  border-radius: 9999px !important;
+  z-index: 1 !important;
+}
+
+.tz-sold-bar .label {
+  position: relative !important;
+  z-index: 2 !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+/* --- 5. FOOTER & BẢN QUYỀN (Hình 6) --- */
+.tz-footer .tz-logo,
+.tz-footer .tz-logo div,
+.tz-footer .tz-logo span,
+.tz-footer .tz-logo .accent {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.footer-bottom-bar {
+  padding-left: 90px !important;
+}
+
+/* --- 6. TIẾN TRÌNH ĐƠN HÀNG (POPUP & TRACKING-DETAIL - Hình 7) --- */
+.timeline-step.completed .timeline-node,
+.order-timeline.modal-mode .timeline-step.completed .timeline-dot,
+.order-timeline.modal-mode .timeline-step.active:not(.current) .timeline-dot,
+.spx-vert-step:not(.current) .spx-vert-dot {
+  background-color: #64748b !important;
+  border-color: #64748b !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.timeline-step.completed .timeline-node i,
+.order-timeline.modal-mode .timeline-step.completed .timeline-dot i,
+.order-timeline.modal-mode .timeline-step.active:not(.current) .timeline-dot i {
+  color: #ffffff !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.order-timeline::before,
+.spx-vertical-timeline::before,
+.spx-vertical-timeline.modal-vert::before {
+  background-color: #cbd5e1 !important;
+}
+
+.order-timeline::after {
+  background-color: #64748b !important;
+}
+
+.timeline-step.active .timeline-node,
+.timeline-step.current .timeline-dot,
+.order-timeline.modal-mode .timeline-step.current .timeline-dot,
+.spx-v-checkpoint.latest::before,
+.spx-vert-step.current .spx-vert-dot {
+  background-color: #991b1b !important;
+  border-color: #991b1b !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.25) !important;
+}
+
+.timeline-step.active .timeline-node i,
+.timeline-step.current .timeline-dot i,
+.order-timeline.modal-mode .timeline-step.current .timeline-dot i {
+  color: #ffffff !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.order-timeline.modal-mode .timeline-dot {
+  width: 18px !important;
+  height: 18px !important;
+  left: -28px !important;
+  top: 1px !important;
+}
+
+.order-timeline.modal-mode .timeline-dot i {
+  font-size: 9px !important;
+}
+
+/* --- 7. TỐI ƯU RESPONSIVE MOBILE FIRST (Hình 8, 9, 10) --- */
+@media (max-width: 768px) {
+  .tz-header,
+  .tz-main-header,
+  .header-main {
+    padding: 6px 10px !important;
+  }
+  
+  .main-header-row {
+    padding: 0 !important;
+    gap: 6px 0 !important;
+  }
+  
+  .search-hot-keywords {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+  }
+  
+  .tz-search-wrapper {
+    margin: 4px 0 0 0 !important;
+    width: 100% !important;
+  }
+  
+  .tz-search-bar {
+    height: 36px !important;
+    max-height: 36px !important;
+  }
+  
+  .tz-search-bar input {
+    height: 36px !important;
+    font-size: 0.82rem !important;
+  }
+  
+  .tz-btn-search,
+  button.tz-btn-search {
+    height: 36px !important;
+    background: #991b1b !important;
+    color: #ffffff !important;
+    padding: 0 12px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .tz-cart-btn,
+  .header-cart-btn,
+  .tz-nav-btn.tz-cart-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    border-radius: 50% !important;
+    background: #991b1b !important;
+    border: 1px solid #7f1d1d !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    box-shadow: 0 2px 6px rgba(153, 27, 27, 0.3) !important;
+  }
+  
+  .tz-cart-btn .meta,
+  .header-cart-btn .meta,
+  .tz-nav-btn.tz-cart-btn .meta {
+    display: none !important;
+  }
+  
+  .tz-cart-btn i,
+  .header-cart-btn i {
+    font-size: 1rem !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+  }
+  
+  .tz-cart-badge {
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    border-radius: 9999px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 3px !important;
+  }
+  
+  .btn-card-add,
+  .btn-card-add-primary,
+  .tz-card-actions button,
+  button.btn-card-add {
+    background: #991b1b !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+  }
+  
+  .footer-bottom-bar {
+    padding-left: 70px !important;
+    padding-bottom: 85px !important;
+  }
+  
+  .tz-profile-page {
+    padding: 1rem 0 !important;
+  }
+  
+  .tz-profile-page .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .tz-profile-card {
+    padding: 14px 12px !important;
+    border-radius: 12px !important;
+    margin-bottom: 1rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  .tz-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    width: 100% !important;
+  }
+  
+  .tz-form-group {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .tz-form-control,
+  .tz-input,
+  #tz-profile-form input,
+  #tz-profile-form select {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .tz-btn-save-profile,
+  button.tz-btn-save-profile {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    font-size: 0.95rem !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .tz-profile-main,
+  .tz-profile-content,
+  .tz-profile-layout {
+    padding-bottom: 60px !important;
+  }
+  
+  .tz-floating-support {
+    bottom: 18px !important;
+    left: 14px !important;
+    transform: scale(0.9) !important;
+    transform-origin: bottom left !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 93: CHUẨN HÓA FLASHSALE FULL ĐỎ, ICON CHECKOUT XÁM, FOOTER COPYRIGHT
+   DẠT TRÁI, LOGO LOGIN ĐEN TUYỀN / REGISTER TRẮNG & TRIỆT TIÊU NÚT XANH MOBILE
+   ========================================================================== */
+
+/* --- 1. CHUẨN HÓA THANH FLASHSALE "ĐÃ BÁN..." --- */
+.flashsale-cards-grid .product-card,
+.flashsale-cards-grid .tz-product-card,
+.tz-flashsale-item {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.flashsale-cards-grid .product-card .flash-sale-progress,
+.flashsale-cards-grid .product-card .tz-sold-bar,
+.flashsale-cards-grid .tz-product-card .flash-sale-progress,
+.flashsale-cards-grid .tz-product-card .tz-sold-bar,
+.tz-flashsale-item .flash-sale-progress,
+.tz-flashsale-item .tz-sold-bar,
+.flash-sale-progress,
+.tz-sold-bar {
+  margin-top: auto !important;
+  margin-bottom: 10px !important;
+  width: 100% !important;
+  height: 20px !important;
+  background: #991b1b !important;
+  background-color: #991b1b !important;
+  border-radius: 9999px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.flash-sale-progress .fill,
+.tz-sold-bar .fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  background: #991b1b !important;
+  background-color: #991b1b !important;
+  border-radius: 9999px !important;
+  z-index: 1 !important;
+}
+
+.flash-sale-progress .label,
+.tz-sold-bar .label,
+.tz-sold-bar span,
+.flash-sale-progress span {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  text-align: center !important;
+  line-height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  text-shadow: none !important;
+}
+
+.flash-sale-progress .label i,
+.tz-sold-bar .label i {
+  color: #ffffff !important;
+  font-size: 11px !important;
+  margin-right: 2px !important;
+}
+
+/* --- 2. ĐỒNG BỘ ICON MỤC VẬN CHUYỂN & THANH TOÁN (Trang checkout.html) --- */
+.tz-radio-card-meta h6 i,
+.tz-radio-card h6 i,
+.tz-radio-card i,
+.tz-radio-options .tz-radio-card i,
+.tz-radio-card [class*="fa-"] {
+  color: #64748b !important;
+  fill: #64748b !important;
+  stroke: #64748b !important;
+}
+
+/* --- 3. DÒNG BẢN QUYỀN FOOTER DẠT SANG GÓC TRÁI --- */
+.footer-bottom-bar,
+.container.footer-bottom-bar,
+.tz-footer .footer-bottom-bar {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-left: 95px !important;
+  padding-right: 32px !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  background: #0a0c10 !important;
+  border-top: 1px solid #161a23 !important;
+}
+
+.footer-copyright-left {
+  text-align: left !important;
+  color: #cbd5e1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  margin-right: auto !important;
+}
+
+.footer-meta-right {
+  text-align: right !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-bar,
+  .container.footer-bottom-bar,
+  .tz-footer .footer-bottom-bar {
+    padding-left: 70px !important;
+    padding-right: 16px !important;
+    padding-bottom: 85px !important;
+  }
+}
+
+/* --- 4. SỬA LỖI LOGO TRANG ĐĂNG NHẬP & ĐĂNG KÝ (login.html & register.html) --- */
+/* Trang Đăng nhập (login.html) - Card nền trắng */
+.tz-auth-card .logo-mini,
+.tz-auth-card .tz-auth-header .logo-mini,
+.tz-auth-card .logo-mini .brand-text,
+.tz-auth-card .logo-mini span:not(.chip),
+.tz-auth-logo-white-card span:not(.chip) {
+  color: #0f172a !important;
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+}
+
+.tz-auth-card .logo-mini .chip,
+.tz-auth-logo-white-card .chip {
+  width: 36px !important;
+  height: 36px !important;
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.1rem !important;
+}
+
+/* Trang Đăng ký (register.html) - Banner cột trái nền tối than chì */
+.tz-auth-banner-col .logo-mini,
+.tz-auth-banner-col .logo-mini .brand-text,
+.tz-auth-banner-col .logo-mini span:not(.chip),
+.banner-brand .logo-mini,
+.banner-brand .logo-mini .brand-text,
+.banner-brand .logo-mini span:not(.chip) {
+  color: #ffffff !important;
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+}
+
+.tz-auth-banner-col .logo-mini .chip,
+.banner-brand .logo-mini .chip {
+  width: 36px !important;
+  height: 36px !important;
+  background: #991b1b !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.1rem !important;
+}
+
+/* --- 5. KHẮC PHỤC TRIỆT ĐỂ NÚT "THÊM VÀO GIỎ HÀNG" TRÊN MOBILE --- */
+.product-card .card-actions button,
+.product-card .card-action-btns button,
+.tz-product-card .tz-card-actions button,
+.tz-flashsale-item .card-actions button,
+.tz-flashsale-item .tz-card-actions button,
+.flashsale-cards-grid .product-card .card-actions button,
+.flashsale-cards-grid .tz-card-actions button,
+.flashsale-cards-grid button,
+.btn-card-add,
+.btn-card-add-primary,
+button.btn-card-add,
+button.btn-card-add-primary,
+.card-actions button,
+.tz-card-actions button,
+.tz-single-action-row button,
+.btn-card-buy,
+button.btn-card-buy,
+.btn-pd-add-cart,
+button.btn-pd-add-cart,
+.btn-add-to-cart,
+button.btn-add-to-cart {
+  background: #991b1b !important;
+  background-color: #991b1b !important;
+  border: 1px solid #7f1d1d !important;
+  border-color: #7f1d1d !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(153, 27, 27, 0.25) !important;
+}
+
+.product-card .card-actions button:hover,
+.product-card .card-action-btns button:hover,
+.tz-product-card .tz-card-actions button:hover,
+.tz-flashsale-item .card-actions button:hover,
+.flashsale-cards-grid .product-card .card-actions button:hover,
+.btn-card-add:hover,
+.btn-card-add-primary:hover,
+button.btn-card-add:hover,
+button.btn-card-add-primary:hover {
+  background: #7f1d1d !important;
+  background-color: #7f1d1d !important;
+  border-color: #601414 !important;
+  color: #ffffff !important;
+}
+
+.product-card .card-actions button i,
+.tz-product-card .tz-card-actions button i,
+.btn-card-add i,
+.btn-card-add-primary i,
+button.btn-card-add i {
+  color: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+  .product-card .card-actions button,
+  .product-card .card-action-btns button,
+  .tz-product-card .tz-card-actions button,
+  .tz-flashsale-item .card-actions button,
+  .tz-flashsale-item .tz-card-actions button,
+  .flashsale-cards-grid .product-card .card-actions button,
+  .flashsale-cards-grid .tz-card-actions button,
+  .flashsale-cards-grid button,
+  .btn-card-add,
+  .btn-card-add-primary,
+  button.btn-card-add,
+  button.btn-card-add-primary,
+  .card-actions button,
+  .tz-card-actions button,
+  .tz-single-action-row button {
+    background: #991b1b !important;
+    background-color: #991b1b !important;
+    border: 1px solid #7f1d1d !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-card .card-actions button,
+  .product-card .card-action-btns button,
+  .tz-product-card .tz-card-actions button,
+  .tz-flashsale-item .card-actions button,
+  .tz-flashsale-item .tz-card-actions button,
+  .flashsale-cards-grid .product-card .card-actions button,
+  .flashsale-cards-grid .tz-card-actions button,
+  .flashsale-cards-grid button,
+  .btn-card-add,
+  .btn-card-add-primary,
+  button.btn-card-add,
+  button.btn-card-add-primary,
+  .card-actions button,
+  .tz-card-actions button,
+  .tz-single-action-row button {
+    background: #991b1b !important;
+    background-color: #991b1b !important;
+    border: 1px solid #7f1d1d !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-card .card-actions button,
+  .product-card .card-action-btns button,
+  .tz-product-card .tz-card-actions button,
+  .tz-flashsale-item .card-actions button,
+  .tz-flashsale-item .tz-card-actions button,
+  .flashsale-cards-grid .product-card .card-actions button,
+  .flashsale-cards-grid .tz-card-actions button,
+  .flashsale-cards-grid button,
+  .btn-card-add,
+  .btn-card-add-primary,
+  button.btn-card-add,
+  button.btn-card-add-primary,
+  .card-actions button,
+  .tz-card-actions button,
+  .tz-single-action-row button {
+    background: #991b1b !important;
+    background-color: #991b1b !important;
+    border: 1px solid #7f1d1d !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 94: RESPONSIVE MOBILE TWEAKS (@media (max-width: 768px))
+   - 1. Topbar: Ẩn "Hệ thống 86 chi nhánh" & "Tin tức TechZone", chỉ giữ lại Location & Hotline tràn đều
+   - 1. Thanh tìm kiếm: Chiều cao 38px, nút Tìm kiếm dạng viên thuốc (border-radius: 20px), padding 0 12px
+   - 2. Bảng Flashsale: Thanh "Đã bán X/100 suất" cao 20px, bo góc 12px, chữ trắng đậm 1 dòng không ngắt dòng
+   - 3. Trang Hồ sơ cá nhân: Padding 2 bên 16px, inputs 100% bo góc 8px, giới tính dịch phải 60px và cách đáy 80px né nút CSKH
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. TOPBAR MOBILE */
+  .tz-topbar .topbar-hide-mobile,
+  .tz-topbar .topbar-divider,
+  .topbar-hide-mobile,
+  .topbar-divider,
+  .topbar-left a.topbar-link,
+  .topbar-left a.topbar-hide-mobile,
+  .topbar-left .topbar-divider,
+  .topbar-left .topbar-link {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .tz-topbar {
+    width: 100% !important;
+    overflow-x: hidden !important;
+    padding: 4px 0 !important;
+  }
+
+  .tz-topbar-inner,
+  .tz-topbar .container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .topbar-left {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .topbar-right {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .topbar-hotline {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 1. KHUNG TÌM KIẾM MOBILE */
+  .tz-search-wrapper,
+  .search-bar-wrapper,
+  .header-search {
+    width: 100% !important;
+    margin: 4px 0 0 0 !important;
+  }
+
+  .tz-search-bar,
+  .search-bar {
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    border-radius: 25px !important;
+    padding: 3px 4px 3px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  .tz-search-bar input,
+  .search-bar input,
+  #header-global-search {
+    height: 32px !important;
+    font-size: 12.5px !important;
+    padding: 0 6px !important;
+  }
+
+  .tz-btn-search,
+  .btn-search,
+  button.tz-btn-search,
+  button.btn-search,
+  .tz-search-bar button,
+  .search-bar button {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    padding: 0 12px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 20px !important;
+    background: #991b1b !important;
+    color: #ffffff !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+  }
+
+  /* 2. BẢNG FLASHSALE TRÊN MOBILE */
+  .flash-sale-progress,
+  .tz-sold-bar,
+  .flashsale-cards-grid .product-card .tz-sold-bar,
+  .tz-flashsale-item .tz-sold-bar,
+  .product-card .tz-sold-bar {
+    min-height: 20px !important;
+    height: 20px !important;
+    border-radius: 12px !important;
+    background: #991b1b !important;
+    margin-top: auto !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+  }
+
+  .flash-sale-progress .fill,
+  .tz-sold-bar .fill {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    background: #991b1b !important;
+    border-radius: 12px !important;
+    z-index: 1 !important;
+  }
+
+  .flash-sale-progress .label,
+  .tz-sold-bar .label,
+  .tz-sold-bar span,
+  .flash-sale-progress span {
+    position: relative !important;
+    z-index: 2 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    line-height: 20px !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    padding: 0 4px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  .flash-sale-progress .label i,
+  .tz-sold-bar .label i,
+  .tz-sold-bar i {
+    font-size: 10px !important;
+    color: #ffffff !important;
+    margin-right: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 3. TRANG HỒ SƠ CÁ NHÂN TRÊN MOBILE */
+  .tz-profile-page {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-page .container,
+  .tz-profile-layout,
+  .tz-profile-main,
+  .tz-profile-card,
+  #section-profile-info {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-card {
+    padding: 18px 16px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    width: 100% !important;
+  }
+
+  .tz-form-group {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .tz-form-control,
+  .tz-input,
+  #tz-profile-form input,
+  #tz-profile-form select {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 8px !important;
+    height: 42px !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+
+  .tz-gender-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    padding-left: 60px !important;
+    padding-bottom: 80px !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-gender-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 95: RESPONSIVE PROFILE PAGE ON MOBILE (@media (max-width: 768px))
+   - 1. Dải 3 thẻ thống kê (.tz-benefit-grid / .smember-stat-grid): Chuyển sang lưới 1 cột, không tràn lề
+   - 2. Container & Card Form: width/max-width 100%, padding: 16px 12px, mô tả 12px không bị cắt chữ
+   - 3. Nút tròn CSKH 42px x 42px (bottom: 20px; left: 16px;), Giới tính padding-left: 55px, Đáy trang padding-bottom: 80px
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. KHẮC PHỤC DẢI 3 THẺ THỐNG KÊ BỊ TRÀN VIỀN */
+  .tz-benefit-grid,
+  .smember-stat-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 1.25rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-benefit-grid .benefit-card,
+  .smember-stat-grid .benefit-card,
+  .benefit-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .benefit-card .benefit-icon,
+  .benefit-icon.points,
+  .benefit-icon.spending,
+  .benefit-icon.orders {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 8px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.05rem !important;
+    color: #991b1b !important;
+    flex-shrink: 0 !important;
+  }
+
+  .benefit-card .benefit-data {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .benefit-data .benefit-val,
+  #profile-reward-points,
+  #profile-total-spent,
+  #profile-orders-count {
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  .benefit-data .benefit-val .unit {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    margin-left: 4px !important;
+  }
+
+  .benefit-data .benefit-label {
+    font-size: 12px !important;
+    color: #64748b !important;
+    white-space: nowrap !important;
+    line-height: 1.3 !important;
+    margin-top: 2px !important;
+  }
+
+  /* 2. CĂN CHỈNH CONTAINER VÀ CARD FORM KHÔNG BỊ CẮT CHỮ */
+  .tz-profile-page,
+  .tz-profile-layout,
+  .tz-profile-content,
+  .tz-profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-page {
+    padding: 12px 12px 80px 12px !important;
+  }
+
+  .tz-profile-page .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .tz-profile-sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .tz-profile-card {
+    padding: 16px 12px !important;
+    border-radius: 12px !important;
+    margin-bottom: 1.25rem !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .tz-profile-card-header p,
+  .tz-profile-card p {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    color: #64748b !important;
+    margin: 4px 0 14px 0 !important;
+  }
+
+  /* 3. XỬ LÝ NÚT TRÒN CSKH ĐÈ LÊN THỐNG KÊ & CHỮ GIỚI TÍNH */
+  .tz-floating-support,
+  #tz-floating-support {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 16px !important;
+    z-index: 9990 !important;
+  }
+
+  .tz-support-trigger-btn,
+  #btn-toggle-support,
+  .tz-floating-support button {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    font-size: 18px !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
+  }
+
+  .tz-support-trigger-btn i,
+  #btn-toggle-support i {
+    font-size: 18px !important;
+  }
+
+  /* Khối Giới tính: né nút CSKH */
+  .tz-gender-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 18px !important;
+    padding-left: 55px !important;
+    margin-bottom: 24px !important;
+    box-sizing: border-box !important;
+    flex-wrap: wrap !important;
+  }
+
+  .tz-gender-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+    font-size: 13.5px !important;
+    color: #334155 !important;
+  }
+
+  /* Đáy trang chống che khuất nội dung */
+  .tz-profile-page {
+    padding-bottom: 80px !important;
+  }
+}
+
+
+/* ==========================================================================
+   PROMPT 96: THU GỌN KHOẢNG CÁCH GIỚI TÍNH & SỔ ĐỊA CHỈ TRÊN MOBILE (@media (max-width: 768px))
+   - Khối Giới tính (.tz-gender-group): margin-bottom 4px - 6px, padding trên dưới 4px, padding-left 55px né nút CSKH
+   - Khối ngăn cách (.profile-address-section): margin: 12px 0 8px 0 !important, padding-top: 10px !important
+   - Thu nhỏ khoảng cách dòng mô tả và ô input bên dưới: margin-bottom: 8px !important
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Khối Giới tính (.tz-gender-group) */
+  .tz-form-group:has(.tz-gender-group) {
+    margin-bottom: 6px !important;
+  }
+
+  .tz-gender-group {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 6px !important;
+    padding-left: 55px !important;
+  }
+
+  /* Khối phân cách đường nét đứt & Tiêu đề Sổ Địa Chỉ Nhận Hàng Mặc Định */
+  .profile-address-section,
+  .tz-address-section,
+  div:has(> [class*="Sổ Địa Chỉ"]),
+  div[style*="border-top: 1px dashed"],
+  #section-profile-info div[style*="border-top: 1px dashed"],
+  #tz-profile-form div[style*="border-top: 1px dashed"] {
+    margin: 12px 0 8px 0 !important;
+    padding-top: 10px !important;
+  }
+
+  /* Tiêu đề H4 và dòng mô tả Sổ địa chỉ */
+  .profile-address-section h4,
+  .tz-address-section h4,
+  #tz-profile-form div[style*="border-top: 1px dashed"] h4 {
+    margin: 0 0 3px 0 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .profile-address-section p,
+  .tz-address-section p,
+  #tz-profile-form div[style*="border-top: 1px dashed"] p {
+    margin: 0 0 8px 0 !important;
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+  }
 }

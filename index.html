@@ -6,6 +6,11 @@
   <title>TechZone - Hệ Thống Thiết Bị Công Nghệ & Giao Hàng Hỏa Tốc 2H</title>
   
   <!-- Font Awesome Icons 6.5.1 -->
+    <!-- Google Fonts: Inter (Tối ưu hiển thị Tiếng Việt sắc nét) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- TechZone Main Stylesheet -->
@@ -26,6 +31,7 @@
   <!-- ========================================================================
        1. HEADER ĐA TẦNG (MULTI-TIER HEADER)
        ======================================================================== -->
+    <!-- HEADER CHUẨN THƯƠNG MẠI ĐIỆN TỬ TECHZONE -->
   <header class="tz-header">
     
     <!-- Top Bar -->
@@ -36,7 +42,7 @@
           <div class="tz-location-wrapper">
             <button type="button" class="tz-location-badge" id="btn-select-location" aria-expanded="false" title="Nhấp để đổi khu vực">
               <i class="fa-solid fa-location-dot"></i>
-              <span class="tz-location-name">Hà Nội</span>
+              <span class="tz-location-name">TP. Hồ Chí Minh</span>
               <i class="fa-solid fa-angle-down tz-location-arrow"></i>
             </button>
             <div class="tz-location-dropdown" id="tz-location-dropdown" role="listbox">
@@ -96,7 +102,18 @@
         <!-- Logo -->
         <a href="index.html" class="tz-logo">
           <div class="tz-logo-chip">
-            <i class="fa-solid fa-microchip"></i>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
           </div>
           <div>Tech<span class="accent">Zone</span></div>
         </a>
@@ -110,9 +127,9 @@
         <!-- Category Dropdown Toggle with Mega Menu -->
         <div class="tz-category-wrapper">
           <button type="button" class="btn-category-menu" id="header-category-toggle" aria-expanded="false" title="Xem danh mục sản phẩm">
-            <i class="fa-solid fa-bars-staggered"></i>
+            <i class="fa-solid fa-bars"></i>
             <span>Danh mục</span>
-            <i class="fa-solid fa-angle-down tz-category-arrow"></i>
+            <i class="fa-solid fa-chevron-down tz-category-arrow"></i>
           </button>
           <div class="tz-category-dropdown" id="header-category-dropdown">
             <div class="tz-category-dropdown-header">
@@ -193,39 +210,38 @@
             <a href="products.html?q=iPhone 16">iPhone 16 Pro Max</a>
             <a href="products.html?q=S24 Ultra">Galaxy S24 Ultra</a>
             <a href="products.html?q=MacBook">MacBook Pro M3</a>
-            <a href="products.html?q=AirPods">AirPods Pro 2</a>
+            <a href="products.html?q=AirPods">AirPods Pro</a>
           </div>
         </div>
 
-        <!-- Action Group on the Right -->
-                <!-- Action Group on the Right (Tách rời độc lập Tài khoản và Giỏ hàng, khoảng cách 16px) -->
+        <!-- Action Group on the Right (Tách rời độc lập Tài khoản và Giỏ hàng, khoảng cách 16px) -->
         <div class="tz-header-actions header-right-actions">
           
           <!-- Khối Tài khoản độc lập -->
-          <div class="tz-user-wrapper user-account-wrapper" id="tz-user-wrapper">
+          <div class="tz-user-wrapper user-account-wrapper not-logged-in is-guest" id="tz-user-wrapper">
             <a href="login.html" class="tz-user-btn" id="tz-user-btn" title="Tài khoản" onclick="if(window.toggleUserDropdown) { toggleUserDropdown(event); }">
-              <i class="fa-solid fa-circle-user"></i>
+              <i class="fa-regular fa-circle-user"></i>
               <div class="meta">
                 <span class="sub">Tài khoản</span>
                 <span id="tz-user-name-display">Đăng nhập</span>
               </div>
             </a>
-            <div class="tz-user-dropdown user-dropdown-menu" id="tz-user-dropdown">
+            <div class="tz-user-dropdown user-dropdown-menu is-guest" id="tz-user-dropdown" style="display: none;">
               <div class="tz-user-dropdown-header">
                 <i class="fa-solid fa-user-check"></i>
-                <span id="tz-dropdown-greeting">Xin chào, Bạn!</span>
+                <span id="tz-dropdown-greeting">Xin chào!</span>
               </div>
               <a href="history.html" class="tz-user-dropdown-item">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span>Đơn mua của tôi</span>
               </a>
               <a href="vouchers.html" class="tz-user-dropdown-item">
-                <span class="tz-dropdown-item-icon">🎟️</span>
+                <i class="fa-solid fa-ticket"></i>
                 <span>Kho voucher của tôi</span>
                 <span class="tz-dropdown-voucher-badge" id="userVoucherBadge" style="display: none;"></span>
               </a>
               <a href="profile.html" class="tz-user-dropdown-item" id="tz-btn-profile-info">
-                <i class="fa-solid fa-id-card"></i>
+                <i class="fa-regular fa-id-card"></i>
                 <span>Thông tin tài khoản</span>
               </a>
               <div class="tz-user-dropdown-item logout" id="tz-btn-logout">
@@ -289,7 +305,7 @@
                 </div>
               </div>
 
-              <!-- Cột 2: PHÂN KHÚC & NHU CẦU -->
+      <!-- Cột 2: PHÂN KHÚC & NHU CẦU -->
               <div class="flyout-col">
                 <div class="flyout-col-title">
                   <i class="fa-solid fa-layer-group"></i>
@@ -1358,27 +1374,58 @@
   <!-- ========================================================================
        8. TECHZONE FOOTER (4 CỘT HIỆN ĐẠI)
        ======================================================================== -->
+    <!-- ==================== FOOTER ĐỒNG BỘ 4 CỘT TECHZONE ==================== -->
+    <!-- ==================== FOOTER ĐỒNG BỘ 4 CỘT TECHZONE ==================== -->
+    <!-- FOOTER CHUẨN THƯƠNG MẠI ĐIỆN TỬ TECHZONE -->
   <footer class="tz-footer">
     <div class="container footer-main-grid">
       
-      <!-- Cột 1: Thông tin liên hệ & Tổng đài -->
-      <div class="tz-footer-col">
-        <a href="index.html" class="tz-logo" style="color: var(--tz-navy); margin-bottom: 0.85rem;">
-          <div class="tz-logo-chip"><i class="fa-solid fa-microchip"></i></div>
-          <div>Tech<span class="accent" style="color: var(--tz-blue);">Zone</span></div>
+      <!-- Cột 1: Thông tin liên hệ & Tổng đài Hotline -->
+      <div class="tz-footer-col footer-col-brand">
+        <a href="index.html" class="tz-logo" style="margin-bottom: 0.85rem;">
+          <div class="tz-logo-chip">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
+          </div>
+          <div>Tech<span class="accent">Zone</span></div>
         </a>
         <p>Hệ thống bán lẻ thiết bị công nghệ chính hãng hàng đầu, tích hợp phân hệ logistics định vị bưu tá và giao hàng hỏa tốc trong 2 giờ.</p>
         
-        <div class="tz-hotlines">
-          <div class="tz-hotline-row">Tư vấn mua hàng: <strong>1800.6868</strong> (7h30 - 22h00)</div>
-          <div class="tz-hotline-row">Hỗ trợ kỹ thuật: <strong>1800.6869</strong> (8h00 - 21h30)</div>
-          <div class="tz-hotline-row">Bảo hành chính hãng: <strong>1800.6870</strong> (8h00 - 21h00)</div>
+        <div class="tz-hotlines footer-hotlines">
+          <div class="tz-hotline-row footer-hotline-row hotline-item">
+            <i class="fa-solid fa-phone" style="color: #991b1b; font-size: 13px; flex-shrink: 0;"></i>
+            <span>Tư vấn mua hàng:</span>
+            <strong>1800.6868</strong>
+            <span>(7h30 - 22h00)</span>
+          </div>
+          <div class="tz-hotline-row footer-hotline-row hotline-item">
+            <i class="fa-solid fa-headset" style="color: #991b1b; font-size: 13px; flex-shrink: 0;"></i>
+            <span>Hỗ trợ kỹ thuật:</span>
+            <strong>1800.6869</strong>
+            <span>(8h00 - 21h30)</span>
+          </div>
+          <div class="tz-hotline-row footer-hotline-row hotline-item">
+            <i class="fa-solid fa-shield-halved" style="color: #991b1b; font-size: 13px; flex-shrink: 0;"></i>
+            <span>Bảo hành chính hãng:</span>
+            <strong>1800.6870</strong>
+            <span>(8h00 - 21h00)</span>
+          </div>
         </div>
       </div>
 
-      <!-- Cột 2: Chính sách & bảo hành -->
+      <!-- Cột 2: Chính sách & Quy định (Clean Typography, loại bỏ toàn bộ icon/SVG rác) -->
       <div class="tz-footer-col">
-        <h4>Chính Sách & Quy Định</h4>
+        <h4>CHÍNH SÁCH & QUY ĐỊNH</h4>
         <div class="tz-footer-links">
           <a href="#">Chính sách giao hàng siêu tốc 2H</a>
           <a href="#">Chính sách bảo hành 1 đổi 1 trong 30 ngày</a>
@@ -1388,9 +1435,9 @@
         </div>
       </div>
 
-      <!-- Cột 3: Dịch vụ & Tra cứu -->
+      <!-- Cột 3: Dịch vụ & Tra cứu (Clean Typography, loại bỏ toàn bộ icon/SVG rác) -->
       <div class="tz-footer-col">
-        <h4>Dịch Vụ & Tra Cứu</h4>
+        <h4>DỊCH VỤ & TRA CỨU</h4>
         <div class="tz-footer-links">
           <a href="tracking-detail.html">Tra cứu hành trình vận chuyển GPS</a>
           <a href="history.html">Quản lý lịch sử đơn mua cá nhân</a>
@@ -1402,27 +1449,32 @@
 
       <!-- Cột 4: Phương thức thanh toán & Chứng nhận -->
       <div class="tz-footer-col">
-        <h4>Phương Thức Thanh Toán</h4>
+        <h4>PHƯƠNG THỨC THANH TOÁN</h4>
         <div class="tz-payment-pills">
-          <span class="tz-pay-tag"><i class="fa-solid fa-money-bill-wave text-success"></i> Tiền mặt COD</span>
-          <span class="tz-pay-tag"><i class="fa-solid fa-qrcode text-primary"></i> VNPAY-QR</span>
-          <span class="tz-pay-tag"><i class="fa-solid fa-wallet" style="color: #a50064;"></i> Ví MoMo</span>
-          <span class="tz-pay-tag"><i class="fa-brands fa-cc-visa text-primary"></i> Visa / Master</span>
-          <span class="tz-pay-tag"><i class="fa-solid fa-percent" style="color: #f59e0b;"></i> Trả góp 0%</span>
+          <span class="tz-pay-tag">Tiền mặt COD</span>
+          <span class="tz-pay-tag">VNPAY-QR</span>
+          <span class="tz-pay-tag">Ví MoMo</span>
+          <span class="tz-pay-tag">Visa / Master</span>
+          <span class="tz-pay-tag">Trả góp 0%</span>
         </div>
 
-        <h4 style="margin-top: 1.35rem;">Chứng Nhận Uy Tín</h4>
-        <div style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: #64748b;">
-          <i class="fa-solid fa-shield-halved" style="font-size: 1.6rem; color: #10b981;"></i>
+        <h4 style="margin-top: 1.35rem;">CHỨNG NHẬN UY TÍN</h4>
+        <div class="tz-cert-box">
+          <i class="fa-solid fa-shield-halved" style="color: #10b981; font-size: 18px; flex-shrink: 0;"></i>
           <span>Website thương mại điện tử đã đăng ký với <strong>Bộ Công Thương</strong></span>
         </div>
       </div>
 
     </div>
 
-    <div class="container footer-bottom-bar">
-      <div>&copy; 2026 TechZone Technology Ecosystem. Bản quyền thuộc về TechZone Vietnam.</div>
-      <div>Multi-page Architecture | Hệ thống Quản trị Vận đơn & Định vị Bưu tá Thời gian thực</div>
+    <!-- Dòng chân trang đáy chuẩn Doanh Nghiệp (padding-left chống đè nút CSKH) -->
+    <div class="footer-bottom-bar">
+      <div class="footer-copyright-left">
+        &copy; 2026 TechZone. Bản quyền thuộc Thanh Toàn - Bảo Vy.
+      </div>
+      <div class="footer-meta-right">
+        Hệ thống bán lẻ &amp; bảo hành công nghệ chính hãng trên toàn quốc
+      </div>
     </div>
   </footer>
 
